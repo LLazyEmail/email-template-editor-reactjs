@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Generate, SaveTree } from "./main.types";
+import { Generate, SaveTree, UpdateTreeNode } from "./main.types";
 
 export const API_URL =
   process.env.NODE_ENV === "development"
@@ -14,3 +14,6 @@ export const getTree = () =>
 
 export const saveTree = (data: SaveTree) =>
   axios.post(`${API_URL}/save-template-tree`, data).then((res) => res.data);
+
+export const updateTreeNode = (data: UpdateTreeNode) =>
+  axios.post(`${API_URL}/update-node-tree`, data).then((res) => res.data);

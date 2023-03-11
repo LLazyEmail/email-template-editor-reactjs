@@ -7,3 +7,8 @@ export interface Generate {
 export interface SaveTree {
   treeData: [{ title: string; key: string; value: string; children: [] }];
 }
+
+export interface UpdateTreeNode {
+  value: string;
+  key: string;
+}

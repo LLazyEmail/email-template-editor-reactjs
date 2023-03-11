@@ -8,6 +8,7 @@ import AddRootElementForm from "./AddRootElementForm/AddRootElementForm";
 
 const Home = () => {
   const [templateTree, setTemplateTree] = useState<TemplateTreeType[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   console.log("templateTree", templateTree);
 
@@ -25,8 +26,6 @@ const Home = () => {
     generate({ treeData: templateTree });
   };
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
   const showModal = () => {
     setIsModalOpen(true);
   };
@@ -39,7 +38,7 @@ const Home = () => {
 
     saveTree({ treeData: root }).then(() => {
       setIsModalOpen(false);
-      getTreeData()
+      getTreeData();
     });
   };
 
@@ -71,7 +70,7 @@ const Home = () => {
         <AddRootElementForm onSubmit={onSubmit} onCancel={handleCancel} />
       </Modal>
       <div>
-        <TemplateTree treeData={templateTree} />
+        <TemplateTree treeData={templateTree} refresh={getTreeData} />
       </div>
     </>
   );
