@@ -1,4 +1,5 @@
 import type { DataNode, TreeProps } from "antd/es/tree";
+import { TemplateTree } from "../../types";
 
 // type M = DataNode & {value: string};
 
@@ -7,7 +8,7 @@ import type { DataNode, TreeProps } from "antd/es/tree";
 //   children: DataNode["children"] & [{ value: string }];
 // }
 
-export const treeData: Record<string, string | object>[] = [
+export const treeData: TemplateTree[] = [
   {
     title: "root",
     key: "0-0",

@@ -1,0 +1,1 @@
+export type TemplateTree = Record<string, string | object>;

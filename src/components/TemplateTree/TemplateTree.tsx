@@ -1,10 +1,10 @@
 import { Tree } from "antd";
-import type { DataNode, TreeProps } from "antd/es/tree";
+// import type { DataNode, TreeProps } from "antd/es/tree";
 import React from "react";
-import { treeData } from "./treeData";
+import { TemplateTreeProps } from "./TemplateTree.types";
 
-const TemplateTree = () => {
-  return <Tree defaultExpandAll treeData={treeData} />;
+const TemplateTree = (props: TemplateTreeProps) => {
+  return <Tree defaultExpandAll treeData={props.treeData} />;
 };
 
 export default TemplateTree;
