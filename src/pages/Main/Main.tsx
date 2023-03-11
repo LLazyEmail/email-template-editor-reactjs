@@ -1,24 +1,30 @@
 import { Button } from "antd";
 import React, { useEffect, useState } from "react";
-import { generate } from "../../api/main";
+import { getTree, generate } from "../../api/main";
 import TemplateTree from "../../components/TemplateTree/TemplateTree";
 import { TemplateTree as TemplateTreeType } from "../../types";
-import { treeData } from "./treeData";
 
 const Home = () => {
   const [templateTree, setTemplateTree] = useState<TemplateTreeType[]>([]);
 
-  const getTree = () => {
-    setTemplateTree(treeData);
+  console.log("templateTree", templateTree);
+
+  const getTreeData = () => {
+    getTree().then((data) => {
+      setTemplateTree(data);
+    });
   };
 
   useEffect(() => {
-    getTree();
+    console.log("call");
+
+    getTreeData();
   }, []);
 
   const onHandleGenerate = () => {
     generate({ treeData: templateTree });
   };
+
   return (
     <>
       <div>

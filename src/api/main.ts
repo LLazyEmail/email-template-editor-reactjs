@@ -8,3 +8,6 @@ export const API_URL =
 
 export const generate = (data: Generate) =>
   axios.post(`${API_URL}/generate`, data);
+
+export const getTree = () =>
+  axios.get(`${API_URL}/template-tree`).then((res) => res.data);
