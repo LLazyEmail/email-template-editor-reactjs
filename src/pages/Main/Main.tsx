@@ -5,6 +5,7 @@ import { SaveTree } from "../../api/main.types";
 import TemplateTree from "../../components/TemplateTree/TemplateTree";
 import { TemplateTree as TemplateTreeType } from "../../types";
 import AddRootElementForm from "./AddRootElementForm/AddRootElementForm";
+import Elements from "./Elements/Elements";
 
 const Home = () => {
   const [templateTree, setTemplateTree] = useState<TemplateTreeType[]>([]);
@@ -69,9 +70,11 @@ const Home = () => {
       >
         <AddRootElementForm onSubmit={onSubmit} onCancel={handleCancel} />
       </Modal>
-      <div>
+      <div style={{ height: 500 }}>
         <TemplateTree treeData={templateTree} refresh={getTreeData} />
       </div>
+
+      <Elements />
     </>
   );
 };

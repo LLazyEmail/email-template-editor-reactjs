@@ -6,7 +6,7 @@ import { ModalState, TemplateTreeProps } from "./TemplateTree.types";
 import { MenuInfo } from "rc-menu/lib/interface";
 import EditElementForm from "./EditElementForm/EditElementForm";
 import { TemplateTree as TemplateTreeNode } from "./../../types";
-import { updateTreeNode, addTreeNode } from "../../api/main";
+import { updateTreeNode, addTreeNode, deleteTreeNode } from "../../api/main";
 import AddElementForm from "./AddElementForm/AddElementForm";
 
 const TemplateTree = (props: TemplateTreeProps) => {
@@ -28,12 +28,21 @@ const TemplateTree = (props: TemplateTreeProps) => {
       label: "Edit",
       key: "edit",
     },
+    {
+      label: "Delete",
+      key: "delete",
+    },
   ];
 
   const handleMenuClick = (e: MenuInfo, item: TemplateTreeNode) => {
     const map: Record<string, Function | undefined> = {
       add: () => setModalAddElement({ isOpen: true, data: item }),
       edit: () => setModalEditElement({ isOpen: true, data: item }),
+      delete: () => {
+        deleteTreeNode({ key: item.key as string }).then(() => {
+          props.refresh();
+        });
+      },
     };
 
     map[e.key]?.();

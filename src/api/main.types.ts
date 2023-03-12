@@ -18,3 +18,7 @@ export interface AddTreeNode {
   parentKey: string;
   item: { title: string; key: string; value: string; children: [] };
 }
+
+export interface DeleteTreeNode {
+  key: string;
+}
