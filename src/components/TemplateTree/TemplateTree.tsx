@@ -1,18 +1,29 @@
 import { Dropdown, Menu, MenuProps, Tree, Modal } from "antd";
 // import type { DataNode, TreeProps } from "antd/es/tree";
 import React, { useState } from "react";
-import { TemplateTreeProps } from "./TemplateTree.types";
+import { ModalState, TemplateTreeProps } from "./TemplateTree.types";
 
 import { MenuInfo } from "rc-menu/lib/interface";
 import EditElementForm from "./EditElementForm/EditElementForm";
 import { TemplateTree as TemplateTreeNode } from "./../../types";
-import { ModalState } from "./EditElementForm/EditElementForm.types";
-import { updateTreeNode } from "../../api/main";
+import { updateTreeNode, addTreeNode } from "../../api/main";
+import AddElementForm from "./AddElementForm/AddElementForm";
 
 const TemplateTree = (props: TemplateTreeProps) => {
-  const [modal, setModal] = useState<ModalState>({ isOpen: false, data: null });
+  const [modalAddElement, setModalAddElement] = useState<ModalState>({
+    isOpen: false,
+    data: null,
+  });
+  const [modalEditElement, setModalEditElement] = useState<ModalState>({
+    isOpen: false,
+    data: null,
+  });
 
   const items: MenuProps["items"] = [
+    {
+      label: "Add",
+      key: "add",
+    },
     {
       label: "Edit",
       key: "edit",
@@ -21,7 +32,8 @@ const TemplateTree = (props: TemplateTreeProps) => {
 
   const handleMenuClick = (e: MenuInfo, item: TemplateTreeNode) => {
     const map: Record<string, Function | undefined> = {
-      "edit": () => setModal({ isOpen: true, data: item }),
+      add: () => setModalAddElement({ isOpen: true, data: item }),
+      edit: () => setModalEditElement({ isOpen: true, data: item }),
     };
 
     map[e.key]?.();
@@ -31,14 +43,18 @@ const TemplateTree = (props: TemplateTreeProps) => {
     console.log("item", item);
   };
 
-  const onSubmit = (values: any) => {
+  const onSubmitModalEdit = (values: any) => {
     console.log("values", values);
 
-    updateTreeNode({ value: values.value, key: values.key }).then(() => {
+    updateTreeNode({
+      value: values.value,
+      key: values.key,
+      title: values.title,
+    }).then(() => {
       props.refresh();
+      setModalEditElement({ isOpen: false, data: null });
     });
 
-    setModal({ isOpen: false, data: null });
     // const root: SaveTree["treeData"] = [
     //   { title: "root", key: "1", value: values.value, children: [] },
     // ];
@@ -49,9 +65,34 @@ const TemplateTree = (props: TemplateTreeProps) => {
     // });
   };
 
-  const handleCancel = () => {
-    setModal({ isOpen: false, data: null });
+  const onSubmitModalAdd = (formValues: any) => {
+    console.log("values", formValues);
+    const { currentItemKey, values } = formValues;
+
+    addTreeNode({
+      parentKey: currentItemKey,
+      item: {
+        key: new Date().toISOString(),
+        title: values.title,
+        value: values.value,
+        children: [],
+      },
+    }).then(() => {
+      props.refresh();
+    });
+
+    setModalAddElement({ isOpen: false, data: null });
   };
+
+  const handleCancelModalEdit = () => {
+    setModalEditElement({ isOpen: false, data: null });
+  };
+
+  const handleCancelModalAdd = () => {
+    setModalAddElement({ isOpen: false, data: null });
+  };
+
+  console.log("modalEditElement", modalEditElement);
 
   return (
     <>
@@ -69,16 +110,34 @@ const TemplateTree = (props: TemplateTreeProps) => {
       />
       <Modal
         title="Edit element"
-        open={modal.isOpen}
-        onCancel={handleCancel}
+        open={modalEditElement.isOpen}
+        onCancel={handleCancelModalEdit}
         footer={null}
         width={1000}
+        destroyOnClose
       >
-        {modal.data ? (
+        {modalEditElement.data ? (
           <EditElementForm
-            data={modal.data}
-            onSubmit={onSubmit}
-            onCancel={handleCancel}
+            data={modalEditElement.data}
+            onSubmit={onSubmitModalEdit}
+            onCancel={handleCancelModalEdit}
+          />
+        ) : null}
+      </Modal>
+
+      <Modal
+        title="Add element"
+        open={modalAddElement.isOpen}
+        onCancel={handleCancelModalAdd}
+        footer={null}
+        width={1000}
+        destroyOnClose
+      >
+        {modalAddElement.data ? (
+          <AddElementForm
+            data={modalAddElement.data}
+            onSubmit={onSubmitModalAdd}
+            onCancel={handleCancelModalAdd}
           />
         ) : null}
       </Modal>

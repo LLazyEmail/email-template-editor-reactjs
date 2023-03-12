@@ -1,14 +1,10 @@
 import React, { useEffect } from "react";
 import { Button, Form, Input } from "antd";
-import { EditElementFormProps } from "./EditElementForm.types";
+import { AddElementFormProps } from "./AddElementForm.types";
 
 const { TextArea } = Input;
 
-const EditElementForm = ({
-  onCancel,
-  onSubmit,
-  data,
-}: EditElementFormProps) => {
+const AddElementForm = ({ onCancel, onSubmit, data }: AddElementFormProps) => {
   const [form] = Form.useForm();
 
   const onReset = () => {
@@ -23,16 +19,13 @@ const EditElementForm = ({
   //     form.setFieldsValue({ note: "Hello world!", gender: "male" });
   //   };
 
-  console.log("data", data);
-
   return (
     <Form
       //   {...layout}
       form={form}
-      name="editElementForm"
-      onFinish={(values) => onSubmit({ ...values, key: data.key })}
+      name="control-hooks"
+      onFinish={(values) => onSubmit({ values, currentItemKey: data.key })}
       style={{ maxWidth: 1000 }}
-      initialValues={{ value: data.value, title: data.title }}
     >
       <Form.Item name="title" label="Title" rules={[{ required: true }]}>
         <Input />
@@ -64,4 +57,4 @@ const EditElementForm = ({
   );
 };
 
-export default EditElementForm;
+export default AddElementForm;

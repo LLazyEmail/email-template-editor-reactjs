@@ -10,5 +10,11 @@ export interface SaveTree {
 
 export interface UpdateTreeNode {
   value: string;
+  title: string;
   key: string;
+}
+
+export interface AddTreeNode {
+  parentKey: string;
+  item: { title: string; key: string; value: string; children: [] };
 }
