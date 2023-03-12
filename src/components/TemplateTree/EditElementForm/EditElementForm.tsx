@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
 import { Button, Form, Input } from "antd";
-import { AddElementFormProps } from "./AddElementForm.types";
+import { EditElementFormProps } from "./EditElementForm.types";
 
 const { TextArea } = Input;
 
-const AddElementForm = ({ onCancel, onSubmit, data }: AddElementFormProps) => {
+const EditElementForm = ({ onCancel, onSubmit, data }: EditElementFormProps) => {
   const [form] = Form.useForm();
 
   const onReset = () => {
@@ -55,4 +55,4 @@ const AddElementForm = ({ onCancel, onSubmit, data }: AddElementFormProps) => {
   );
 };
 
-export default AddElementForm;
+export default EditElementForm;

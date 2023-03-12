@@ -4,9 +4,9 @@ import React, { useState } from "react";
 import { TemplateTreeProps } from "./TemplateTree.types";
 
 import { MenuInfo } from "rc-menu/lib/interface";
-import AddElementForm from "./AddElementForm/AddElementForm";
+import EditElementForm from "./EditElementForm/EditElementForm";
 import { TemplateTree as TemplateTreeNode } from "./../../types";
-import { ModalState } from "./AddElementForm/AddElementForm.types";
+import { ModalState } from "./EditElementForm/EditElementForm.types";
 import { updateTreeNode } from "../../api/main";
 
 const TemplateTree = (props: TemplateTreeProps) => {
@@ -15,13 +15,13 @@ const TemplateTree = (props: TemplateTreeProps) => {
   const items: MenuProps["items"] = [
     {
       label: "Edit",
-      key: "1",
+      key: "edit",
     },
   ];
 
   const handleMenuClick = (e: MenuInfo, item: TemplateTreeNode) => {
     const map: Record<string, Function | undefined> = {
-      "1": () => setModal({ isOpen: true, data: item }),
+      "edit": () => setModal({ isOpen: true, data: item }),
     };
 
     map[e.key]?.();
@@ -68,14 +68,14 @@ const TemplateTree = (props: TemplateTreeProps) => {
         )}
       />
       <Modal
-        title="Add element"
+        title="Edit element"
         open={modal.isOpen}
         onCancel={handleCancel}
         footer={null}
         width={1000}
       >
         {modal.data ? (
-          <AddElementForm
+          <EditElementForm
             data={modal.data}
             onSubmit={onSubmit}
             onCancel={handleCancel}

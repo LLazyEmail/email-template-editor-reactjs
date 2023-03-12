@@ -1,6 +1,6 @@
-import { TemplateTree } from "./../../../types";
+import { TemplateTree } from "../../../types";
 
-export interface AddElementFormProps {
+export interface EditElementFormProps {
   onSubmit: (values: any) => void;
   onCancel: () => void;
   data: TemplateTree;
