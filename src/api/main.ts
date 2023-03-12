@@ -6,8 +6,8 @@ export const API_URL =
     ? "http://localhost:9000"
     : `${document.location.protocol}//${document.location.hostname}:9000`;
 
-export const generate = (data: Generate) =>
-  axios.post(`${API_URL}/generate`, data).then((res) => res.data);
+export const generate = () =>
+  axios.post(`${API_URL}/generate`).then((res) => res.data);
 
 export const getTree = () =>
   axios.get(`${API_URL}/template-tree`).then((res) => res.data);

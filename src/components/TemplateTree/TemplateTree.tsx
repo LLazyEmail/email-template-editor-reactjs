@@ -86,15 +86,17 @@ const TemplateTree = (props: TemplateTreeProps) => {
       element: () => ({
         parentKey: currentItemKey,
         item: {
-          key: new Date().toISOString() + "1",
+          key: new Date().toISOString() + "000",
           title: values.title,
           value: element.value,
-          children: Object.entries(values.children).map(([key, value]) => ({
-            key: new Date().toISOString() + "2",
-            title: key,
-            value,
-            children: [],
-          })),
+          children: Object.entries(values.children).map(
+            ([key, value], index) => ({
+              key: new Date().toISOString() + `${index}`,
+              title: key,
+              value,
+              children: [],
+            })
+          ),
         },
       }),
       html: () => ({

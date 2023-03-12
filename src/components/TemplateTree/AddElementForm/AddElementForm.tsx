@@ -15,7 +15,7 @@ const options = [
 ];
 
 const getArrayOfReplacement = (str: string) => {
-  const regexp = /{{[A-Za-z]{0,}}}/g;
+  const regexp = /{{[A-Za-z0-9]{0,}}}/g;
   const result = str.match(regexp);
   console.log("result");
 

@@ -37,7 +37,7 @@ const EditElementForm = ({
       <Form.Item name="title" label="Title" rules={[{ required: true }]}>
         <Input />
       </Form.Item>
-      <Form.Item name="value" label="Value" rules={[{ required: true }]}>
+      <Form.Item name="value" label="Value">
         <TextArea
           spellCheck="false"
           autoComplete="off"

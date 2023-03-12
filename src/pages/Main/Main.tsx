@@ -24,7 +24,7 @@ const Home = () => {
   }, []);
 
   const onHandleGenerate = () => {
-    generate({ treeData: templateTree });
+    generate();
   };
 
   const showModal = () => {
