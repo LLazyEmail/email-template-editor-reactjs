@@ -1,7 +1,11 @@
 import { Dropdown, Menu, MenuProps, Tree, Modal } from "antd";
 // import type { DataNode, TreeProps } from "antd/es/tree";
 import React, { useState } from "react";
-import { ModalState, TemplateTreeProps } from "./TemplateTree.types";
+import {
+  AddElementFormValues,
+  ModalState,
+  TemplateTreeProps,
+} from "./TemplateTree.types";
 
 import { MenuInfo } from "rc-menu/lib/interface";
 import EditElementForm from "./EditElementForm/EditElementForm";
@@ -74,19 +78,39 @@ const TemplateTree = (props: TemplateTreeProps) => {
     // });
   };
 
-  const onSubmitModalAdd = (formValues: any) => {
+  const onSubmitModalAdd = (formValues: AddElementFormValues) => {
     console.log("values", formValues);
-    const { currentItemKey, values } = formValues;
+    const { currentItemKey, values, element } = formValues;
 
-    addTreeNode({
-      parentKey: currentItemKey,
-      item: {
-        key: new Date().toISOString(),
-        title: values.title,
-        value: values.value,
-        children: [],
-      },
-    }).then(() => {
+    const map = {
+      element: () => ({
+        parentKey: currentItemKey,
+        item: {
+          key: new Date().toISOString() + "1",
+          title: values.title,
+          value: element.value,
+          children: Object.entries(values.children).map(([key, value]) => ({
+            key: new Date().toISOString() + "2",
+            title: key,
+            value,
+            children: [],
+          })),
+        },
+      }),
+      html: () => ({
+        parentKey: currentItemKey,
+        item: {
+          key: new Date().toISOString() + "3",
+          title: values.title,
+          value: values.value ?? "",
+          children: [],
+        },
+      }),
+    };
+
+    const data = map[values.type]?.();
+
+    addTreeNode(data).then(() => {
       props.refresh();
     });
 

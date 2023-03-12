@@ -9,3 +9,20 @@ export interface ModalState {
   isOpen: boolean;
   data: TemplateTree | null;
 }
+
+export interface AddElementFormValues {
+  currentItemKey: string;
+  values: {
+    title: string;
+    value?: string;
+    type: "element" | "html";
+    elementId?: string;
+    children: Record<string, string | undefined>;
+  };
+  element: {
+    key: string;
+    title: string;
+    value: string;
+    children: [];
+  };
+}
