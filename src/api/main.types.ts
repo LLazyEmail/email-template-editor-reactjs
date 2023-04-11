@@ -22,3 +22,15 @@ export interface AddTreeNode {
 export interface DeleteTreeNode {
   key: string;
 }
+
+export interface AddElement{
+  value: string;
+  title: string;
+  key: string;
+}
+
+export interface Element{
+  value: string;
+  title: string;
+  key: string;
+}

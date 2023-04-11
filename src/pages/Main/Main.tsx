@@ -67,6 +67,7 @@ const Home = () => {
         onCancel={handleCancel}
         footer={null}
         width={1000}
+        destroyOnClose
       >
         <AddRootElementForm onSubmit={onSubmit} onCancel={handleCancel} />
       </Modal>

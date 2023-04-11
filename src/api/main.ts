@@ -1,5 +1,12 @@
 import axios from "axios";
-import { AddTreeNode, DeleteTreeNode, Generate, SaveTree, UpdateTreeNode } from "./main.types";
+import {
+  AddElement,
+  AddTreeNode,
+  DeleteTreeNode,
+  Generate,
+  SaveTree,
+  UpdateTreeNode,
+} from "./main.types";
 
 export const API_URL =
   process.env.NODE_ENV === "development"
@@ -23,3 +30,9 @@ export const addTreeNode = (data: AddTreeNode) =>
 
 export const deleteTreeNode = (data: DeleteTreeNode) =>
   axios.post(`${API_URL}/delete-node-tree`, data).then((res) => res.data);
+
+export const getAllElements = () =>
+  axios.get(`${API_URL}/all-elements`).then((res) => res.data);
+
+export const addElement = (data: AddElement) =>
+  axios.post(`${API_URL}/add-element`, data).then((res) => res.data);
