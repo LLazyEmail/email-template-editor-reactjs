@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Button, Form, Input, Select } from "antd";
 import { AddElementFormProps } from "./AddElementForm.types";
-import { getAllElements } from "../../../api/main";
-import { Element } from "../../../api/main.types";
+import { getAllElements } from "../../../../api/main";
+import { Element } from "../../../../api/main.types";
 
 const { TextArea } = Input;
 

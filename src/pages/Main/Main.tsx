@@ -2,7 +2,7 @@ import { Button, Modal } from "antd";
 import React, { useEffect, useState } from "react";
 import { saveTree, getTree, generate } from "../../api/main";
 import { SaveTree } from "../../api/main.types";
-import TemplateTree from "../../components/TemplateTree/TemplateTree";
+import TemplateTree from "./TemplateTree/TemplateTree";
 import { TemplateTree as TemplateTreeType } from "../../types";
 import AddRootElementForm from "./AddRootElementForm/AddRootElementForm";
 import Elements from "./Elements/Elements";

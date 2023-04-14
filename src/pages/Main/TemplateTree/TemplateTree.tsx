@@ -9,8 +9,8 @@ import {
 
 import { MenuInfo } from "rc-menu/lib/interface";
 import EditElementForm from "./EditElementForm/EditElementForm";
-import { TemplateTree as TemplateTreeNode } from "./../../types";
-import { updateTreeNode, addTreeNode, deleteTreeNode } from "../../api/main";
+import { TemplateTree as TemplateTreeNode } from "../../../types";
+import { updateTreeNode, addTreeNode, deleteTreeNode } from "../../../api/main";
 import AddElementForm from "./AddElementForm/AddElementForm";
 
 const TemplateTree = (props: TemplateTreeProps) => {
