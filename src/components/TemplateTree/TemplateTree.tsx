@@ -1,4 +1,4 @@
-import { Dropdown, Menu, MenuProps, Tree, Modal } from "antd";
+import { Dropdown, Menu, MenuProps, Tree, Modal, notification } from "antd";
 // import type { DataNode, TreeProps } from "antd/es/tree";
 import React, { useState } from "react";
 import {
@@ -81,6 +81,14 @@ const TemplateTree = (props: TemplateTreeProps) => {
   const onSubmitModalAdd = (formValues: AddElementFormValues) => {
     console.log("values", formValues);
     const { currentItemKey, values, element } = formValues;
+
+    if (!formValues.values.children) {
+      notification.error({
+        message: "Error: children of the element not found",
+      });
+
+      return;
+    }
 
     const map = {
       element: () => ({

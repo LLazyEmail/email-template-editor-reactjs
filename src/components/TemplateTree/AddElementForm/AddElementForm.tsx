@@ -1,7 +1,8 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Button, Form, Input, Select } from "antd";
 import { AddElementFormProps } from "./AddElementForm.types";
-import { treeDataElements } from "../treeDataElements";
+import { getAllElements } from "../../../api/main";
+import { Element } from "../../../api/main.types";
 
 const { TextArea } = Input;
 
@@ -17,7 +18,7 @@ const options = [
 const getArrayOfReplacement = (str: string) => {
   const regexp = /{{[A-Za-z0-9]{0,}}}/g;
   const result = str.match(regexp);
-  console.log("result");
+  console.log("result", result);
 
   return result ?? [];
 };
@@ -25,6 +26,7 @@ const getArrayOfReplacement = (str: string) => {
 const AddElementForm = ({ onCancel, onSubmit, data }: AddElementFormProps) => {
   const [form] = Form.useForm();
   const elementKey = Form.useWatch("elementKey", form);
+  const [elements, setElements] = useState<Element[]>([]);
 
   const onReset = () => {
     form.resetFields();
@@ -50,26 +52,30 @@ const AddElementForm = ({ onCancel, onSubmit, data }: AddElementFormProps) => {
   //   }
   // };
 
-  const elementIdOptions = treeDataElements.map((element) => ({
+  useEffect(() => {
+    getAllElements().then((data) => {
+      setElements(data);
+    });
+  }, []);
+
+  const elementIdOptions = elements.map((element) => ({
     value: element.key,
     label: element.title,
   }));
 
   const arr = useMemo(() => {
-    const foundElement = treeDataElements.find(
-      (elem) => elem.key === elementKey
-    );
+    const foundElement = elements.find((elem) => elem.key === elementKey);
 
     return foundElement ? getArrayOfReplacement(foundElement.value) : [];
-  }, [elementKey]);
+  }, [elementKey, elements]);
 
   useEffect(() => {
-    const foundElement = treeDataElements.find(
-      (elem) => elem.key === elementKey
-    );
+    const foundElement = elements.find((elem) => elem.key === elementKey);
 
-    form.setFieldValue("title", foundElement?.title);
-  }, [elementKey]);
+    if (foundElement) {
+      form.setFieldValue("title", foundElement?.title);
+    }
+  }, [elementKey, elements]);
 
   return (
     <Form
@@ -83,7 +89,7 @@ const AddElementForm = ({ onCancel, onSubmit, data }: AddElementFormProps) => {
           currentItemKey: data.key,
           element:
             values.type === "element"
-              ? treeDataElements.find((elem) => elem.key === elementKey)
+              ? elements.find((elem) => elem.key === elementKey)
               : null,
         })
       }

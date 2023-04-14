@@ -1,6 +1,5 @@
-import { Button, List, Modal, Typography } from "antd";
 import React, { useEffect, useState } from "react";
-import { treeDataElements } from "../../../components/TemplateTree/treeDataElements";
+import { Button, List, Modal, Typography } from "antd";
 import { addElement, getAllElements } from "../../../api/main";
 import { Element } from "../../../api/main.types";
 import AddElementForm from "./AddElementForm/AddElementForm";
