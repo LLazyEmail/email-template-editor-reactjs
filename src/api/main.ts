@@ -5,7 +5,9 @@ import {
   DeleteTreeNode,
   Generate,
   SaveTree,
+  UpdateElement,
   UpdateTreeNode,
+  DeleteElement,
 } from "./main.types";
 
 export const API_URL =
@@ -36,3 +38,9 @@ export const getAllElements = () =>
 
 export const addElement = (data: AddElement) =>
   axios.post(`${API_URL}/add-element`, data).then((res) => res.data);
+
+export const updateElement = (data: UpdateElement) =>
+  axios.put(`${API_URL}/element`, data).then((res) => res.data);
+
+export const deleteElement = ({ key }: DeleteElement) =>
+  axios.delete(`${API_URL}/element/${key}`).then((res) => res.data);

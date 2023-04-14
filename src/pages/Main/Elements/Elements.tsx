@@ -3,9 +3,15 @@ import { Button, List, Modal, Typography } from "antd";
 import { addElement, getAllElements } from "../../../api/main";
 import { Element } from "../../../api/main.types";
 import AddElementForm from "./AddElementForm/AddElementForm";
+import { ModalState } from "./EditElementForm/EditElementForm.types";
+import EditElementForm from "./EditElementForm/EditElementForm";
 
 const Elements = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpenAddElement, setIsModalOpenAddElement] = useState(false);
+  const [modalEditElement, setModalEditElement] = useState<ModalState>({
+    isOpen: false,
+    data: null,
+  });
   const [elements, setElements] = useState<Element[]>([]);
 
   const getElements = () => {
@@ -18,15 +24,15 @@ const Elements = () => {
     getElements();
   }, []);
 
-  const handleCancel = () => {
-    setIsModalOpen(false);
+  const handleCancelAddElement = () => {
+    setIsModalOpenAddElement(false);
   };
 
-  const showModal = () => {
-    setIsModalOpen(true);
+  const showModalAddElement = () => {
+    setIsModalOpenAddElement(true);
   };
 
-  const onSubmit = (values: any) => {
+  const onSubmitAddElement = (values: any) => {
     console.log("call");
 
     addElement({
@@ -34,9 +40,20 @@ const Elements = () => {
       value: values.value,
       title: values.title,
     }).then(() => {
-      setIsModalOpen(false);
+      setIsModalOpenAddElement(false);
       getElements();
     });
+  };
+
+  const onShowModalEditElement = (item: Element) => {
+    setModalEditElement({
+      isOpen: true,
+      data: item,
+    });
+  };
+
+  const handleCancelEditElement = () => {
+    setModalEditElement({ isOpen: false, data: null });
   };
 
   return (
@@ -44,28 +61,58 @@ const Elements = () => {
       <Typography.Title level={3}>Elements</Typography.Title>
       <List
         header={
-          <Button type="primary" onClick={showModal}>
+          <Button type="primary" onClick={showModalAddElement}>
             Add element
           </Button>
         }
         bordered
         dataSource={elements}
-        renderItem={(item) => (
-          <List.Item actions={[<a key="list-loadmore-edit">edit</a>]}>
-            {item.title}
-          </List.Item>
-        )}
+        renderItem={(item) => {
+          console.log("item", item);
+
+          return (
+            <List.Item
+              actions={[
+                <Button onClick={() => onShowModalEditElement(item)}>
+                  edit
+                </Button>,
+              ]}
+            >
+              {item.title}
+            </List.Item>
+          );
+        }}
       />
 
       <Modal
         title="Add element"
-        open={isModalOpen}
-        onCancel={handleCancel}
+        open={isModalOpenAddElement}
+        onCancel={handleCancelAddElement}
         footer={null}
         width={1000}
         destroyOnClose
       >
-        <AddElementForm onSubmit={onSubmit} onCancel={handleCancel} />
+        <AddElementForm
+          onSubmit={onSubmitAddElement}
+          onCancel={handleCancelAddElement}
+        />
+      </Modal>
+
+      <Modal
+        title="Edit element"
+        open={modalEditElement.isOpen}
+        onCancel={handleCancelEditElement}
+        footer={null}
+        width={1000}
+        destroyOnClose
+      >
+        {modalEditElement.data ? (
+          <EditElementForm
+            onSubmit={() => {}}
+            data={modalEditElement.data}
+            onCancel={handleCancelEditElement}
+          />
+        ) : null}
       </Modal>
     </>
   );
