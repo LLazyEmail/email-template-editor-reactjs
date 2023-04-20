@@ -43,4 +43,4 @@ export const updateElement = (data: UpdateElement) =>
   axios.put(`${API_URL}/element`, data).then((res) => res.data);
 
 export const deleteElement = ({ key }: DeleteElement) =>
-  axios.delete(`${API_URL}/element/${key}`).then((res) => res.data);
+  axios.delete(`${API_URL}/delete-element/${key}`).then((res) => res.data);

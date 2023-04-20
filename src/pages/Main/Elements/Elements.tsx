@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Button, List, Modal, Typography } from "antd";
-import { addElement, getAllElements, updateElement } from "../../../api/main";
+import {
+  addElement,
+  deleteElement,
+  getAllElements,
+  updateElement,
+} from "../../../api/main";
 import { Element } from "../../../api/main.types";
 import AddElementForm from "./AddElementForm/AddElementForm";
 import { ModalState } from "./EditElementForm/EditElementForm.types";
@@ -65,6 +70,14 @@ const Elements = () => {
     setModalEditElement({ isOpen: false, data: null });
   };
 
+  const onDeleteElement = (item: Element) => {
+    deleteElement({
+      key: item.key,
+    }).then(() => {
+      getElements();
+    });
+  };
+
   return (
     <>
       <Typography.Title level={3}>Elements</Typography.Title>
@@ -82,6 +95,9 @@ const Elements = () => {
               actions={[
                 <Button onClick={() => onShowModalEditElement(item)}>
                   edit
+                </Button>,
+                <Button danger onClick={() => onDeleteElement(item)}>
+                  Delete
                 </Button>,
               ]}
             >
