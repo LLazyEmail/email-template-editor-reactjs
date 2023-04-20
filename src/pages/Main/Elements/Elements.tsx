@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Button, List, Modal, Typography } from "antd";
-import { addElement, getAllElements } from "../../../api/main";
+import { addElement, getAllElements, updateElement } from "../../../api/main";
 import { Element } from "../../../api/main.types";
 import AddElementForm from "./AddElementForm/AddElementForm";
 import { ModalState } from "./EditElementForm/EditElementForm.types";
@@ -33,8 +33,6 @@ const Elements = () => {
   };
 
   const onSubmitAddElement = (values: any) => {
-    console.log("call");
-
     addElement({
       key: new Date().toISOString() + "1",
       value: values.value,
@@ -42,6 +40,17 @@ const Elements = () => {
     }).then(() => {
       setIsModalOpenAddElement(false);
       getElements();
+    });
+  };
+
+  const onSubmitEditElement = (values: any) => {
+    updateElement({
+      value: values.value,
+      key: values.key,
+      title: values.title,
+    }).then(() => {
+      getElements();
+      setModalEditElement({ isOpen: false, data: null });
     });
   };
 
@@ -68,8 +77,6 @@ const Elements = () => {
         bordered
         dataSource={elements}
         renderItem={(item) => {
-          console.log("item", item);
-
           return (
             <List.Item
               actions={[
@@ -108,7 +115,7 @@ const Elements = () => {
       >
         {modalEditElement.data ? (
           <EditElementForm
-            onSubmit={() => {}}
+            onSubmit={onSubmitEditElement}
             data={modalEditElement.data}
             onCancel={handleCancelEditElement}
           />
