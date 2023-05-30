@@ -5,6 +5,16 @@ docker build -t email-template-editor-reactjs-v-0-0-1 .
 docker run -dp 9001:9001 email-template-editor-reactjs-v-0-0-1
 ```
 
+
+### Running in docker 
+
+```
+docker run -dp 3000:3000 \
+    -w /app --mount type=bind,src="$(pwd)",target=/app \
+    node:16-alpine \
+    sh -c "npm install && npm run start"
+```
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
