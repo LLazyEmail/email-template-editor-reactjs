@@ -1,4 +1,4 @@
-import { Button, Modal } from "antd";
+import { Button, Modal, Typography } from "antd";
 import React, { useEffect, useState } from "react";
 import { saveTree, getTree, generate } from "../../api/main";
 import { SaveTree } from "../../api/main.types";
@@ -6,10 +6,12 @@ import TemplateTree from "./TemplateTree/TemplateTree";
 import { TemplateTree as TemplateTreeType } from "../../types";
 import AddRootElementForm from "./AddRootElementForm/AddRootElementForm";
 import Elements from "./Elements/Elements";
+import "./Main.css";
 
 const Home = () => {
   const [templateTree, setTemplateTree] = useState<TemplateTreeType[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [generatedTemplateLink, setGeneratedTemplateLink] = useState("");
 
   console.log("templateTree", templateTree);
 
@@ -24,7 +26,9 @@ const Home = () => {
   }, []);
 
   const onHandleGenerate = () => {
-    generate();
+    generate().then((link) => {
+      setGeneratedTemplateLink(link);
+    });
   };
 
   const showModal = () => {
@@ -47,8 +51,12 @@ const Home = () => {
     setIsModalOpen(false);
   };
 
+  const onOpenLink = () => {
+    window.open(generatedTemplateLink, "_blank")?.focus();
+  };
+
   return (
-    <>
+    <div className="container">
       <div>
         <Button
           disabled={Boolean(templateTree.length)}
@@ -60,6 +68,9 @@ const Home = () => {
         <Button onClick={onHandleGenerate} type="primary">
           Generate
         </Button>
+        <Typography.Link onClick={onOpenLink}>
+          {generatedTemplateLink}
+        </Typography.Link>
       </div>
       <Modal
         title="Add root element"
@@ -76,7 +87,7 @@ const Home = () => {
       </div>
 
       <Elements />
-    </>
+    </div>
   );
 };
 
