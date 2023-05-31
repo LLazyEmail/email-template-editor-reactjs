@@ -1,4 +1,4 @@
-import { Button, Modal, Typography } from "antd";
+import { Button, Modal, Typography, notification } from "antd";
 import React, { useEffect, useState } from "react";
 import { saveTree, getTree, generate } from "../../api/main";
 import { SaveTree } from "../../api/main.types";
@@ -27,6 +27,7 @@ const Home = () => {
 
   const onHandleGenerate = () => {
     generate().then((link) => {
+      notification.success({ message: "Generated successfully" });
       setGeneratedTemplateLink(link);
     });
   };
