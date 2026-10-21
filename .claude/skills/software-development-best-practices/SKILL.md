@@ -26,7 +26,7 @@ Apply these practices on every code change in this repo. Prefer small, correct, 
 
 ## This repository
 
-- Interactive UI lives under `src/pages/Main` and must be a client component (`"use client"`).
+- Interactive UI lives under `src/editor/Main` and must be a client component (`"use client"`).
 - All HTTP calls go through `src/api/main.ts`. Do not call `axios` from UI files.
 - Tests use Vitest. Mock `src/api/main` so tests never hit the network.
 - Backend default is `http://localhost:9000`. Override with `NEXT_PUBLIC_API_URL`.

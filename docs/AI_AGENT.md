@@ -33,9 +33,9 @@ The editor is a single-page experience:
 |------|------|
 | `app/layout.tsx` | HTML shell, metadata, global CSS imports |
 | `app/page.tsx` | Renders the editor |
-| `src/pages/Main/Main.tsx` | Top-level state and actions |
-| `src/pages/Main/TemplateTree/TemplateTree.tsx` | Tree UI + add/edit/delete node modals |
-| `src/pages/Main/Elements/Elements.tsx` | Element library UI |
+| `src/editor/Main/Main.tsx` | Top-level state and actions |
+| `src/editor/Main/TemplateTree/TemplateTree.tsx` | Tree UI + add/edit/delete node modals |
+| `src/editor/Main/Elements/Elements.tsx` | Element library UI |
 | `src/api/main.ts` | All HTTP calls |
 | `src/api/main.types.ts` | Shared request types |
 | `src/types/index.ts` | `TemplateTree` type |
@@ -46,7 +46,7 @@ The editor is a single-page experience:
 
 - **Small PRs.** One concern per pull request.
 - **Human-readable PR body.** What changed, why, and how to verify.
-- **Client components.** Any new interactive component under `src/pages/Main` needs `"use client"`.
+- **Client components.** Any new interactive component under `src/editor/Main` needs `"use client"`.
 - **Tests.** Prefer Vitest. Mock the API module. Assert on user-visible text or behavior.
 - **No network in unit tests.** Always mock `src/api/main`.
 - **Environment.** Use `NEXT_PUBLIC_API_URL` for the backend base URL when it needs to differ from the default.

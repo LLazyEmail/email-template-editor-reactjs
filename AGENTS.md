@@ -33,7 +33,7 @@ src/
   api/
     main.ts                   # Axios API client
     main.types.ts             # Request/response types
-  pages/Main/                 # Editor UI (client components)
+  editor/Main/                 # Editor UI (client components)
     Main.tsx                  # Root editor screen
     Elements/                 # Element list + add/edit modals
     TemplateTree/             # Tree view + context-menu actions
@@ -58,7 +58,7 @@ tsconfig.json                 # Paths: @/* → ./src/*
 - Anything that uses hooks, Ant Design, `window`, or browser APIs must be a **client component**.
 - Add `"use client";` at the top of the file.
 - Currently marked client: `Main.tsx`, `Elements.tsx`, `TemplateTree.tsx`.
-- New interactive UI under `src/pages/Main/**` should also be client components.
+- New interactive UI under `src/editor/Main/**` should also be client components.
 
 ### API client (`src/api/main.ts`)
 - Default backend: `http://localhost:9000`.
@@ -96,7 +96,7 @@ tsconfig.json                 # Paths: @/* → ./src/*
 ## Common tasks
 
 ### Add a new UI section
-1. Create a component under `src/pages/Main/` (or a subfolder).
+1. Create a component under `src/editor/Main/` (or a subfolder).
 2. Add `"use client";` if it uses hooks/state/antd.
 3. Import and render it from `Main.tsx`.
 4. Add or update a Vitest smoke/interaction test if the change is user-facing.
