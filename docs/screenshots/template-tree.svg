@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="420" viewBox="0 0 720 420" role="img" aria-label="Template tree with context menu">
+  <rect width="720" height="420" fill="#f5f7fa"/>
+  <rect x="20" y="20" width="680" height="380" rx="12" fill="#ffffff" stroke="#e5e7eb"/>
+  <text x="44" y="60" font-family="system-ui,Segoe UI,sans-serif" font-size="18" font-weight="700" fill="#111827">Template tree</text>
+  <text x="44" y="88" font-family="system-ui,Segoe UI,sans-serif" font-size="13" fill="#6b7280">Right-click a node to add, edit, or delete</text>
+  <text x="56" y="140" font-family="system-ui,Segoe UI,sans-serif" font-size="15" fill="#111827">root</text>
+  <text x="80" y="176" font-family="system-ui,Segoe UI,sans-serif" font-size="15" fill="#111827">header</text>
+  <text x="104" y="212" font-family="system-ui,Segoe UI,sans-serif" font-size="15" fill="#4b5563">logo</text>
+  <text x="80" y="248" font-family="system-ui,Segoe UI,sans-serif" font-size="15" fill="#111827">body</text>
+  <text x="104" y="284" font-family="system-ui,Segoe UI,sans-serif" font-size="15" fill="#4b5563">cta-button</text>
+  <text x="80" y="320" font-family="system-ui,Segoe UI,sans-serif" font-size="15" fill="#111827">footer</text>
+  <rect x="280" y="190" width="160" height="120" rx="6" fill="#ffffff" stroke="#d1d5db"/>
+  <text x="300" y="220" font-family="system-ui,Segoe UI,sans-serif" font-size="14" fill="#111827">Add</text>
+  <text x="300" y="250" font-family="system-ui,Segoe UI,sans-serif" font-size="14" fill="#111827">Edit</text>
+  <text x="300" y="280" font-family="system-ui,Segoe UI,sans-serif" font-size="14" fill="#b91c1c">Delete</text>
+</svg>
