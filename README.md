@@ -126,7 +126,7 @@ docker run -p 3000:3000 email-template-editor
 app/                    Next.js App Router (layout, page)
 src/
   api/                  Axios client and types
-  pages/Main/           Editor UI (tree, elements, forms)
+  editor/Main/           Editor UI (tree, elements, forms)
   types/                Shared types
 AGENTS.md               Guide for AI coding agents
 docs/AI_AGENT.md        Extended agent reference
