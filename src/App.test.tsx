@@ -4,7 +4,7 @@ import App from './App';
 
 // Mock API calls made by Main on mount so the test does not hit the network
 jest.mock('./api/main', () => ({
-  getTree: jest.fn(() => Promise.resolve([]),
+  getTree: jest.fn(() => Promise.resolve([])),
   generate: jest.fn(() => Promise.resolve('')),
   saveTree: jest.fn(() => Promise.resolve({})),
 }));
