@@ -10,10 +10,17 @@ import {
   DeleteElement,
 } from "./main.types";
 
-export const API_URL =
-  process.env.NODE_ENV === "development"
-    ? "http://localhost:9000"
-    : `${document.location.protocol}//${document.location.hostname}:9000`;
+function getApiUrl(): string {
+  if (typeof window === "undefined") {
+    return process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000";
+  }
+  if (process.env.NODE_ENV === "development") {
+    return "http://localhost:9000";
+  }
+  return `${window.location.protocol}//${window.location.hostname}:9000`;
+}
+
+export const API_URL = getApiUrl();
 
 export const generate = () =>
   axios.post<string>(`${API_URL}/generate`).then((res) => res.data);
