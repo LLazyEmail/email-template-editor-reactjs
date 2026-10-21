@@ -1,3 +1,5 @@
+"use client";
+
 import { Dropdown, Menu, MenuProps, Tree, Modal, notification } from "antd";
 // import type { DataNode, TreeProps } from "antd/es/tree";
 import React, { useState } from "react";
