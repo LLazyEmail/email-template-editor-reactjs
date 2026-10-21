@@ -1,3 +1,5 @@
+"use client";
+
 import { Button, Modal, Typography, notification } from "antd";
 import React, { useEffect, useState } from "react";
 import { saveTree, getTree, generate } from "../../api/main";

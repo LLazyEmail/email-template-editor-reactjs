@@ -1,10 +1,13 @@
 # syntax=docker/dockerfile:1
 
-FROM node:16-alpine
+FROM node:20-alpine
 WORKDIR /app
-COPY package.json package-lock.json ./
+
+COPY package.json package-lock.json* ./
 RUN npm install
+
 COPY . .
 RUN npm run build
-CMD ["node", "./server.js"]
-EXPOSE 9001
+
+EXPOSE 3000
+CMD ["npm", "start"]
