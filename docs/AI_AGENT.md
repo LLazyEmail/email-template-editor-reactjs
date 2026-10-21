@@ -39,6 +39,8 @@ The editor is a single-page experience:
 | `src/api/main.ts` | All HTTP calls |
 | `src/api/main.types.ts` | Shared request types |
 | `src/types/index.ts` | `TemplateTree` type |
+| `AGENTS.md` | Agent entry point |
+| `.claude/skills/` | Claude skills, including software-development best practices |
 
 ## Conventions agents should follow
 
@@ -48,6 +50,7 @@ The editor is a single-page experience:
 - **Tests.** Prefer Vitest. Mock the API module. Assert on user-visible text or behavior.
 - **No network in unit tests.** Always mock `src/api/main`.
 - **Environment.** Use `NEXT_PUBLIC_API_URL` for the backend base URL when it needs to differ from the default.
+- **Best practices.** Follow `.claude/skills/software-development-best-practices/SKILL.md` when writing or reviewing code.
 
 ## Testing notes
 
@@ -63,14 +66,17 @@ vi.mock("./api/main", () => ({
 Run once: `npm test`  
 Watch mode: `npm run test:watch`
 
-## Migration status
+## Claude skills
 
-- **PR #15** migrates the project from Create React App to Next.js + Vitest.
-- Until it is merged, the default branch still uses CRA (`react-scripts`).
-- After merge, ignore CRA-specific patterns (eject, `react-scripts`, Jest config in `package.json`).
+| Skill | Path | When to use |
+| --- | --- | --- |
+| Software development best practices | `.claude/skills/software-development-best-practices/` | Implementing, fixing, refactoring, reviewing, or opening PRs |
+
+The skill includes a pre-submit checklist in `references/checklist.md`.
 
 ## When in doubt
 
 1. Read `AGENTS.md` and the file you are about to edit.
 2. Match existing naming and Ant Design usage.
 3. Keep changes focused and leave a clear PR description.
+4. Run the checklist in the Claude skill before submitting.

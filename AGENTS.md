@@ -3,11 +3,18 @@
 > **Audience:** Other AI coding agents (Cursor, Copilot, Claude, Grok, etc.) working on this repository.
 > **Purpose:** Give agents enough context to make safe, consistent changes without rediscovering the project layout or conventions.
 
+## Read this first
+
+1. This file — layout and rules.
+2. [`docs/AI_AGENT.md`](docs/AI_AGENT.md) — data flow and file roles.
+3. [`.claude/skills/software-development-best-practices/SKILL.md`](.claude/skills/software-development-best-practices/SKILL.md) — how to change code well.
+4. [`README.md`](README.md) — product goal, problems solved, charts, screenshots.
+
 ## Project overview
 
-This is a **visual email template editor** built with React. Users build a tree of email elements, edit them, and generate HTML templates. The frontend talks to a separate backend API (default port `9000`).
+This is a **visual email template editor**. Users build a tree of email elements, edit them, and generate HTML templates. The frontend talks to a separate backend API (default port `9000`).
 
-**Current stack (after migration PR #15):**
+**Stack:**
 - Next.js 14 (App Router)
 - React 18
 - Ant Design 5
@@ -15,20 +22,18 @@ This is a **visual email template editor** built with React. Users build a tree 
 - TypeScript
 - Vitest + Testing Library for tests
 
-**Note:** The default branch may still be on Create React App until PR #15 is merged. Prefer working on the migration branch or after merge.
-
 ## Directory map
 
 ```
 app/                          # Next.js App Router entry
-  layout.tsx                  # Root layout (imports Ant Design reset + global CSS)
+  layout.tsx                  # Root layout (Ant Design reset + global CSS)
   page.tsx                    # Home page → renders <Main />
 
 src/
   api/
-    main.ts                   # Axios API client (getTree, saveTree, generate, elements CRUD)
+    main.ts                   # Axios API client
     main.types.ts             # Request/response types
-  pages/Main/                 # Main editor UI (client components)
+  pages/Main/                 # Editor UI (client components)
     Main.tsx                  # Root editor screen
     Elements/                 # Element list + add/edit modals
     TemplateTree/             # Tree view + context-menu actions
@@ -37,6 +42,9 @@ src/
   App.tsx                     # Legacy app root (still used by tests)
   index.css                   # Global styles
 
+.claude/skills/               # Claude skills (best practices)
+docs/AI_AGENT.md              # Extended agent reference
+docs/screenshots/             # UI illustrations for the README
 .github/workflows/ci.yml      # CI: Node 18/20/22, test + build
 Dockerfile                    # Node 20, next build + next start (port 3000)
 vitest.config.ts              # Vitest config (jsdom, setup file, path alias)
@@ -57,6 +65,7 @@ tsconfig.json                 # Paths: @/* → ./src/*
 - Override with `NEXT_PUBLIC_API_URL`.
 - The URL helper avoids touching `document` during SSR.
 - Do not import this module from pure server components without care.
+- Do not call `axios` directly from UI components.
 
 ### Styling
 - Ant Design 5 (`antd`). Reset CSS is imported in `app/layout.tsx`.
@@ -74,6 +83,15 @@ tsconfig.json                 # Paths: @/* → ./src/*
 - Strict mode is on.
 - Path alias `@/*` maps to `src/*`.
 - Prefer explicit types from `src/api/main.types.ts` and `src/types`.
+
+## Best practices (short)
+
+- Small, focused changes. One concern per PR.
+- Read the file you are about to edit.
+- Keep public behavior covered by a test.
+- Surface failures to the user; do not swallow errors.
+- Match existing naming and patterns.
+- Full checklist: `.claude/skills/software-development-best-practices/references/checklist.md`.
 
 ## Common tasks
 
@@ -112,16 +130,17 @@ docker run -p 3000:3000 email-template-editor
 
 ## Things to avoid
 
-- Do not reintroduce Create React App (`react-scripts`) once the migration is merged.
+- Do not reintroduce Create React App (`react-scripts`).
 - Do not use `document` or `window` at module scope in files that may be imported during SSR.
 - Do not call the real backend from unit tests.
 - Avoid large drive-by refactors in the same PR as a feature or bug fix.
 - Prefer small, focused commits with clear messages.
+- Do not commit secrets or local `.env` files.
 
 ## Suggested workflow for agents
 
 1. Read this file and the relevant source files before editing.
-2. Create a feature branch from `master` (or the current migration branch if not yet merged).
+2. Create a feature branch from `master`.
 3. Make the change, keeping client/server boundaries in mind.
 4. Update or add a Vitest test when behavior changes.
 5. Open a PR with a short human summary of what changed and why.
@@ -134,4 +153,4 @@ docker run -p 3000:3000 email-template-editor
   - `POST /save-template-tree`
   - `POST /generate`
   - Element CRUD under `/all-elements`, `/add-element`, `/element`, `/delete-element/:key`
-- Migration context: PR #15 (Create React App → Next.js + Vitest).
+- Product description, charts, and screenshots: `README.md`.

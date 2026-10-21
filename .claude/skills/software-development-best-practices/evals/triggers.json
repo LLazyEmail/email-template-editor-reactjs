@@ -1,0 +1,9 @@
+{
+  "skill": "software-development-best-practices",
+  "test_cases": [
+    {"input": "implement this feature", "should_trigger": true},
+    {"input": "fix the bug in the tree editor", "should_trigger": true},
+    {"input": "review this pull request", "should_trigger": true},
+    {"input": "what is the weather today", "should_trigger": false}
+  ]
+}
