@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540" role="img" aria-label="Email template editor overview">
+  <rect width="960" height="540" fill="#f5f7fa"/>
+  <rect x="24" y="24" width="912" height="492" rx="12" fill="#ffffff" stroke="#e5e7eb"/>
+  <text x="48" y="64" font-family="system-ui,Segoe UI,sans-serif" font-size="22" font-weight="700" fill="#111827">Email Template Editor</text>
+  <text x="48" y="92" font-family="system-ui,Segoe UI,sans-serif" font-size="14" fill="#6b7280">Build a tree of blocks, then generate HTML</text>
+  <rect x="48" y="116" width="160" height="36" rx="6" fill="#1677ff"/>
+  <text x="128" y="139" text-anchor="middle" font-family="system-ui,Segoe UI,sans-serif" font-size="14" fill="#ffffff">Add root element</text>
+  <rect x="220" y="116" width="110" height="36" rx="6" fill="#1677ff"/>
+  <text x="275" y="139" text-anchor="middle" font-family="system-ui,Segoe UI,sans-serif" font-size="14" fill="#ffffff">Generate</text>
+  <text x="348" y="139" font-family="system-ui,Segoe UI,sans-serif" font-size="14" fill="#1677ff">https://cdn.example.com/template.html</text>
+  <rect x="48" y="176" width="540" height="300" rx="8" fill="#fafafa" stroke="#e5e7eb"/>
+  <text x="68" y="208" font-family="system-ui,Segoe UI,sans-serif" font-size="13" fill="#374151">Template tree</text>
+  <text x="84" y="244" font-family="system-ui,Segoe UI,sans-serif" font-size="14" fill="#111827">root</text>
+  <text x="104" y="272" font-family="system-ui,Segoe UI,sans-serif" font-size="14" fill="#111827">header</text>
+  <text x="124" y="300" font-family="system-ui,Segoe UI,sans-serif" font-size="14" fill="#4b5563">logo</text>
+  <text x="124" y="328" font-family="system-ui,Segoe UI,sans-serif" font-size="14" fill="#4b5563">title</text>
+  <text x="104" y="356" font-family="system-ui,Segoe UI,sans-serif" font-size="14" fill="#111827">body</text>
+  <text x="124" y="384" font-family="system-ui,Segoe UI,sans-serif" font-size="14" fill="#4b5563">cta-button</text>
+  <text x="104" y="412" font-family="system-ui,Segoe UI,sans-serif" font-size="14" fill="#111827">footer</text>
+  <rect x="608" y="176" width="300" height="300" rx="8" fill="#ffffff" stroke="#e5e7eb"/>
+  <text x="628" y="208" font-family="system-ui,Segoe UI,sans-serif" font-size="16" font-weight="600" fill="#111827">Elements</text>
+  <rect x="628" y="224" width="120" height="28" rx="4" fill="#1677ff"/>
+  <text x="688" y="243" text-anchor="middle" font-family="system-ui,Segoe UI,sans-serif" font-size="12" fill="#ffffff">Add element</text>
+  <rect x="628" y="268" width="260" height="40" rx="4" fill="#f9fafb" stroke="#e5e7eb"/>
+  <text x="644" y="293" font-family="system-ui,Segoe UI,sans-serif" font-size="14" fill="#111827">Header block</text>
+  <rect x="628" y="318" width="260" height="40" rx="4" fill="#f9fafb" stroke="#e5e7eb"/>
+  <text x="644" y="343" font-family="system-ui,Segoe UI,sans-serif" font-size="14" fill="#111827">CTA button</text>
+  <rect x="628" y="368" width="260" height="40" rx="4" fill="#f9fafb" stroke="#e5e7eb"/>
+  <text x="644" y="393" font-family="system-ui,Segoe UI,sans-serif" font-size="14" fill="#111827">Footer</text>
+</svg>

@@ -1,0 +1,20 @@
+{
+  "skill": "software-development-best-practices",
+  "test_cases": [
+    {
+      "name": "feature_keeps_scope",
+      "input": "add a delete confirmation to the elements list",
+      "assertions": ["changes only the elements list and related test", "does not rewrite unrelated components"]
+    },
+    {
+      "name": "client_boundary",
+      "input": "add a new interactive form under the editor",
+      "assertions": ["adds use client directive", "uses Ant Design components"]
+    },
+    {
+      "name": "test_with_mock",
+      "input": "write a test for generate",
+      "assertions": ["mocks src/api/main", "does not call the real backend"]
+    }
+  ]
+}
