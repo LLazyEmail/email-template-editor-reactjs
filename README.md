@@ -22,6 +22,16 @@ Give non-specialists (and developers) a reliable way to assemble email templates
 
 ## Screenshots
 
+### Editor in action
+
+A template tree built from nested elements, with the **Generate** link to the rendered HTML and the Elements library below.
+
+![Template tree and Elements library](docs/screenshots/app-tree-and-elements.png)
+
+Editing an element: the title is the placeholder used in the tree (`{{twoBlocks}}`), the value is the HTML it expands to.
+
+![Edit element modal](docs/screenshots/app-edit-element.png)
+
 ### Template tree
 
 Right-click a node to add a child, edit the current node, or delete it.
