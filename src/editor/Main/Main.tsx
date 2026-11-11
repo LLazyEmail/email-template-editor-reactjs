@@ -1,19 +1,26 @@
 "use client";
 
-import { Button, Modal, Typography, notification } from "antd";
+import { Button, Drawer, Modal, Typography, notification } from "antd";
 import React, { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
 import { saveTree, getTree, generate } from "../../api/main";
 import { SaveTree } from "../../api/main.types";
 import TemplateTree from "./TemplateTree/TemplateTree";
 import { TemplateTree as TemplateTreeType } from "../../types";
 import AddRootElementForm from "./AddRootElementForm/AddRootElementForm";
 import Elements from "./Elements/Elements";
+import type { ChangedResource } from "../../ai/tools";
 import "./Main.css";
+
+// Loaded on first open so the AI SDK is not part of the initial page bundle.
+const ChatPanel = dynamic(() => import("./Chat/ChatPanel"), { ssr: false });
 
 const Home = () => {
   const [templateTree, setTemplateTree] = useState<TemplateTreeType[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [generatedTemplateLink, setGeneratedTemplateLink] = useState("");
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [elementsVersion, setElementsVersion] = useState(0);
 
   console.log("templateTree", templateTree);
 
@@ -54,6 +61,11 @@ const Home = () => {
     setIsModalOpen(false);
   };
 
+  const onAssistantChange = (resource: ChangedResource) => {
+    if (resource === "tree") getTreeData();
+    else setElementsVersion((version) => version + 1);
+  };
+
   const onOpenLink = () => {
     window.open(generatedTemplateLink, "_blank")?.focus();
   };
@@ -71,6 +83,7 @@ const Home = () => {
         <Button onClick={onHandleGenerate} type="primary">
           Generate
         </Button>
+        <Button onClick={() => setIsChatOpen(true)}>AI assistant</Button>
         <Typography.Link onClick={onOpenLink}>
           {generatedTemplateLink}
         </Typography.Link>
@@ -89,7 +102,17 @@ const Home = () => {
         <TemplateTree treeData={templateTree} refresh={getTreeData} />
       </div>
 
-      <Elements />
+      <Elements refreshKey={elementsVersion} />
+
+      <Drawer
+        title="AI assistant"
+        open={isChatOpen}
+        onClose={() => setIsChatOpen(false)}
+        width={440}
+        mask={false}
+      >
+        <ChatPanel onChange={onAssistantChange} />
+      </Drawer>
     </div>
   );
 };

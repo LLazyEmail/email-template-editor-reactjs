@@ -80,3 +80,41 @@ The skill includes a pre-submit checklist in `references/checklist.md`.
 2. Match existing naming and Ant Design usage.
 3. Keep changes focused and leave a clear PR description.
 4. Run the checklist in the Claude skill before submitting.
+
+## AI assistant (`src/ai/`, `src/editor/Main/Chat/`)
+
+A chat in a drawer that changes the template through tools. It calls the LLM **directly from the browser** with the user's own key (BYOK) via the [Vercel AI SDK](https://ai-sdk.dev). The backend is not involved and never receives the key.
+
+```
+ChatPanel ──► runAgent (generateText, max 8 steps) ──► provider (Gemini / OpenAI / Anthropic)
+                 │
+                 └─ tools ──► src/api/main.ts ──► backend
+```
+
+| File | Role |
+|------|------|
+| `src/ai/providers.ts` | Provider list, default models, `createModel()` |
+| `src/ai/keyStore.ts` | Key storage: `memory` / `session` (default) / `local`; non-secret settings |
+| `src/ai/tools.ts` | Tools the model can call; each wraps a function from `src/api/main.ts` |
+| `src/ai/agent.ts` | System prompt and `runAgent()` |
+| `src/editor/Main/TemplateTree/nodeBuilders.ts` | Node construction shared by the tree UI and the tools |
+| `src/editor/Main/Chat/ChatPanel.tsx` | Chat UI, delete confirmation, stop button |
+| `src/editor/Main/Chat/AiSettingsModal.tsx` | Provider, model, key, and storage choice |
+
+Rules when changing it:
+
+- **Render model output as text only.** No `dangerouslySetInnerHTML`, no markdown-to-HTML. The model can echo node HTML, which is untrusted, and an XSS would expose the user's key.
+- **New tools** go in `src/ai/tools.ts` through `run()`, so errors reach the model as `{ ok: false, error }` and the chat log. Call `onChange` after a successful change. Destructive tools must call `confirm()` first.
+- **Placeholder slots.** Generation fills the first occurrence of a child's title in the parent's HTML, so each placeholder occurrence holds one child. `add_*_node` refuses a missing or taken slot and tells the model how to fix it: insert a new placeholder with `edit_node_text`, then add the node. `get_tree` reports `freePlaceholders` and `notRendered`. Large nodes (the root is ~180 KB) are edited with `edit_node_text` and read as snippets.
+- **Never send the key to our backend** or log it. `e2e/ai-assistant.spec.ts` checks this.
+- **Keep `ChatPanel` lazy-loaded** (`next/dynamic` in `Main.tsx`) so the AI SDK stays out of the initial bundle.
+- **Tests:** mock `src/api/main`. Use `MockLanguageModelV4` from `ai/test` for agent tests, and mock Gemini with `page.route` in e2e.
+
+### Key storage and threat model
+
+No browser storage protects against XSS or malicious browser extensions, so the defense is keeping the page free of XSS. The key is never stored on the server: the backend has no auth, so a stored key would be usable by anyone who can reach it. Server-side key storage only makes sense once the backend has accounts and auth.
+
+Planned follow-ups:
+
+- a CSP header with `connect-src` limited to the API and provider hosts;
+- an optional `POST /ai/chat` proxy in the backend, if the editor becomes a public multi-user service.

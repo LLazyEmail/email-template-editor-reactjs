@@ -1,0 +1,5 @@
+/* Masks the API key without type="password", so browsers don't treat the form as a login form. */
+.ai-api-key--masked input,
+input.ai-api-key--masked {
+  -webkit-text-security: disc;
+}
