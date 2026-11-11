@@ -4,11 +4,11 @@ Issue: #9
 
 ## Goal
 
-Give every contributor the same Node 20 environment for the Next.js editor, without a local Node install.
+Give every contributor the same Node 22 environment for the Next.js editor, without a local Node install.
 
 ## What was added
 
-- `.devcontainer/devcontainer.json` — Dev Container config based on the official Node 20 image.
+- `.devcontainer/devcontainer.json` — Dev Container config based on the official Node 22 image (`typescript-node:5-22-bookworm`).
 - Forwards ports `3000` (Next.js) and `9000` (backend API).
 - Runs `npm install` after the container is created.
 - Suggests ESLint, Prettier, and Playwright extensions.
@@ -29,4 +29,4 @@ Open http://localhost:3000.
 ## Notes
 
 - The frontend still expects a backend on port 9000. Override with `NEXT_PUBLIC_API_URL` if needed.
-- Node version matches CI (Node 20).
+- Node version matches CI (Node 22).
