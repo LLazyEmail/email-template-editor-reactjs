@@ -21,11 +21,11 @@ The editor is a single-page experience:
 
 ## Data flow
 
-1. **Load tree:** `Main` calls `getTree()` → `GET /template-tree`.
-2. **Add root:** User submits `AddRootElementForm` → `saveTree({ treeData })` → `POST /save-template-tree`.
-3. **Edit tree nodes:** Context menu in `TemplateTree` → `updateTreeNode` / `addTreeNode` / `deleteTreeNode`.
-4. **Manage elements:** `Elements` list → `getAllElements` / `addElement` / `updateElement` / `deleteElement`.
-5. **Generate:** Button calls `generate()` → `POST /generate` → returns a link that can be opened.
+1. **Load tree:** `Main` calls `getTree()` → `GET /tree`.
+2. **Add root:** User submits `AddRootElementForm` → `saveTree({ treeData })` → `PUT /tree`.
+3. **Edit tree nodes:** Context menu in `TemplateTree` → `updateTreeNode` / `addTreeNode` / `deleteTreeNode` (`PATCH` / `POST` / `DELETE` under `/tree/nodes`).
+4. **Manage elements:** `Elements` list → `getAllElements` / `addElement` / `updateElement` / `deleteElement` (REST under `/elements`).
+5. **Generate:** Button calls `generate()` → `POST /generate` → `{ url }`; `generate()` resolves to the link that can be opened.
 
 ## File responsibilities
 
