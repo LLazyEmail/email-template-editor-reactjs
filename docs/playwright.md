@@ -15,7 +15,7 @@ Run the editor in a real browser and check the main flows, without depending on 
 
 ## How the tests work
 
-Playwright starts `npm run dev` and opens Chromium. API calls to `/template-tree` and `/all-elements` are intercepted and return empty arrays, so the suite does not need the backend on port 9000.
+Playwright starts `npm run dev` and opens Chromium. API calls to `/tree` and `/elements` are intercepted and return empty arrays, so the suite does not need the backend on port 9000.
 
 ## Run locally
 

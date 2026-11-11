@@ -26,7 +26,7 @@ Run: `npm test`
 ## E2E (Playwright)
 
 - Config: `playwright.config.ts`. Specs: `e2e/`.
-- Intercept `/template-tree` and `/all-elements` so tests do not need the backend.
+- Intercept `/tree` and `/elements` so tests do not need the backend.
 - Run: `npm run test:e2e`
 
 ## Checklist

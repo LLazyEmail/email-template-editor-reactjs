@@ -147,9 +147,9 @@ docker run -p 3000:3000 email-template-editor
 
 ## Related
 
-- Backend is a separate service (not in this repo). Frontend expects endpoints such as:
-  - `GET /template-tree`
-  - `POST /save-template-tree`
-  - `POST /generate`
-  - Element CRUD under `/all-elements`, `/add-element`, `/element`, `/delete-element/:key`
+- Backend is a separate service (not in this repo): [email-template-editor-nodejs](https://github.com/LLazyEmail/email-template-editor-nodejs). Frontend expects its REST API:
+  - Tree: `GET /tree`, `PUT /tree`, `POST /tree/nodes`, `PATCH /tree/nodes/:key`, `DELETE /tree/nodes/:key`
+  - Elements: `GET /elements`, `POST /elements`, `PATCH /elements/:key`, `DELETE /elements/:key`
+  - `POST /generate` → `{ url }`
+  - Keys in paths are URL-encoded. Errors are `{ error: { code, message, details?, requestId } }`.
 - Product description, charts, and screenshots: `README.md`.

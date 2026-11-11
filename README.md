@@ -63,13 +63,13 @@ sequenceDiagram
   participant UI as Editor
   participant API as Backend
   U->>UI: Open app
-  UI->>API: GET /template-tree
+  UI->>API: GET /tree
   API-->>UI: Current tree
   U->>UI: Add / edit / delete nodes
   UI->>API: save / update / add / delete
   U->>UI: Generate
   UI->>API: POST /generate
-  API-->>UI: Link to HTML
+  API-->>UI: { url } of generated HTML
   UI-->>U: Open generated template
 ```
 
