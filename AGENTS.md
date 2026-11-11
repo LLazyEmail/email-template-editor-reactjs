@@ -33,11 +33,13 @@ src/
   api/
     main.ts                   # Axios API client
     main.types.ts             # Request/response types
+  ai/                         # AI assistant (no React): providers, tools, agent loop, keyStore
   editor/Main/                 # Editor UI (client components)
     Main.tsx                  # Root editor screen
     Elements/                 # Element list + add/edit modals
     TemplateTree/             # Tree view + context-menu actions
     AddRootElementForm/       # Form to create the root node
+    Chat/                     # AI assistant drawer + settings (lazy-loaded)
   types/                      # Shared types (e.g. TemplateTree)
   App.tsx                     # Legacy app root (still used by tests)
   index.css                   # Global styles

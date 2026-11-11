@@ -13,7 +13,12 @@ import AddElementForm from "./AddElementForm/AddElementForm";
 import { ModalState } from "./EditElementForm/EditElementForm.types";
 import EditElementForm from "./EditElementForm/EditElementForm";
 
-const Elements = () => {
+interface ElementsProps {
+  /** Change this value to reload the list after elements were changed elsewhere (e.g. by the AI assistant). */
+  refreshKey?: number;
+}
+
+const Elements = ({ refreshKey = 0 }: ElementsProps) => {
   const [isModalOpenAddElement, setIsModalOpenAddElement] = useState(false);
   const [modalEditElement, setModalEditElement] = useState<ModalState>({
     isOpen: false,
@@ -29,7 +34,7 @@ const Elements = () => {
 
   useEffect(() => {
     getElements();
-  }, []);
+  }, [refreshKey]);
 
   const handleCancelAddElement = () => {
     setIsModalOpenAddElement(false);

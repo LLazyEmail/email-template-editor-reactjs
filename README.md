@@ -79,6 +79,7 @@ sequenceDiagram
 - Context menu on each node: add, edit, delete
 - Elements library with create, edit, and delete
 - One-click generate that returns a link to the HTML
+- AI assistant that edits the template on request (Gemini, OpenAI or Anthropic, with your own API key)
 - Ant Design UI
 - Talks to a separate backend (default `http://localhost:9000`, override with `NEXT_PUBLIC_API_URL`)
 
@@ -130,13 +131,20 @@ docker build -t email-template-editor .
 docker run -p 3000:3000 email-template-editor
 ```
 
+## AI assistant
+
+Open **AI assistant**, choose a provider (Google Gemini, OpenAI or Anthropic), paste your own API key, and ask for changes in plain language, e.g. "add a heading that says Welcome under the root". The assistant reads the tree and element library, adds, edits or deletes nodes and elements, and can generate the template. It asks before deleting anything.
+
+**Where your key goes.** The key is kept in your browser and sent only to the provider you chose; the editor's backend never sees it. By default it is kept for the current tab (`sessionStorage`). You can also keep it for the current page only, or remember it on the device (`localStorage`), and you can remove it at any time in the assistant settings. Any script running on the page, including browser extensions, could read the key, so use a key with a spending limit and revoke it if in doubt.
+
 ## Project layout
 
 ```
 app/                    Next.js App Router (layout, page)
 src/
   api/                  Axios client and types
-  editor/Main/           Editor UI (tree, elements, forms)
+  ai/                   AI assistant: providers, tools, agent loop, key storage
+  editor/Main/           Editor UI (tree, elements, forms, AI chat)
   types/                Shared types
 AGENTS.md               Guide for AI coding agents
 docs/AI_AGENT.md        Extended agent reference
