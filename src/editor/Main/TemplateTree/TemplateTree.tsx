@@ -14,6 +14,7 @@ import EditElementForm from "./EditElementForm/EditElementForm";
 import { TemplateTree as TemplateTreeNode } from "../../../types";
 import { updateTreeNode, addTreeNode, deleteTreeNode } from "../../../api/main";
 import AddElementForm from "./AddElementForm/AddElementForm";
+import { buildElementNode, buildHtmlNode } from "./nodeBuilders";
 
 const TemplateTree = (props: TemplateTreeProps) => {
   const [modalAddElement, setModalAddElement] = useState<ModalState>({
@@ -84,43 +85,25 @@ const TemplateTree = (props: TemplateTreeProps) => {
     console.log("values", formValues);
     const { currentItemKey, values, element } = formValues;
 
-    if (!formValues.values.children) {
-      notification.error({
-        message: "Error: children of the element not found",
-      });
+    if (values.type === "element" && !element) {
+      notification.error({ message: "Error: element not found" });
 
       return;
     }
 
-    const map = {
-      element: () => ({
-        parentKey: currentItemKey,
-        item: {
-          key: new Date().toISOString() + "000",
-          title: values.title,
-          value: element.value,
-          children: Object.entries(values.children).map(
-            ([key, value], index) => ({
-              key: new Date().toISOString() + `${index}`,
-              title: key,
-              value,
-              children: [],
-            })
-          ),
-        },
-      }),
-      html: () => ({
-        parentKey: currentItemKey,
-        item: {
-          key: new Date().toISOString() + "3",
-          title: values.title,
-          value: values.value ?? "",
-          children: [],
-        },
-      }),
-    };
-
-    const data = map[values.type]?.();
+    const data =
+      values.type === "element"
+        ? buildElementNode({
+            parentKey: currentItemKey,
+            title: values.title,
+            elementValue: element.value,
+            fills: values.children,
+          })
+        : buildHtmlNode({
+            parentKey: currentItemKey,
+            title: values.title,
+            value: values.value ?? "",
+          });
 
     addTreeNode(data).then(() => {
       props.refresh();

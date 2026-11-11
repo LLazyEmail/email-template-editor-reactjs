@@ -3,6 +3,7 @@ import { Button, Form, Input, Select } from "antd";
 import { AddElementFormProps } from "./AddElementForm.types";
 import { getAllElements } from "../../../../api/main";
 import { Element } from "../../../../api/main.types";
+import { extractPlaceholders } from "../nodeBuilders";
 
 const { TextArea } = Input;
 
@@ -14,14 +15,6 @@ const options = [
   { value: "Yiminghe", label: "yiminghe" },
   { value: "disabled", label: "Disabled", disabled: true },
 ];
-
-const getArrayOfReplacement = (str: string) => {
-  const regexp = /{{[A-Za-z0-9]{0,}}}/g;
-  const result = str.match(regexp);
-  console.log("result", result);
-
-  return result ?? [];
-};
 
 const AddElementForm = ({ onCancel, onSubmit, data }: AddElementFormProps) => {
   const [form] = Form.useForm();
@@ -66,7 +59,7 @@ const AddElementForm = ({ onCancel, onSubmit, data }: AddElementFormProps) => {
   const arr = useMemo(() => {
     const foundElement = elements.find((elem) => elem.key === elementKey);
 
-    return foundElement ? getArrayOfReplacement(foundElement.value) : [];
+    return foundElement ? extractPlaceholders(foundElement.value) : [];
   }, [elementKey, elements]);
 
   useEffect(() => {
