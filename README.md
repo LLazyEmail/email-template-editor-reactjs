@@ -135,7 +135,7 @@ docker run -p 3000:3000 email-template-editor
 
 Open **AI assistant**, choose a provider (Google Gemini, OpenAI or Anthropic), paste your own API key, and ask for changes in plain language, e.g. "add a heading that says Welcome under the root". The assistant reads the tree and element library, adds, edits or deletes nodes and elements, and can generate the template. It asks before deleting anything.
 
-**Where your key goes.** The key is kept in your browser and sent only to the provider you chose; the editor's backend never sees it. By default it is kept for the current tab (`sessionStorage`). You can also keep it for the current page only, or remember it on the device (`localStorage`), and you can remove it at any time in the assistant settings. Any script running on the page, including browser extensions, could read the key, so use a key with a spending limit and revoke it if in doubt.
+**Where your key goes.** The key is kept in your browser and sent only to the provider you chose; the editor's backend never sees it. By default it is kept for the current tab (`sessionStorage`). You can also keep it for the current page only, or remember it on the device (`localStorage`), and you can remove it at any time in the assistant settings. Any script running on the page, including browser extensions, could read the key, so use a key with a spending limit and revoke it if in doubt. A Content-Security-Policy blocks injected scripts and lets the page talk only to the editor's backend and the LLM providers.
 
 ## Project layout
 

@@ -13,6 +13,11 @@ test("assistant adds a node with the user's own Gemini key", async ({ page }) =>
   const backendRequests: Request[] = [];
   const geminiKeys: (string | null)[] = [];
   let addedNode: unknown = null;
+  // The whole flow (lazy chat chunk, provider and backend calls) must work under the CSP.
+  const cspViolations: string[] = [];
+  page.on("console", (message) => {
+    if (/Content Security Policy/i.test(message.text())) cspViolations.push(message.text());
+  });
 
   await page.route("**/tree", (route) => {
     backendRequests.push(route.request());
@@ -62,6 +67,7 @@ test("assistant adds a node with the user's own Gemini key", async ({ page }) =>
     item: { title: "{{content}}", value: "<p>Welcome</p>" },
   });
   expect(geminiKeys).toEqual([API_KEY, API_KEY]);
+  expect(cspViolations).toEqual([]);
   // The key goes to the provider only, never to the editor's backend.
   for (const request of backendRequests) {
     expect(JSON.stringify(request.headers())).not.toContain(API_KEY);

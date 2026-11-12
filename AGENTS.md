@@ -28,11 +28,14 @@ This is a **visual email template editor**. Users build a tree of email elements
 app/                          # Next.js App Router entry
   layout.tsx                  # Root layout (Ant Design reset + global CSS)
   page.tsx                    # Home page → renders <Main />
+middleware.ts                 # Per-request nonce Content-Security-Policy
+
 
 src/
   api/
     main.ts                   # Axios API client
     main.types.ts             # Request/response types
+    apiUrl.ts                 # Backend URL resolution (shared with the CSP)
   ai/                         # AI assistant (no React): providers, tools, agent loop, keyStore
   editor/Main/                 # Editor UI (client components)
     Main.tsx                  # Root editor screen
@@ -40,6 +43,7 @@ src/
     TemplateTree/             # Tree view + context-menu actions
     AddRootElementForm/       # Form to create the root node
     Chat/                     # AI assistant drawer + settings (lazy-loaded)
+  security/                   # Content-Security-Policy builder
   types/                      # Shared types (e.g. TemplateTree)
   App.tsx                     # Legacy app root (still used by tests)
   index.css                   # Global styles
@@ -132,6 +136,7 @@ docker run -p 3000:3000 email-template-editor
 ## Things to avoid
 
 - Do not reintroduce Create React App (`react-scripts`).
+- Do not call a new external host from the page without adding it to the CSP (`src/security/contentSecurityPolicy.ts`); the browser will block it. See `docs/AI_AGENT.md`.
 - Do not use `document` or `window` at module scope in files that may be imported during SSR.
 - Do not call the real backend from unit tests.
 - Avoid large drive-by refactors in the same PR as a feature or bug fix.
