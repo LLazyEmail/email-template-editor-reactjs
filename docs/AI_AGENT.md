@@ -114,7 +114,22 @@ Rules when changing it:
 
 No browser storage protects against XSS or malicious browser extensions, so the defense is keeping the page free of XSS. The key is never stored on the server: the backend has no auth, so a stored key would be usable by anyone who can reach it. Server-side key storage only makes sense once the backend has accounts and auth.
 
-Planned follow-ups:
+### Content-Security-Policy
 
-- a CSP header with `connect-src` limited to the API and provider hosts;
-- an optional `POST /ai/chat` proxy in the backend, if the editor becomes a public multi-user service.
+`middleware.ts` sends a CSP on every page, built by `src/security/contentSecurityPolicy.ts`:
+
+- `script-src 'nonce-…' 'strict-dynamic'`: only scripts carrying this request's nonce run, plus what they load (Next.js chunks, the lazy chat panel). Injected inline scripts and `onerror=` handlers are blocked. Dev mode adds `'unsafe-eval'`.
+- `connect-src`: the page may call only itself, the backend and the LLM providers (`src/ai/providerOrigins.ts`). A stolen key can't be sent to another host with `fetch`.
+- Also `object-src 'none'`, `frame-ancestors 'none'`, `base-uri 'self'` and `form-action 'self'`. `style-src` keeps `'unsafe-inline'` because Ant Design injects its styles at runtime.
+
+Consequences when changing code:
+
+- **Pages render per request** (`dynamic = "force-dynamic"` in `app/layout.tsx`), because a prerendered page has no nonce and its scripts would be blocked. Static export (`output: 'export'`) is not possible with this setup.
+- **A new provider** must be added to `src/ai/providerOrigins.ts`; a unit test fails if it is missing.
+- **A new external host** the page calls (an API, CDN or image host) must be added to the policy, or the browser blocks it.
+- **The backend URL** comes from `src/api/apiUrl.ts`, which both the API client and the policy use; change it there only.
+- `e2e/csp.spec.ts` checks the header, that an injected script does not run, and that `fetch` to an unknown host is blocked. `e2e/ai-assistant.spec.ts` fails on any CSP violation during the chat flow.
+
+CSP can't stop top-level navigation, so it narrows exfiltration rather than ruling it out. Rendering untrusted text as text stays the first line of defense.
+
+Planned follow-up: an optional `POST /ai/chat` proxy in the backend, if the editor becomes a public multi-user service.

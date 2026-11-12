@@ -9,18 +9,13 @@ import {
   UpdateTreeNode,
   DeleteElement,
 } from "./main.types";
+import { resolveApiUrl } from "./apiUrl";
 
-function getApiUrl(): string {
-  if (typeof window === "undefined") {
-    return process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000";
-  }
-  if (process.env.NODE_ENV === "development") {
-    return "http://localhost:9000";
-  }
-  return `${window.location.protocol}//${window.location.hostname}:9000`;
-}
-
-export const API_URL = getApiUrl();
+export const API_URL = resolveApiUrl({
+  location: typeof window === "undefined" ? undefined : window.location,
+  nodeEnv: process.env.NODE_ENV,
+  envUrl: process.env.NEXT_PUBLIC_API_URL,
+});
 
 const enc = encodeURIComponent;
 
