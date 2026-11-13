@@ -2,8 +2,17 @@ export interface GenerateResponse {
   url: string;
 }
 
+/** A template tree node as stored by the backend. */
+export interface TreeNodeData {
+  key: string;
+  title: string;
+  value: string;
+  children?: TreeNodeData[];
+}
+
+/** PUT /tree replaces the whole tree in one atomic write. */
 export interface SaveTree {
-  treeData: [{ title: string; key: string; value: string; children: [] }];
+  treeData: TreeNodeData[];
 }
 
 export interface UpdateTreeNode {

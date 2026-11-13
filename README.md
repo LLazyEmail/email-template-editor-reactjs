@@ -82,6 +82,7 @@ sequenceDiagram
 - Elements library with create, edit, and delete
 - One-click generate that returns a link to the HTML
 - AI assistant that edits the template on request (Gemini, OpenAI or Anthropic, with your own API key)
+- Build an issue from pasted text: the assistant lays the content out in blocks from your element library
 - Ant Design UI
 - Talks to a separate backend (default `http://localhost:9000`, override with `NEXT_PUBLIC_API_URL`)
 
@@ -136,6 +137,8 @@ docker run -p 3000:3000 email-template-editor
 ## AI assistant
 
 The assistant sits on the left of the editor, next to the preview. Open **Settings** (or **Add key**), choose a provider (Google Gemini, OpenAI or Anthropic), paste your own API key, and ask for changes in plain language, e.g. "add a heading that says Welcome under the root". The assistant reads the tree and element library, adds, edits or deletes nodes and elements, and can generate the template. It asks before deleting anything.
+
+**Build an issue from text.** Paste the issue's content (an intro, a few recipes with titles, links and photos) and ask the assistant to build the email. It picks matching blocks from the element library, fills them with your text and adds them after the current content in one step; the preview updates right away. Ask it to "replace" the content to swap out the current blocks instead (it asks first). It uses only library elements, never new HTML, so the email stays within your approved design. Content that fits no element is listed in the reply, so you know which element to add. The assistant judges elements by their placeholders and HTML, so clear placeholder names (`{{image}}`, `{{link}}`, `{{title}}`) help it choose.
 
 **Where your key goes.** The key is kept in your browser and sent only to the provider you chose; the editor's backend never sees it. By default it is kept for the current tab (`sessionStorage`). You can also keep it for the current page only, or remember it on the device (`localStorage`), and you can remove it at any time in the assistant settings. Any script running on the page, including browser extensions, could read the key, so use a key with a spending limit and revoke it if in doubt. A Content-Security-Policy blocks injected scripts and lets the page talk only to the editor's backend and the LLM providers.
 

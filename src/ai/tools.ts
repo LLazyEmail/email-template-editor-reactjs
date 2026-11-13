@@ -13,6 +13,7 @@ import {
   updateTreeNode,
 } from "../api/main";
 import type { Element } from "../api/main.types";
+import { composeBlocks, replaceNode } from "./compose";
 import {
   buildElementNode,
   buildHtmlNode,
@@ -143,6 +144,13 @@ export function findNode(nodes: TreeNode[], key: string): TreeNode | undefined {
 }
 
 const keyField = z.string().min(1);
+const fillsField = z
+  .record(z.string(), z.string())
+  .optional()
+  .describe('Placeholder → text or HTML, e.g. {"{{title}}": "Hello"}');
+
+const MAX_ELEMENTS_PER_READ = 20;
+const MAX_BLOCKS = 50;
 
 export function createEditorTools({ confirm, onChange, onToolEvent }: EditorToolsOptions): ToolSet {
   /**
@@ -257,18 +265,25 @@ export function createEditorTools({ confirm, onChange, onToolEvent }: EditorTool
     }),
 
     get_element: tool({
-      description: "Get the full HTML of one library element by key.",
-      inputSchema: z.object({ key: keyField }),
+      description:
+        "Get the full HTML of library elements by key. Pass all the keys you need in one call.",
+      inputSchema: z.object({ keys: z.array(keyField).min(1).max(MAX_ELEMENTS_PER_READ) }),
       execute: (input) =>
         run(
           "get_element",
           input,
           async () => {
-            const element = (await loadElements()).find((item) => item.key === input.key);
-            if (!element) return { ok: false, error: `Element "${input.key}" not found` };
-            return { ok: true, element };
+            const library = await loadElements();
+            const missing = input.keys.filter((key) => !library.some((item) => item.key === key));
+            if (missing.length) {
+              return { ok: false, error: `Element(s) not found: ${missing.join(", ")}` };
+            }
+            return { ok: true, elements: library.filter((item) => input.keys.includes(item.key)) };
           },
-          () => `Read element ${input.key}`
+          () =>
+            input.keys.length === 1
+              ? `Read element ${input.keys[0]}`
+              : `Read ${input.keys.length} elements`
         ),
     }),
 
@@ -327,10 +342,7 @@ export function createEditorTools({ confirm, onChange, onToolEvent }: EditorTool
         parentKey: keyField,
         elementKey: keyField,
         title: z.string().min(1).describe("Placeholder in the parent HTML this node fills"),
-        fills: z
-          .record(z.string(), z.string())
-          .optional()
-          .describe('Placeholder → value, e.g. {"{{title}}": "Hello"}'),
+        fills: fillsField,
       }),
       execute: (input) =>
         run(
@@ -354,6 +366,90 @@ export function createEditorTools({ confirm, onChange, onToolEvent }: EditorTool
             return { ok: true, key: data.item.key };
           },
           () => `Added element "${input.title}"`
+        ),
+    }),
+
+    compose_blocks: tool({
+      description:
+        "Add several library elements, in order, under a parent node in one atomic change: either all blocks are added or none. " +
+        "The tool inserts the placeholders into the parent itself, so do not call edit_node_text first. " +
+        "Use it to build an email from text the user pasted. Every block must be a library element.",
+      inputSchema: z.object({
+        parentKey: keyField.optional().describe("Defaults to the root node"),
+        after: z
+          .string()
+          .optional()
+          .describe(
+            "Placeholder in the parent after which the blocks go; defaults to its last placeholder"
+          ),
+        replace: z
+          .boolean()
+          .optional()
+          .describe(
+            "Remove the parent's current child blocks and put the new ones in their place. Only when the user asks to replace the content. The user is asked to confirm."
+          ),
+        blocks: z
+          .array(
+            z.object({
+              elementKey: keyField,
+              fills: fillsField,
+              slots: z
+                .record(z.string(), z.object({ elementKey: keyField, fills: fillsField }))
+                .optional()
+                .describe(
+                  'Placeholder → another library element placed there, e.g. {"{{item1}}": {"elementKey": "card", "fills": {...}}} for a card in a column'
+                ),
+            })
+          )
+          .min(1)
+          .max(MAX_BLOCKS),
+      }),
+      execute: (input) =>
+        run(
+          "compose_blocks",
+          input,
+          async () => {
+            const [tree, library] = await Promise.all([loadTree(), loadElements()]);
+            const parent = input.parentKey ? findNode(tree, input.parentKey) : tree[0];
+            if (!parent) {
+              return {
+                ok: false,
+                error: input.parentKey
+                  ? `Parent node "${input.parentKey}" not found`
+                  : "The tree is empty; create the root node first with create_root",
+              };
+            }
+            const plan = composeBlocks(parent, library, input);
+            if (!plan.ok) {
+              return {
+                ok: false,
+                error: `Nothing was added. Fix all of these and call compose_blocks again:\n${plan.errors.join("\n")}`,
+              };
+            }
+            if (plan.removedCount > 0) {
+              const approved = await confirm(
+                `Replace ${plan.removedCount} block(s) in "${parent.title}" with ${plan.added.length} new block(s)?`
+              );
+              if (!approved) return { ok: false, error: "The user declined replacing the blocks" };
+            }
+            // One PUT of the whole tree: the backend writes it atomically, so a failure leaves no half-built email.
+            await saveTree({ treeData: replaceNode(tree, plan.parent) });
+            onChange("tree");
+            return {
+              ok: true,
+              parentKey: parent.key,
+              added: plan.added,
+              removedCount: plan.removedCount,
+              unfilled: plan.unfilled,
+            };
+          },
+          (result) => {
+            const added = result.ok && Array.isArray(result.added) ? result.added.length : 0;
+            const removed = result.ok ? Number(result.removedCount) : 0;
+            return removed
+              ? `Replaced ${removed} block(s) with ${added} new block(s)`
+              : `Added ${added} block(s)`;
+          }
         ),
     }),
 

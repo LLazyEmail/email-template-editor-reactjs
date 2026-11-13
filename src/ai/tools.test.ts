@@ -246,3 +246,278 @@ describe("editor tools", () => {
     });
   });
 });
+
+describe("get_element", () => {
+  it("returns several elements in one call", async () => {
+    vi.mocked(api.getAllElements).mockResolvedValue([
+      ...elements,
+      { key: "el2", title: "Text", value: "<p>{{text}}</p>" },
+    ]);
+    const { call } = setup();
+    expect(await call("get_element", { keys: ["el1", "el2"] })).toMatchObject({
+      ok: true,
+      elements: [{ key: "el1" }, { key: "el2" }],
+    });
+  });
+
+  it("names the keys that do not exist", async () => {
+    const { call } = setup();
+    expect(await call("get_element", { keys: ["el1", "nope"] })).toEqual({
+      ok: false,
+      error: "Element(s) not found: nope",
+    });
+  });
+});
+
+describe("compose_blocks", () => {
+  const library = [
+    { key: "text", title: "{{text}}", value: "<p>{{text}}</p>" },
+    { key: "row", title: "{{twoBlocks}}", value: "<tr><td>{{item1}}</td><td>{{item2}}</td></tr>" },
+    {
+      key: "card",
+      title: "{{card}}",
+      value: '<a href="{{link}}"><img src="{{image}}"></a><b>{{title}}</b>',
+    },
+  ];
+
+  const issueRoot = () => ({
+    key: "root",
+    title: "root",
+    value: "<header/>{{items}}\n{{items2}}<footer/>",
+    children: [
+      { key: "a", title: "{{items}}", value: "<p>Old 1</p>", children: [] },
+      { key: "b", title: "{{items2}}", value: "<p>Old 2</p>", children: [] },
+    ],
+  });
+
+  const card = (title: string) => ({
+    elementKey: "card",
+    fills: {
+      "{{link}}": `https://example.com/${title}`,
+      "{{image}}": `https://img/${title}.jpg`,
+      "{{title}}": title,
+    },
+  });
+
+  const savedRoot = () => vi.mocked(api.saveTree).mock.calls[0][0].treeData[0];
+
+  beforeEach(() => {
+    vi.mocked(api.getTree).mockResolvedValue([issueRoot()]);
+    vi.mocked(api.getAllElements).mockResolvedValue(library);
+  });
+
+  it("appends blocks in order after the last placeholder, in one save", async () => {
+    const { call, options } = setup();
+    const result = await call("compose_blocks", {
+      blocks: [
+        { elementKey: "text", fills: { "{{text}}": "This week: soups" } },
+        { elementKey: "row", slots: { "{{item1}}": card("Borscht"), "{{item2}}": card("Ramen") } },
+        { elementKey: "row", slots: { "{{item1}}": card("Pho") } },
+      ],
+    });
+
+    expect(result).toMatchObject({
+      ok: true,
+      parentKey: "root",
+      removedCount: 0,
+      added: [
+        { title: "{{block1}}", elementKey: "text" },
+        { title: "{{block2}}", elementKey: "row" },
+        { title: "{{block3}}", elementKey: "row" },
+      ],
+      unfilled: ["blocks[2] {{item2}}"],
+    });
+    expect(api.saveTree).toHaveBeenCalledTimes(1);
+    expect(api.addTreeNode).not.toHaveBeenCalled();
+    const root = savedRoot();
+    expect(root.value).toBe(
+      "<header/>{{items}}\n{{items2}}\n{{block1}}\n{{block2}}\n{{block3}}<footer/>"
+    );
+    expect(root.children!.map((child) => child.title)).toEqual([
+      "{{items}}",
+      "{{items2}}",
+      "{{block1}}",
+      "{{block2}}",
+      "{{block3}}",
+    ]);
+    // A card sits in the row's column slot, with its own fields as leaves.
+    const row = root.children![3];
+    expect(row.children).toMatchObject([
+      {
+        title: "{{item1}}",
+        value: library[2].value,
+        children: [
+          { title: "{{link}}", value: "https://example.com/Borscht" },
+          { title: "{{image}}", value: "https://img/Borscht.jpg" },
+          { title: "{{title}}", value: "Borscht" },
+        ],
+      },
+      {
+        title: "{{item2}}",
+        children: expect.arrayContaining([
+          expect.objectContaining({ title: "{{title}}", value: "Ramen" }),
+        ]),
+      },
+    ]);
+    expect(options.onChange).toHaveBeenCalledWith("tree");
+    expect(options.onToolEvent).toHaveBeenCalledWith(
+      expect.objectContaining({ ok: true, summary: "Added 3 block(s)" })
+    );
+  });
+
+  it("fills a single free placeholder first, e.g. {{content}} of a new root", async () => {
+    vi.mocked(api.getTree).mockResolvedValue([
+      { key: "1", title: "root", value: "<table>{{content}}</table>", children: [] },
+    ]);
+    const { call } = setup();
+    await call("compose_blocks", {
+      blocks: [
+        { elementKey: "text", fills: { text: "Hello" } },
+        { elementKey: "text", fills: { "{{text}}": "Bye" } },
+      ],
+    });
+    const root = savedRoot();
+    expect(root.value).toBe("<table>{{content}}\n{{block1}}</table>");
+    expect(root.children).toMatchObject([
+      { title: "{{content}}", children: [{ title: "{{text}}", value: "Hello" }] },
+      { title: "{{block1}}", children: [{ title: "{{text}}", value: "Bye" }] },
+    ]);
+  });
+
+  it("adds after a given placeholder and under a given parent", async () => {
+    vi.mocked(api.getTree).mockResolvedValue([
+      {
+        key: "root",
+        title: "root",
+        value: "{{main}}",
+        children: [
+          {
+            key: "main",
+            title: "{{main}}",
+            value: "{{intro}}{{block1}}{{outro}}",
+            children: [{ key: "x", title: "{{intro}}", value: "", children: [] }],
+          },
+        ],
+      },
+    ]);
+    const { call } = setup();
+    await call("compose_blocks", {
+      parentKey: "main",
+      after: "{{intro}}",
+      blocks: [{ elementKey: "text", fills: { "{{text}}": "Hi" } }],
+    });
+    const main = savedRoot().children![0];
+    // {{block1}} is already in the HTML, so the new placeholder gets the next free name.
+    expect(main.value).toBe("{{intro}}\n{{block2}}{{block1}}{{outro}}");
+    expect(main.children!.map((child) => child.title)).toEqual(["{{intro}}", "{{block2}}"]);
+  });
+
+  it("reports every invalid block at once and saves nothing", async () => {
+    const { call, options } = setup();
+    const result = (await call("compose_blocks", {
+      blocks: [
+        { elementKey: "missing" },
+        { elementKey: "text", fills: { "{{body}}": "x" } },
+        {
+          elementKey: "row",
+          slots: { "{{item1}}": { elementKey: "card", fills: { "{{title}}": "Hi {{items}}" } } },
+        },
+        {
+          elementKey: "row",
+          fills: { "{{item1}}": "a" },
+          slots: { "{{item1}}": card("Pho"), "{{item3}}": card("Tea") },
+        },
+      ],
+    })) as { ok: false; error: string };
+
+    expect(result.ok).toBe(false);
+    expect(result.error).toContain("Nothing was added");
+    expect(result.error).toContain(
+      'blocks[0]: element "missing" not found. Library keys: text, row, card'
+    );
+    expect(result.error).toContain("blocks[1].fills: {{body}} is not a placeholder");
+    expect(result.error).toContain("Its placeholders: {{text}}");
+    expect(result.error).toContain(
+      'blocks[2].slots["{{item1}}"].fills["{{title}}"]: text must not contain placeholders like {{items}}'
+    );
+    expect(result.error).toContain("blocks[3]: {{item1}} is in both fills and slots");
+    expect(result.error).toContain("blocks[3].slots: {{item3}} is not a placeholder");
+    expect(api.saveTree).not.toHaveBeenCalled();
+    expect(options.onChange).not.toHaveBeenCalled();
+  });
+
+  it("refuses a parent without placeholders", async () => {
+    vi.mocked(api.getTree).mockResolvedValue([
+      { key: "1", title: "root", value: "<table></table>", children: [] },
+    ]);
+    const { call } = setup();
+    const result = (await call("compose_blocks", {
+      blocks: [{ elementKey: "text" }],
+    })) as { ok: false; error: string };
+    expect(result.error).toContain("has no placeholder to add blocks after");
+    expect(api.saveTree).not.toHaveBeenCalled();
+  });
+
+  it("refuses when the tree is empty or the parent is unknown", async () => {
+    const { call } = setup();
+    expect(
+      await call("compose_blocks", { parentKey: "nope", blocks: [{ elementKey: "text" }] })
+    ).toEqual({ ok: false, error: 'Parent node "nope" not found' });
+    vi.mocked(api.getTree).mockResolvedValue([]);
+    expect(await call("compose_blocks", { blocks: [{ elementKey: "text" }] })).toMatchObject({
+      ok: false,
+      error: expect.stringContaining("create_root"),
+    });
+  });
+
+  it("replace swaps the current blocks for the new ones after confirmation", async () => {
+    const { call, options } = setup();
+    const result = await call("compose_blocks", {
+      replace: true,
+      blocks: [
+        { elementKey: "text", fills: { "{{text}}": "New intro" } },
+        { elementKey: "row", slots: { "{{item1}}": card("Pho") } },
+      ],
+    });
+
+    expect(options.confirm).toHaveBeenCalledWith(
+      'Replace 2 block(s) in "root" with 2 new block(s)?'
+    );
+    expect(result).toMatchObject({ ok: true, removedCount: 2 });
+    const root = savedRoot();
+    expect(root.value).toBe("<header/>\n{{block1}}\n{{block2}}\n<footer/>");
+    expect(root.children!.map((child) => child.title)).toEqual(["{{block1}}", "{{block2}}"]);
+    expect(options.onToolEvent).toHaveBeenCalledWith(
+      expect.objectContaining({ summary: "Replaced 2 block(s) with 2 new block(s)" })
+    );
+  });
+
+  it("replace changes nothing when the user declines", async () => {
+    const { call, options } = setup({ confirm: vi.fn(() => Promise.resolve(false)) });
+    const result = await call("compose_blocks", {
+      replace: true,
+      blocks: [{ elementKey: "text" }],
+    });
+    expect(result).toEqual({ ok: false, error: "The user declined replacing the blocks" });
+    expect(api.saveTree).not.toHaveBeenCalled();
+    expect(options.onChange).not.toHaveBeenCalled();
+  });
+
+  it("returns a failed save to the model and reports no change", async () => {
+    vi.mocked(api.saveTree).mockRejectedValueOnce({
+      response: { data: { error: { code: "CONFLICT", message: "Duplicate tree node key" } } },
+    });
+    const { call, options } = setup();
+    const result = await call("compose_blocks", { blocks: [{ elementKey: "text" }] });
+    expect(result).toEqual({ ok: false, error: "Duplicate tree node key" });
+    expect(options.onChange).not.toHaveBeenCalled();
+  });
+
+  it("does not modify the tree it loaded", async () => {
+    const loaded = [issueRoot()];
+    vi.mocked(api.getTree).mockResolvedValue(loaded);
+    const { call } = setup();
+    await call("compose_blocks", { blocks: [{ elementKey: "text" }] });
+    expect(loaded).toEqual([issueRoot()]);
+  });
+});
