@@ -9,6 +9,8 @@ import TemplateTree from "./TemplateTree/TemplateTree";
 import { TemplateTree as TemplateTreeType } from "../../types";
 import AddRootElementForm from "./AddRootElementForm/AddRootElementForm";
 import Elements from "./Elements/Elements";
+import Preview from "./Preview/Preview";
+import type { PreviewNode } from "./Preview/renderTemplate";
 import type { ChangedResource } from "../../ai/tools";
 import "./Main.css";
 
@@ -98,8 +100,15 @@ const Home = () => {
       >
         <AddRootElementForm onSubmit={onSubmit} onCancel={handleCancel} />
       </Modal>
-      <div style={{ height: 500 }}>
-        <TemplateTree treeData={templateTree} refresh={getTreeData} />
+      <div className="editor-layout">
+        <div className="editor-tree">
+          <TemplateTree treeData={templateTree} refresh={getTreeData} />
+        </div>
+        <section className="editor-preview" aria-label="Preview">
+          <Typography.Title level={5}>Preview</Typography.Title>
+          {/* GET /tree returns TreeNode[]; the shared TemplateTree type is a loose record. */}
+          <Preview tree={templateTree as unknown as PreviewNode[]} />
+        </section>
       </div>
 
       <Elements refreshKey={elementsVersion} />

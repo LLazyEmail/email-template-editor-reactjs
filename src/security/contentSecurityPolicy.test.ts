@@ -40,6 +40,14 @@ describe("buildContentSecurityPolicy", () => {
     expect(policy["form-action"]).toEqual(["'self'"]);
   });
 
+  it("lets the email preview load remote images, fonts and stylesheets over https only", () => {
+    for (const name of ["img-src", "font-src", "style-src"]) {
+      expect(policy[name]).toContain("https:");
+      expect(policy[name]).not.toContain("http:");
+      expect(policy[name]).not.toContain("*");
+    }
+  });
+
   it("allows eval only in development", () => {
     const dev = directives(buildContentSecurityPolicy({ nonce: "n", isDev: true, apiOrigins: [] }));
     expect(dev["script-src"]).toContain("'unsafe-eval'");

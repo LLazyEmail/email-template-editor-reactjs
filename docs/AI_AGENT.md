@@ -121,14 +121,23 @@ No browser storage protects against XSS or malicious browser extensions, so the 
 - `script-src 'nonce-…' 'strict-dynamic'`: only scripts carrying this request's nonce run, plus what they load (Next.js chunks, the lazy chat panel). Injected inline scripts and `onerror=` handlers are blocked. Dev mode adds `'unsafe-eval'`.
 - `connect-src`: the page may call only itself, the backend and the LLM providers (`src/ai/providerOrigins.ts`). A stolen key can't be sent to another host with `fetch`.
 - Also `object-src 'none'`, `frame-ancestors 'none'`, `base-uri 'self'` and `form-action 'self'`. `style-src` keeps `'unsafe-inline'` because Ant Design injects its styles at runtime.
+- `img-src`, `font-src` and `style-src` allow any `https:` host, for the email preview (see below).
 
 Consequences when changing code:
 
 - **Pages render per request** (`dynamic = "force-dynamic"` in `app/layout.tsx`), because a prerendered page has no nonce and its scripts would be blocked. Static export (`output: 'export'`) is not possible with this setup.
 - **A new provider** must be added to `src/ai/providerOrigins.ts`; a unit test fails if it is missing.
-- **A new external host** the page calls (an API, CDN or image host) must be added to the policy, or the browser blocks it.
+- **A new external host** the page calls (an API or script CDN) must be added to the policy, or the browser blocks it. Images, fonts and stylesheets over `https:` already load.
 - **The backend URL** comes from `src/api/apiUrl.ts`, which both the API client and the policy use; change it there only.
 - `e2e/csp.spec.ts` checks the header, that an injected script does not run, and that `fetch` to an unknown host is blocked. `e2e/ai-assistant.spec.ts` fails on any CSP violation during the chat flow.
+
+### Email preview (`src/editor/Main/Preview/`)
+
+`Preview.tsx` shows the email next to the tree. `renderTemplate.ts` renders the tree in the browser with the same rules as the backend's `POST /generate` (`src/modules/generate/generate-html.ts` in the backend repo); change both together. The preview re-renders whenever `Main` reloads the tree, including after the assistant's changes.
+
+- The email HTML is untrusted, so it goes into `<iframe sandbox="" srcdoc>`: no scripts, forms or popups, and an opaque origin that can't read the key. Don't add `allow-scripts` or `allow-same-origin`; together they would let the email reach the editor's storage.
+- A srcdoc iframe inherits the page's CSP. That's why the policy allows `https:` images, fonts and stylesheets: emails load them from their own hosts.
+- `e2e/preview.spec.ts` checks that the preview renders, a remote image loads and a script in the email doesn't run.
 
 CSP can't stop top-level navigation, so it narrows exfiltration rather than ruling it out. Rendering untrusted text as text stays the first line of defense.
 
