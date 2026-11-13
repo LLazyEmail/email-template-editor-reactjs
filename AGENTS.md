@@ -43,6 +43,7 @@ src/
     TemplateTree/             # Tree view + context-menu actions
     AddRootElementForm/       # Form to create the root node
     Chat/                     # AI assistant drawer + settings (lazy-loaded)
+    Preview/                  # Live email preview (sandboxed iframe) + client-side renderer
   security/                   # Content-Security-Policy builder
   types/                      # Shared types (e.g. TemplateTree)
   App.tsx                     # Legacy app root (still used by tests)

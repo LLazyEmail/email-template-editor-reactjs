@@ -32,9 +32,13 @@ export function buildContentSecurityPolicy({ nonce, isDev, apiOrigins }: BuildCs
       ...(isDev ? ["'unsafe-eval'"] : []),
     ],
     // Ant Design injects its CSS-in-JS as <style> tags at runtime.
-    "style-src": ["'self'", "'unsafe-inline'"],
-    "img-src": ["'self'", "data:", "blob:"],
-    "font-src": ["'self'", "data:"],
+    // `https:` in style/img/font-src is for the email preview: the email loads its images, fonts
+    // and stylesheets from anywhere, and a srcdoc iframe inherits this page's policy.
+    // Scripts and connect-src stay locked down, so this doesn't let injected code run or call out
+    // with fetch; it does widen what an already-running script could leak through (see note above).
+    "style-src": ["'self'", "'unsafe-inline'", "https:"],
+    "img-src": ["'self'", "data:", "blob:", "https:"],
+    "font-src": ["'self'", "data:", "https:"],
     "connect-src": [
       "'self'",
       ...Array.from(new Set(apiOrigins)),

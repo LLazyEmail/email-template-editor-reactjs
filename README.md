@@ -77,6 +77,7 @@ sequenceDiagram
 
 - Add a root element and grow a template tree
 - Context menu on each node: add, edit, delete
+- Live preview of the email next to the tree
 - Elements library with create, edit, and delete
 - One-click generate that returns a link to the HTML
 - AI assistant that edits the template on request (Gemini, OpenAI or Anthropic, with your own API key)
