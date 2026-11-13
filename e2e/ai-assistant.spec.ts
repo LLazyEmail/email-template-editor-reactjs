@@ -51,7 +51,6 @@ test("assistant adds a node with the user's own Gemini key", async ({ page }) =>
   });
 
   await page.goto("/");
-  await page.getByRole("button", { name: "AI assistant" }).click();
   await page.getByRole("button", { name: "Add key" }).click();
   await page.getByLabel("API key").fill(API_KEY);
   await page.getByRole("button", { name: "Save" }).click();

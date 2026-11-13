@@ -19,7 +19,7 @@ const Preview = ({ tree }: PreviewProps) => {
   const html = useMemo(() => renderTemplate(tree), [tree]);
 
   if (tree.length === 0) {
-    return <Empty description="Add a root element to see the preview" />;
+    return <Empty description="No email yet. Ask the assistant to build one, or add a root element." />;
   }
 
   return (

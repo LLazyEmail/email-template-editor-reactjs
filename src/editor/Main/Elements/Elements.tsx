@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Button, List, Modal, Typography } from "antd";
+import { Button, List, Modal } from "antd";
 import {
   addElement,
   deleteElement,
@@ -87,7 +87,6 @@ const Elements = ({ refreshKey = 0 }: ElementsProps) => {
 
   return (
     <>
-      <Typography.Title level={3}>Elements</Typography.Title>
       <List
         header={
           <Button type="primary" onClick={showModalAddElement}>

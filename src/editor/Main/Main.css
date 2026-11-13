@@ -1,24 +1,80 @@
-.container {
-  margin: 20px auto;
-  width: 1200px;
+/* App shell: the page fills the window, the chat always fits, the right column scrolls. */
+.editor {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding: 16px 24px;
 }
 
-.editor-layout {
+.editor-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+  margin-bottom: 16px;
+}
+
+/* Chat on the left, the email (and manual editing under it) on the right. */
+.editor-workspace {
+  flex: 1;
+  min-height: 0;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 640px;
+  grid-template-columns: 400px minmax(0, 1fr);
   gap: 24px;
-  margin: 16px 0;
 }
 
-.editor-tree {
-  min-height: 500px;
+.editor-chat {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding: 16px;
+  border: 1px solid #f0f0f0;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.editor-chat-body {
+  flex: 1;
+  min-height: 0;
+}
+
+.editor-main {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+  min-height: 0;
+  overflow-y: auto;
 }
 
 .preview-frame {
   display: block;
   width: 100%;
-  height: 720px;
+  /* Leaves the manual-editing headers peeking out below. */
+  height: calc(100vh - 160px);
+  min-height: 480px;
   border: 1px solid #f0f0f0;
   border-radius: 8px;
   background: #fff;
+}
+
+@media (max-width: 960px) {
+  .editor {
+    height: auto;
+    padding: 12px 16px;
+  }
+
+  .editor-workspace {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .editor-chat {
+    height: 560px;
+  }
+
+  .editor-main {
+    overflow-y: visible;
+  }
 }
