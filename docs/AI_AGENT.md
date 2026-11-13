@@ -83,7 +83,7 @@ The skill includes a pre-submit checklist in `references/checklist.md`.
 
 ## AI assistant (`src/ai/`, `src/editor/Main/Chat/`)
 
-A chat in a drawer that changes the template through tools. It calls the LLM **directly from the browser** with the user's own key (BYOK) via the [Vercel AI SDK](https://ai-sdk.dev). The backend is not involved and never receives the key.
+A chat in the editor's left column that changes the template through tools. It calls the LLM **directly from the browser** with the user's own key (BYOK) via the [Vercel AI SDK](https://ai-sdk.dev). The backend is not involved and never receives the key.
 
 ```
 ChatPanel ──► runAgent (generateText, max 8 steps) ──► provider (Gemini / OpenAI / Anthropic)

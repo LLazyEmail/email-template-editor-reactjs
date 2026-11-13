@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Drawer, Modal, Typography, notification } from "antd";
+import { Button, Collapse, Modal, Skeleton, Typography, notification } from "antd";
 import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { saveTree, getTree, generate } from "../../api/main";
@@ -14,14 +14,16 @@ import type { PreviewNode } from "./Preview/renderTemplate";
 import type { ChangedResource } from "../../ai/tools";
 import "./Main.css";
 
-// Loaded on first open so the AI SDK is not part of the initial page bundle.
-const ChatPanel = dynamic(() => import("./Chat/ChatPanel"), { ssr: false });
+// Loaded after the page so the AI SDK is not part of the initial page bundle.
+const ChatPanel = dynamic(() => import("./Chat/ChatPanel"), {
+  ssr: false,
+  loading: () => <Skeleton active />,
+});
 
 const Home = () => {
   const [templateTree, setTemplateTree] = useState<TemplateTreeType[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [generatedTemplateLink, setGeneratedTemplateLink] = useState("");
-  const [isChatOpen, setIsChatOpen] = useState(false);
   const [elementsVersion, setElementsVersion] = useState(0);
 
   console.log("templateTree", templateTree);
@@ -73,8 +75,8 @@ const Home = () => {
   };
 
   return (
-    <div className="container">
-      <div>
+    <div className="editor">
+      <header className="editor-toolbar">
         <Button
           disabled={Boolean(templateTree.length)}
           onClick={showModal}
@@ -85,11 +87,10 @@ const Home = () => {
         <Button onClick={onHandleGenerate} type="primary">
           Generate
         </Button>
-        <Button onClick={() => setIsChatOpen(true)}>AI assistant</Button>
         <Typography.Link onClick={onOpenLink}>
           {generatedTemplateLink}
         </Typography.Link>
-      </div>
+      </header>
       <Modal
         title="Add root element"
         open={isModalOpen}
@@ -100,28 +101,32 @@ const Home = () => {
       >
         <AddRootElementForm onSubmit={onSubmit} onCancel={handleCancel} />
       </Modal>
-      <div className="editor-layout">
-        <div className="editor-tree">
-          <TemplateTree treeData={templateTree} refresh={getTreeData} />
-        </div>
-        <section className="editor-preview" aria-label="Preview">
-          <Typography.Title level={5}>Preview</Typography.Title>
-          {/* GET /tree returns TreeNode[]; the shared TemplateTree type is a loose record. */}
-          <Preview tree={templateTree as unknown as PreviewNode[]} />
-        </section>
+
+      <div className="editor-workspace">
+        <aside className="editor-chat" aria-label="AI assistant">
+          <Typography.Title level={5}>AI assistant</Typography.Title>
+          <div className="editor-chat-body">
+            <ChatPanel onChange={onAssistantChange} />
+          </div>
+        </aside>
+
+        <main className="editor-main">
+          <section aria-label="Preview">
+            {/* GET /tree returns TreeNode[]; the shared TemplateTree type is a loose record. */}
+            <Preview tree={templateTree as unknown as PreviewNode[]} />
+          </section>
+
+          {/* Manual editing: collapsed by default, panels render on first open. */}
+          <Collapse>
+            <Collapse.Panel key="tree" header="Template tree">
+              <TemplateTree treeData={templateTree} refresh={getTreeData} />
+            </Collapse.Panel>
+            <Collapse.Panel key="elements" header="Elements">
+              <Elements refreshKey={elementsVersion} />
+            </Collapse.Panel>
+          </Collapse>
+        </main>
       </div>
-
-      <Elements refreshKey={elementsVersion} />
-
-      <Drawer
-        title="AI assistant"
-        open={isChatOpen}
-        onClose={() => setIsChatOpen(false)}
-        width={440}
-        mask={false}
-      >
-        <ChatPanel onChange={onAssistantChange} />
-      </Drawer>
     </div>
   );
 };

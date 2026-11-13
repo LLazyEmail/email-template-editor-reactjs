@@ -25,6 +25,6 @@ test("renders the email in a fully sandboxed iframe", () => {
 test("shows a hint instead of an empty frame when there is no template yet", () => {
   render(<Preview tree={[]} />);
 
-  expect(screen.getByText(/add a root element to see the preview/i)).toBeInTheDocument();
+  expect(screen.getByText(/ask the assistant to build one/i)).toBeInTheDocument();
   expect(screen.queryByTitle("Email preview")).not.toBeInTheDocument();
 });

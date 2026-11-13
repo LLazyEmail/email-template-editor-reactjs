@@ -17,13 +17,13 @@ test("pages carry a nonce-based CSP with a fresh nonce per request", async ({ pa
   }
   expect(nonces[0]).not.toBe("");
   expect(nonces[0]).not.toBe(nonces[1]);
-  // The app still works: Next.js scripts got the nonce and hydrated the page.
-  await expect(page.getByRole("button", { name: "AI assistant" })).toBeVisible();
+  // The app still works: Next.js scripts got the nonce, hydrated the page and loaded the lazy chat.
+  await expect(page.getByLabel("Message")).toBeVisible();
 });
 
 test("an injected inline script does not run", async ({ page }) => {
   await page.goto("/");
-  await expect(page.getByRole("button", { name: "AI assistant" })).toBeVisible();
+  await expect(page.getByLabel("Message")).toBeVisible();
 
   const result = await page.evaluate(
     () =>
