@@ -3,7 +3,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Alert, Button, Input, Space, Spin, Typography } from "antd";
 import type { ModelMessage } from "ai";
-import { runAgent, type AgentStatus } from "../../../ai/agent";
+import { MAX_STEPS, runAgent, type AgentStatus } from "../../../ai/agent";
 import { loadAiSettings, loadApiKey, saveAiSettings, type AiSettings } from "../../../ai/keyStore";
 import { createModel, isProviderId, PROVIDERS, REQUEST_TIMEOUT_MS } from "../../../ai/providers";
 import { createEditorTools, errorMessage, type ChangedResource } from "../../../ai/tools";
@@ -143,6 +143,12 @@ const ChatPanel = ({ onChange }: ChatPanelProps) => {
       });
       historyRef.current = [...messages, ...result.responseMessages];
       if (result.text) append({ kind: "assistant", text: result.text });
+      if (result.hitStepLimit) {
+        append({
+          kind: "error",
+          text: `Stopped after ${MAX_STEPS} steps; the task may be unfinished. Send "continue" to go on.`,
+        });
+      }
     } catch (error) {
       console.error("AI assistant request failed", error);
       const providerLabel = PROVIDERS[settings.provider].label;

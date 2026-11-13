@@ -1,4 +1,4 @@
-import { AddTreeNode } from "../../../api/main.types";
+import { AddTreeNode, TreeNodeData } from "../../../api/main.types";
 
 /** Placeholders look like `{{name}}`; a child node's title fills the matching slot in its parent's HTML. */
 const PLACEHOLDER_REGEXP = /{{[A-Za-z0-9]*}}/g;
@@ -32,32 +32,49 @@ export const buildHtmlNode = ({
   item: { key: createNodeKey(), title, value, children: [] },
 });
 
-interface BuildElementNodeParams {
-  parentKey: string;
+interface BuildElementItemParams {
   title: string;
   /** HTML of the element from the library; its placeholders become child nodes. */
   elementValue: string;
   /** Value for each placeholder, keyed by the placeholder itself (e.g. `{{title}}`). */
   fills?: Record<string, string | undefined>;
+  /** Ready-made child node for a placeholder (e.g. another element), used instead of a text fill. */
+  slots?: Record<string, TreeNodeData | undefined>;
 }
 
 /** A node built from a library element: one child per placeholder in the element HTML. */
-export const buildElementNode = ({
-  parentKey,
+export const buildElementItem = ({
   title,
   elementValue,
   fills = {},
+  slots = {},
+}: BuildElementItemParams): TreeNodeData & { children: TreeNodeData[] } => ({
+  key: createNodeKey(),
+  title,
+  value: elementValue,
+  children: extractPlaceholders(elementValue).map(
+    (placeholder) =>
+      slots[placeholder] ?? {
+        key: createNodeKey(),
+        title: placeholder,
+        value: fills[placeholder] ?? "",
+        children: [],
+      }
+  ),
+});
+
+interface BuildElementNodeParams {
+  parentKey: string;
+  title: string;
+  elementValue: string;
+  fills?: Record<string, string | undefined>;
+}
+
+/** Request body that adds a node built from a library element under `parentKey`. */
+export const buildElementNode = ({
+  parentKey,
+  ...params
 }: BuildElementNodeParams): AddTreeNode => ({
   parentKey,
-  item: {
-    key: createNodeKey(),
-    title,
-    value: elementValue,
-    children: extractPlaceholders(elementValue).map((placeholder) => ({
-      key: createNodeKey(),
-      title: placeholder,
-      value: fills[placeholder] ?? "",
-      children: [],
-    })),
-  },
+  item: buildElementItem(params),
 });

@@ -86,7 +86,7 @@ The skill includes a pre-submit checklist in `references/checklist.md`.
 A chat in the editor's left column that changes the template through tools. It calls the LLM **directly from the browser** with the user's own key (BYOK) via the [Vercel AI SDK](https://ai-sdk.dev). The backend is not involved and never receives the key.
 
 ```
-ChatPanel ──► runAgent (generateText, max 8 steps) ──► provider (Gemini / OpenAI / Anthropic)
+ChatPanel ──► runAgent (generateText, max 12 steps) ──► provider (Gemini / OpenAI / Anthropic)
                  │
                  └─ tools ──► src/api/main.ts ──► backend
 ```
@@ -96,6 +96,7 @@ ChatPanel ──► runAgent (generateText, max 8 steps) ──► provider (Gem
 | `src/ai/providers.ts` | Provider list, default models, `createModel()` |
 | `src/ai/keyStore.ts` | Key storage: `memory` / `session` (default) / `local`; non-secret settings |
 | `src/ai/tools.ts` | Tools the model can call; each wraps a function from `src/api/main.ts` |
+| `src/ai/compose.ts` | Pure planning for `compose_blocks`: validation, placeholder insertion, node building |
 | `src/ai/agent.ts` | System prompt and `runAgent()` |
 | `src/editor/Main/TemplateTree/nodeBuilders.ts` | Node construction shared by the tree UI and the tools |
 | `src/editor/Main/Chat/ChatPanel.tsx` | Chat UI, delete confirmation, stop button |
@@ -106,9 +107,30 @@ Rules when changing it:
 - **Render model output as text only.** No `dangerouslySetInnerHTML`, no markdown-to-HTML. The model can echo node HTML, which is untrusted, and an XSS would expose the user's key.
 - **New tools** go in `src/ai/tools.ts` through `run()`, so errors reach the model as `{ ok: false, error }` and the chat log. Call `onChange` after a successful change. Destructive tools must call `confirm()` first.
 - **Placeholder slots.** Generation fills the first occurrence of a child's title in the parent's HTML, so each placeholder occurrence holds one child. `add_*_node` refuses a missing or taken slot and tells the model how to fix it: insert a new placeholder with `edit_node_text`, then add the node. `get_tree` reports `freePlaceholders` and `notRendered`. Large nodes (the root is ~180 KB) are edited with `edit_node_text` and read as snippets.
+- **Step budget.** `MAX_STEPS` (12) caps model ↔ tool round-trips per message, so prefer tools that do a whole job in one call (`compose_blocks`, `get_element` with several `keys`) over many small calls. When the limit cuts a run short, the chat says so.
 - **Never send the key to our backend** or log it. `e2e/ai-assistant.spec.ts` checks this.
 - **Keep `ChatPanel` lazy-loaded** (`next/dynamic` in `Main.tsx`) so the AI SDK stays out of the initial bundle.
 - **Tests:** mock `src/api/main`. Use `MockLanguageModelV4` from `ai/test` for agent tests, and mock Gemini with `page.route` in e2e.
+
+### Building an email from text (`compose_blocks`)
+
+The user pastes an issue's content; the system prompt tells the model to call `list_elements`, read the candidates with one `get_element({ keys })`, map the content to elements in order and make **one** `compose_blocks` call, then reply with what it added, which placeholders stayed empty and what content fit no element. That's about four steps.
+
+```
+compose_blocks({ parentKey?, after?, replace?, blocks: [
+  { elementKey, fills?: { "{{title}}": "…" },
+    slots?: { "{{item1}}": { elementKey, fills } } } ] })
+```
+
+- **Library elements only.** There is no raw-HTML block: an email built this way stays within the approved blocks. `add_html_node` is still there for explicit requests.
+- **One level of nesting.** `slots` put an element into a placeholder of another (a recipe card into a column of a two-column row). Deeper nesting would need a recursive schema (`$ref`), which not every provider handles, so it is left out on purpose.
+- **Placeholders are managed by the tool.** Each block gets a new placeholder in the parent (`{{block1}}`, `{{block2}}`, … skipping names already used), inserted after the anchor: `after`, or the parent's last placeholder. If the anchor occurs once and is empty (e.g. `{{content}}` of a new root), the first block takes it. `parentKey` defaults to the root.
+- **`replace: true`** removes the parent's children and their placeholders and puts the new blocks where the first of them was. The user confirms first.
+- **Validate, then write once.** All blocks are checked before anything changes: unknown elements, `fills`/`slots` keys that aren't placeholders of the element (`title` is accepted for `{{title}}`), a key in both, and fill text containing `{{…}}` (generation would put another child into it). Every error comes back in one result so the model can fix them in one retry. The new tree is built locally from one `getTree()` and saved with one `saveTree()` (`PUT /tree`), which the backend writes atomically: a failure leaves the tree as it was. Trade-off: an edit made in the UI between that read and write (milliseconds, no model call in between) is overwritten.
+- **Result:** keys and titles of the added nodes, `removedCount`, and `unfilled` placeholders (e.g. `blocks[2] {{item2}}`), which render as nothing.
+- **Pasted content is data.** The system prompt says so explicitly; the model also must not invent URLs or images. As everywhere, the chat renders the model's reply as text only, and fills go only into the email, which the preview shows in the sandboxed iframe.
+- Elements have only `key`, `title` and `value`, so the model judges them by placeholder names and HTML. An optional `description` field (backend + frontend) is a possible follow-up.
+- Tests: `src/ai/tools.test.ts` (`compose_blocks`), `src/ai/agent.test.ts` (the whole flow with `MockLanguageModelV4`), `e2e/compose-from-text.spec.ts` (pasted text → one `PUT /tree` → preview).
 
 ### Key storage and threat model
 

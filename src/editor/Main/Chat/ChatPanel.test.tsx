@@ -5,7 +5,7 @@ import ChatPanel from "./ChatPanel";
 import { runAgent } from "../../../ai/agent";
 import { clearApiKey, saveApiKey } from "../../../ai/keyStore";
 
-vi.mock("../../../ai/agent", () => ({ runAgent: vi.fn() }));
+vi.mock("../../../ai/agent", () => ({ runAgent: vi.fn(), MAX_STEPS: 12 }));
 vi.mock("../../../api/main", () => ({}));
 
 beforeEach(() => {
@@ -26,7 +26,11 @@ describe("ChatPanel", () => {
   it("renders model output as text, never as HTML", async () => {
     saveApiKey("google", "test-key", "memory");
     const payload = '<img src="x" onerror="alert(1)">';
-    vi.mocked(runAgent).mockResolvedValue({ text: payload, responseMessages: [] });
+    vi.mocked(runAgent).mockResolvedValue({
+      text: payload,
+      hitStepLimit: false,
+      responseMessages: [],
+    });
 
     const { container } = render(<ChatPanel onChange={vi.fn()} />);
     await userEvent.type(screen.getByLabelText("Message"), "hello");
@@ -37,6 +41,21 @@ describe("ChatPanel", () => {
     expect(runAgent).toHaveBeenCalledWith(
       expect.objectContaining({ messages: [{ role: "user", content: "hello" }] })
     );
+  });
+
+  it("says when the assistant ran out of steps", async () => {
+    saveApiKey("google", "key", "memory");
+    vi.mocked(runAgent).mockResolvedValue({ text: "", hitStepLimit: true, responseMessages: [] });
+
+    render(<ChatPanel onChange={vi.fn()} />);
+    await userEvent.type(screen.getByLabelText("Message"), "build the issue");
+    await userEvent.click(screen.getByRole("button", { name: "Send" }));
+
+    expect(
+      await screen.findByText(
+        'Stopped after 12 steps; the task may be unfinished. Send "continue" to go on.'
+      )
+    ).toBeInTheDocument();
   });
 
   it("shows provider errors", async () => {
