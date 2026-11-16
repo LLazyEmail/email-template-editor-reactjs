@@ -51,7 +51,7 @@ src/
 
 .claude/skills/               # Claude skills (best practices)
 docs/AI_AGENT.md              # Extended agent reference
-docs/screenshots/             # UI illustrations for the README
+docs/screenshots/             # Screenshots for the README
 .github/workflows/            # CI on Node 22: ci.yml (build), test.yml (Vitest), e2e.yml (Playwright)
 Dockerfile                    # Node 22, next build + next start (port 3000)
 vitest.config.mts             # Vitest config (jsdom, setup file, path alias)
