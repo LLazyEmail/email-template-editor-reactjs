@@ -54,7 +54,7 @@ docs/AI_AGENT.md              # Extended agent reference
 docs/screenshots/             # UI illustrations for the README
 .github/workflows/            # CI on Node 22: ci.yml (build), test.yml (Vitest), e2e.yml (Playwright)
 Dockerfile                    # Node 22, next build + next start (port 3000)
-vitest.config.ts              # Vitest config (jsdom, setup file, path alias)
+vitest.config.mts             # Vitest config (jsdom, setup file, path alias)
 next.config.js
 tsconfig.json                 # Paths: @/* → ./src/*
 ```
@@ -81,7 +81,7 @@ tsconfig.json                 # Paths: @/* → ./src/*
 
 ### Tests
 - Runner: **Vitest** (`npm test` / `npm run test:watch`).
-- Config: `vitest.config.ts`.
+- Config: `vitest.config.mts`.
 - Setup: `src/setupTests.ts` (jest-dom matchers + cleanup).
 - Mock API calls with `vi.mock` so tests do not hit the network.
 - Example: `src/App.test.tsx`.
