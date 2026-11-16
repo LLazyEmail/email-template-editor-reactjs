@@ -2,7 +2,7 @@ import { PROVIDER_API_ORIGINS } from "../ai/providerOrigins";
 import { resolveApiUrl } from "../api/apiUrl";
 
 /**
- * Content-Security-Policy for the editor, built per request by `middleware.ts`.
+ * Content-Security-Policy for the editor, built per request by `proxy.ts`.
  *
  * Why: the AI assistant keeps the user's API key in the browser, so an injected script could
  * read it. This policy blocks scripts that don't carry this request's nonce, and limits where the
@@ -24,7 +24,7 @@ export function buildContentSecurityPolicy({ nonce, isDev, apiOrigins }: BuildCs
   const directives: Record<string, string[]> = {
     "default-src": ["'self'"],
     // 'strict-dynamic' lets nonce'd scripts load the lazy chunks (e.g. the chat panel).
-    // Dev needs 'unsafe-eval' for webpack's eval source maps and React Refresh.
+    // Dev needs 'unsafe-eval' for the dev bundler's eval source maps and React Refresh.
     "script-src": [
       "'self'",
       `'nonce-${nonce}'`,

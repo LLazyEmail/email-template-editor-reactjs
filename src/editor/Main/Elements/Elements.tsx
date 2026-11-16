@@ -119,7 +119,7 @@ const Elements = ({ refreshKey = 0 }: ElementsProps) => {
         onCancel={handleCancelAddElement}
         footer={null}
         width={1000}
-        destroyOnClose
+        destroyOnHidden
       >
         <AddElementForm
           onSubmit={onSubmitAddElement}
@@ -133,7 +133,7 @@ const Elements = ({ refreshKey = 0 }: ElementsProps) => {
         onCancel={handleCancelEditElement}
         footer={null}
         width={1000}
-        destroyOnClose
+        destroyOnHidden
       >
         {modalEditElement.data ? (
           <EditElementForm

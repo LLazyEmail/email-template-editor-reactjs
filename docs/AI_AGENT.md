@@ -138,7 +138,7 @@ No browser storage protects against XSS or malicious browser extensions, so the 
 
 ### Content-Security-Policy
 
-`middleware.ts` sends a CSP on every page, built by `src/security/contentSecurityPolicy.ts`:
+`proxy.ts` sends a CSP on every page, built by `src/security/contentSecurityPolicy.ts`:
 
 - `script-src 'nonce-…' 'strict-dynamic'`: only scripts carrying this request's nonce run, plus what they load (Next.js chunks, the lazy chat panel). Injected inline scripts and `onerror=` handlers are blocked. Dev mode adds `'unsafe-eval'`.
 - `connect-src`: the page may call only itself, the backend and the LLM providers (`src/ai/providerOrigins.ts`). A stolen key can't be sent to another host with `fetch`.

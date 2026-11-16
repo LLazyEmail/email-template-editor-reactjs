@@ -7,7 +7,7 @@ description: "Write and fix tests for the email template editor. Use when adding
 
 ## Unit tests (Vitest)
 
-- Config: `vitest.config.ts`. Setup: `src/setupTests.ts`.
+- Config: `vitest.config.mts`. Setup: `src/setupTests.ts`.
 - Mock `src/api/main` completely. Never hit the network.
 - Ant Design needs `window.matchMedia`. The setup file already polyfills it.
 - Assert on visible text (`getByText`, `findByText`), not internals.

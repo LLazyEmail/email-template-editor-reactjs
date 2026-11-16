@@ -40,7 +40,7 @@ const Home = () => {
 
   const onHandleGenerate = () => {
     generate().then((link) => {
-      notification.success({ message: "Generated successfully" });
+      notification.success({ title: "Generated successfully" });
       setGeneratedTemplateLink(link);
     });
   };
@@ -97,7 +97,7 @@ const Home = () => {
         onCancel={handleCancel}
         footer={null}
         width={1000}
-        destroyOnClose
+        destroyOnHidden
       >
         <AddRootElementForm onSubmit={onSubmit} onCancel={handleCancel} />
       </Modal>
@@ -117,14 +117,20 @@ const Home = () => {
           </section>
 
           {/* Manual editing: collapsed by default, panels render on first open. */}
-          <Collapse>
-            <Collapse.Panel key="tree" header="Template tree">
-              <TemplateTree treeData={templateTree} refresh={getTreeData} />
-            </Collapse.Panel>
-            <Collapse.Panel key="elements" header="Elements">
-              <Elements refreshKey={elementsVersion} />
-            </Collapse.Panel>
-          </Collapse>
+          <Collapse
+            items={[
+              {
+                key: "tree",
+                label: "Template tree",
+                children: <TemplateTree treeData={templateTree} refresh={getTreeData} />,
+              },
+              {
+                key: "elements",
+                label: "Elements",
+                children: <Elements refreshKey={elementsVersion} />,
+              },
+            ]}
+          />
         </main>
       </div>
     </div>

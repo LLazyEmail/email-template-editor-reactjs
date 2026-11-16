@@ -29,3 +29,8 @@ yarn-error.log*
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+
+# typescript
+*.tsbuildinfo
+# managed by Next.js; its content flips between `next dev` and `next build`
+next-env.d.ts

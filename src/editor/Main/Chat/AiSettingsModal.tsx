@@ -93,12 +93,12 @@ const AiSettingsModal = ({ open, settings, onClose, onChange }: AiSettingsModalP
   const info = PROVIDERS[provider];
 
   return (
-    <Modal title="AI assistant settings" open={open} onCancel={onClose} footer={null} destroyOnClose>
+    <Modal title="AI assistant settings" open={open} onCancel={onClose} footer={null} destroyOnHidden>
       <Alert
         type="info"
         showIcon
         style={{ marginBottom: 16 }}
-        message="Your key stays in this browser"
+        title="Your key stays in this browser"
         description={`It is sent only to ${info.label}, never to the editor's server. Anyone who can run scripts on this page or in your browser extensions could read it, so use a key with a spending limit and revoke it if in doubt.`}
       />
       <Form form={form} layout="vertical" onFinish={onFinish} requiredMark={false}>
@@ -163,7 +163,7 @@ const AiSettingsModal = ({ open, settings, onClose, onChange }: AiSettingsModalP
             ))}
           </Radio.Group>
         </Form.Item>
-        {error ? <Alert type="error" message={error} style={{ marginBottom: 16 }} /> : null}
+        {error ? <Alert type="error" title={error} style={{ marginBottom: 16 }} /> : null}
         <div style={{ display: "flex", justifyContent: "space-between", gap: 8 }}>
           <Button danger disabled={!storedKey} onClick={onRemoveKey}>
             Remove key
