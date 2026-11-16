@@ -9,7 +9,7 @@ Read `docs/deployment.md` before changing hosting.
 
 ## Facts
 
-- App is Next.js 14 App Router. Default output is a Node server (`next start`).
+- App is Next.js 16 App Router. Default output is a Node server (`next start`).
 - Frontend calls a separate backend on port 9000 unless `NEXT_PUBLIC_API_URL` is set.
 - Docker image already builds and runs on port 3000.
 

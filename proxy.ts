@@ -6,7 +6,7 @@ import { apiOriginsFor, buildContentSecurityPolicy } from "./src/security/conten
  * Next.js reads the policy from the request headers and adds the nonce to its own scripts;
  * for that the pages must render per request (see `dynamic` in app/layout.tsx).
  */
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const nonce = btoa(crypto.randomUUID());
 
   // Behind a reverse proxy, the browser-facing protocol and host come from X-Forwarded-*.

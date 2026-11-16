@@ -18,6 +18,15 @@ Object.defineProperty(window, "matchMedia", {
   }),
 });
 
+// jsdom has no ResizeObserver, and Ant Design 6 no longer bundles a polyfill
+if (typeof window.ResizeObserver === "undefined") {
+  window.ResizeObserver = class {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  };
+}
+
 afterEach(() => {
   cleanup();
 });

@@ -8,7 +8,7 @@ Compare practical ways to host the email template editor. This is research, not 
 
 ## What the app needs
 
-- Next.js 14 App Router frontend.
+- Next.js 16 App Router frontend.
 - A separate backend (default `http://localhost:9000`).
 - Public env var `NEXT_PUBLIC_API_URL` for the API base URL.
 - No server-side secrets in this repo today.

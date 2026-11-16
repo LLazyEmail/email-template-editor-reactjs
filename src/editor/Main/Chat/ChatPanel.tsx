@@ -196,7 +196,7 @@ const ChatPanel = ({ onChange }: ChatPanelProps) => {
         <Alert
           type="warning"
           showIcon
-          message="Add your API key to start"
+          title="Add your API key to start"
           action={
             <Button size="small" type="primary" onClick={() => setSettingsOpen(true)}>
               Add key
@@ -218,9 +218,9 @@ const ChatPanel = ({ onChange }: ChatPanelProps) => {
         {pendingConfirm ? (
           <Alert
             type="warning"
-            message={pendingConfirm.message}
+            title={pendingConfirm.message}
             action={
-              <Space direction="vertical">
+              <Space orientation="vertical">
                 <Button size="small" danger onClick={() => pendingConfirm.resolve(true)}>
                   Delete
                 </Button>
@@ -275,7 +275,7 @@ const ChatPanel = ({ onChange }: ChatPanelProps) => {
 
 const ChatMessage = ({ entry }: { entry: ChatEntry }) => {
   if (entry.kind === "error") {
-    return <Alert type="error" message={entry.text} style={{ marginBottom: 8 }} />;
+    return <Alert type="error" title={entry.text} style={{ marginBottom: 8 }} />;
   }
   if (entry.kind === "tool") {
     return (

@@ -1,6 +1,6 @@
 "use client";
 
-import { Dropdown, Menu, MenuProps, Tree, Modal, notification } from "antd";
+import { Dropdown, MenuProps, Tree, Modal, notification } from "antd";
 // import type { DataNode, TreeProps } from "antd/es/tree";
 import React, { useState } from "react";
 import {
@@ -9,12 +9,13 @@ import {
   TemplateTreeProps,
 } from "./TemplateTree.types";
 
-import { MenuInfo } from "rc-menu/lib/interface";
 import EditElementForm from "./EditElementForm/EditElementForm";
 import { TemplateTree as TemplateTreeNode } from "../../../types";
 import { updateTreeNode, addTreeNode, deleteTreeNode } from "../../../api/main";
 import AddElementForm from "./AddElementForm/AddElementForm";
 import { buildElementNode, buildHtmlNode } from "./nodeBuilders";
+
+type MenuInfo = Parameters<NonNullable<MenuProps["onClick"]>>[0];
 
 const TemplateTree = (props: TemplateTreeProps) => {
   const [modalAddElement, setModalAddElement] = useState<ModalState>({
@@ -86,7 +87,7 @@ const TemplateTree = (props: TemplateTreeProps) => {
     const { currentItemKey, values, element } = formValues;
 
     if (values.type === "element" && !element) {
-      notification.error({ message: "Error: element not found" });
+      notification.error({ title: "Error: element not found" });
 
       return;
     }
@@ -142,7 +143,7 @@ const TemplateTree = (props: TemplateTreeProps) => {
         onCancel={handleCancelModalEdit}
         footer={null}
         width={1000}
-        destroyOnClose
+        destroyOnHidden
       >
         {modalEditElement.data ? (
           <EditElementForm
@@ -159,7 +160,7 @@ const TemplateTree = (props: TemplateTreeProps) => {
         onCancel={handleCancelModalAdd}
         footer={null}
         width={1000}
-        destroyOnClose
+        destroyOnHidden
       >
         {modalAddElement.data ? (
           <AddElementForm
