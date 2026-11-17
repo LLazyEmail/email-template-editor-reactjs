@@ -1,0 +1,45 @@
+name: Feature request
+description: A new capability or a change to existing behavior.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What the user cannot do today, or what is slow or confusing.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+      description: What should happen instead. Mockups or examples welcome.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: Checkable statements that define "done". They become the tests.
+      placeholder: |
+        - [ ] Right-clicking a node shows "Duplicate"
+        - [ ] Duplicate copies the node and its children under the same parent
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      multiple: true
+      options:
+        - Template tree
+        - Elements library
+        - Preview
+        - AI assistant
+        - Generate / backend API (needs email-template-editor-nodejs)
+        - Build, CI or deployment
+  - type: textarea
+    id: out-of-scope
+    attributes:
+      label: Out of scope
+      description: What this issue deliberately does not cover.

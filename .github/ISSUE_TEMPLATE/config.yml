@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Backend API issue
+    url: https://github.com/LLazyEmail/email-template-editor-nodejs/issues
+    about: Problems with /tree, /elements or /generate belong to the backend repository.

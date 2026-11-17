@@ -1,0 +1,44 @@
+name: Bug report
+description: Something in the editor does not work as expected.
+labels: [bug]
+body:
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Exact clicks or inputs, starting from a fresh page load.
+      placeholder: |
+        1. Right-click the root node in the template tree
+        2. Choose Add, type HTML, Submit
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: Include errors from the browser console or the notification text.
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      multiple: true
+      options:
+        - Template tree
+        - Elements library
+        - Preview
+        - AI assistant
+        - Generate / backend API
+        - Build, CI or deployment
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Browser, frontend commit, backend version, AI provider and model if relevant.
