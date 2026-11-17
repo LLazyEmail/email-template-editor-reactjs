@@ -1,1 +1,15 @@
 node_modules
+.next
+.git
+.github
+.devcontainer
+.claude
+.plans
+coverage
+test-results
+playwright-report
+blob-report
+e2e
+docs
+*.md
+.env*

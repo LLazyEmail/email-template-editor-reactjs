@@ -59,8 +59,9 @@ public/                       # favicon.ico, robots.txt
 .mcp.json                     # MCP servers: Next DevTools (dev-server errors/routes), Playwright (browser)
 docs/AI_AGENT.md              # Extended agent reference
 docs/screenshots/             # Screenshots for the README
-.github/workflows/            # CI on Node 22: ci.yml (build), test.yml (Vitest), e2e.yml (Playwright)
-Dockerfile                    # Node 22, next build + next start (port 3000)
+.github/workflows/            # CI on Node 24 (.nvmrc): ci.yml (lint, typecheck, format, build, Docker), test.yml (Vitest), e2e.yml (Playwright)
+Dockerfile                    # Node 24, multi-stage, runs the standalone server as user node (port 3000)
+.nvmrc                        # Node major used by CI, Docker and the devcontainer
 vitest.config.mts             # Vitest config (jsdom, setup file, path alias)
 next.config.js
 tsconfig.json                 # Paths: @/* → ./src/*
@@ -162,7 +163,7 @@ npm run build
 ### Docker
 
 ```bash
-docker build -t email-template-editor .
+docker build --build-arg NEXT_PUBLIC_API_URL=https://api.example.com -t email-template-editor .
 docker run -p 3000:3000 email-template-editor
 ```
 

@@ -49,8 +49,8 @@ Use the Next.js runtime, set `NEXT_PUBLIC_API_URL`, deploy from Git.
 **Fit:** self-hosted or ECS/Fargate.
 
 ```bash
-docker build -t email-template-editor .
-docker run -p 3000:3000 -e NEXT_PUBLIC_API_URL=https://api.example.com email-template-editor
+docker build --build-arg NEXT_PUBLIC_API_URL=https://api.example.com -t email-template-editor .
+docker run -p 3000:3000 email-template-editor
 ```
 
 Note: `NEXT_PUBLIC_*` is inlined at build time, so pass it as a build arg if the image is built in CI.

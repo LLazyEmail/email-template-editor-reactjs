@@ -121,21 +121,21 @@ The frontend expects a backend on port **9000**. Override the base URL with `NEX
 
 ### Scripts
 
-| Command              | Purpose                                            |
-| -------------------- | -------------------------------------------------- |
-| `npm run dev`        | Next.js development server                         |
-| `npm run lint`       | ESLint (Next.js rules + architecture import rules) |
-| `npm run typecheck`  | TypeScript check (`tsc --noEmit`)                  |
-| `npm run format`     | Format with Prettier (`format:check` runs in CI)   |
-| `npm test`           | Run Vitest once                                    |
-| `npm run test:watch` | Vitest in watch mode                               |
-| `npm run build`      | Production build                                   |
-| `npm start`          | Start the production server                        |
+| Command              | Purpose                                                                       |
+| -------------------- | ----------------------------------------------------------------------------- |
+| `npm run dev`        | Next.js development server                                                    |
+| `npm run lint`       | ESLint (Next.js rules + architecture import rules)                            |
+| `npm run typecheck`  | TypeScript check (`tsc --noEmit`)                                             |
+| `npm run format`     | Format with Prettier (`format:check` runs in CI)                              |
+| `npm test`           | Run Vitest once                                                               |
+| `npm run test:watch` | Vitest in watch mode                                                          |
+| `npm run build`      | Production build                                                              |
+| `npm start`          | Start the production build locally (Docker runs `.next/standalone/server.js`) |
 
 ### Docker
 
 ```bash
-docker build -t email-template-editor .
+docker build --build-arg NEXT_PUBLIC_API_URL=https://api.example.com -t email-template-editor .
 docker run -p 3000:3000 email-template-editor
 ```
 
