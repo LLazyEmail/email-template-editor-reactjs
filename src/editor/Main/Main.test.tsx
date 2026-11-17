@@ -1,9 +1,8 @@
-import React from "react";
 import { render, screen } from "@testing-library/react";
 import { vi } from "vitest";
-import App from "./App";
+import Main from "./Main";
 
-vi.mock("./api/main", () => ({
+vi.mock("@/api/main", () => ({
   getTree: vi.fn(() => Promise.resolve([])),
   generate: vi.fn(() => Promise.resolve("")),
   saveTree: vi.fn(() => Promise.resolve({})),
@@ -16,8 +15,8 @@ vi.mock("./api/main", () => ({
   deleteTreeNode: vi.fn(() => Promise.resolve({})),
 }));
 
-test("renders the app without crashing", async () => {
-  render(<App />);
+test("renders the editor without crashing", async () => {
+  render(<Main />);
   expect(await screen.findByText(/Add root element/i)).toBeInTheDocument();
   expect(screen.getByText(/Generate/i)).toBeInTheDocument();
 });

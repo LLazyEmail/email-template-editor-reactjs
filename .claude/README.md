@@ -1,16 +1,23 @@
 # Claude folder
 
-Issue: #10
+Claude Code configuration for this repository. The entry point for every agent is [`AGENTS.md`](../AGENTS.md).
 
-This folder holds Claude Code skills for this repository. Skills are loaded when a task matches their description.
+## Skills (`skills/`)
 
-## Skills
+Loaded when a task matches the skill's `description`.
 
 | Skill | When to use |
 | --- | --- |
 | `software-development-best-practices` | Any feature, fix, refactor, or review |
 | `testing` | Writing or fixing Vitest or Playwright tests |
-| `deployment` | Shipping the app to CloudFront, Vercel, Netlify, or Docker |
-| `editor-conventions` | Changing the email editor UI or API client |
+| `deployment` | Hosting, Docker, environment variables |
+| `editor-conventions` | Changing the editor UI, AI assistant, CSP or API client |
 
-See `docs/claude-skills.md` for the full guide.
+## Subagents (`agents/`)
+
+| Agent | Use for |
+| --- | --- |
+| `coder` | Logic and behavior: state, API client, AI assistant, CSP, types, tests |
+| `designer` | Visual work: layout, spacing, Ant Design theming, accessibility, preview look |
+
+See [`docs/claude-skills.md`](../docs/claude-skills.md) for how to add or change them.

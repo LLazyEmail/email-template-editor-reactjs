@@ -15,46 +15,15 @@ Compare practical ways to host the email template editor. This is research, not 
 
 ## Options
 
-### 1. Amazon CloudFront + S3
+### 1. Amazon CloudFront
 
-**Fit:** good if the team already uses AWS and the app can be a static export.
+**Static export (CloudFront + S3) is not possible.** The page sends a Content-Security-Policy with a nonce that changes on every request (`proxy.ts`), so `app/layout.tsx` sets `dynamic = "force-dynamic"` and every page is rendered per request. `output: "export"` would produce pages without a nonce, and the browser would block their scripts.
 
-**How it would work**
+**What works on AWS:** CloudFront in front of a Node server (the Docker image on ECS/Fargate or App Runner, see option 4) or Amplify Hosting (option 5).
 
-1. Set `output: 'export'` in `next.config.js`.
-2. `npm run build` writes static files to `out/`.
-3. Upload `out/` to an S3 bucket.
-4. Put CloudFront in front of the bucket (HTTPS, caching, custom domain).
-5. Set `NEXT_PUBLIC_API_URL` at build time to the public backend URL.
-
-**Pros**
-
-- Cheap at low traffic.
-- CDN caching is strong for a mostly static editor shell.
-- Matches the issue request for CloudFront.
-
-**Cons**
-
-- Static export drops Next.js server features (SSR, route handlers, image optimization).
-- API URL is baked in at build time.
-- Need a separate host for the backend.
-
-**Starter config**
-
-```js
-// next.config.js
-const nextConfig = {
-  output: "export",
-  images: { unoptimized: true },
-};
-module.exports = nextConfig;
-```
-
-```bash
-NEXT_PUBLIC_API_URL=https://api.example.com npm run build
-aws s3 sync out/ s3://email-template-editor --delete
-aws cloudfront create-invalidation --distribution-id DIST_ID --paths "/*"
-```
+- Cache only `/_next/static/*` (immutable, hashed file names) at the edge.
+- Do not cache HTML: forward it to the origin so each response gets its own nonce.
+- Set `NEXT_PUBLIC_API_URL` at build time to the public backend URL; the CSP allows that origin.
 
 ### 2. Vercel
 
@@ -88,23 +57,20 @@ Note: `NEXT_PUBLIC_*` is inlined at build time, so pass it as a build arg if the
 
 ### 5. AWS Amplify Hosting
 
-**Fit:** AWS-native alternative to CloudFront+S3 that understands Next.js better.
-
-Amplify can host Next.js without forcing a static export. Use this if the team wants AWS but also wants server features later.
+**Fit:** AWS-native managed hosting that runs the Next.js server, so the per-request CSP works.
 
 ## Recommendation
 
 | Priority | Choice | Why |
 | --- | --- | --- |
 | Fastest | Vercel | Native Next.js, least setup |
-| AWS, static | CloudFront + S3 | Matches the issue, cheap, needs static export |
-| AWS, flexible | Amplify | Stays on AWS without dropping Next features |
+| AWS, managed | Amplify | Runs the Next.js server on AWS |
+| AWS, own infra | CloudFront + Docker on ECS/App Runner | Edge caching of static assets, HTML from the server |
 | Self-hosted | Existing Dockerfile | Already works |
 
 Do not hardcode the API host. Always use `NEXT_PUBLIC_API_URL`.
 
 ## Suggested next steps
 
-1. Decide static export vs Node server.
-2. If CloudFront: add `output: 'export'` in a follow-up PR and a GitHub Action that syncs `out/` to S3.
-3. Document the production API URL once the backend host exists.
+1. Pick a Node host (Vercel, Amplify or Docker).
+2. Document the production API URL once the backend host exists.

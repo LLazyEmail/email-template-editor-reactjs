@@ -46,10 +46,13 @@ src/
     Preview/                  # Live email preview (sandboxed iframe) + client-side renderer
   security/                   # Content-Security-Policy builder
   types/                      # Shared types (e.g. TemplateTree)
-  App.tsx                     # Legacy app root (still used by tests)
   index.css                   # Global styles
+  setupTests.ts               # Vitest setup (jest-dom, matchMedia/ResizeObserver polyfills)
+e2e/                          # Playwright specs (backend and AI providers are mocked with page.route)
+public/                       # favicon.ico, robots.txt
 
-.claude/skills/               # Claude skills (best practices)
+.claude/skills/               # Claude skills: best practices, testing, deployment, editor conventions
+.claude/agents/               # Claude subagents: coder (logic, tests), designer (visual work)
 docs/AI_AGENT.md              # Extended agent reference
 docs/screenshots/             # Screenshots for the README
 .github/workflows/            # CI on Node 22: ci.yml (build), test.yml (Vitest), e2e.yml (Playwright)
@@ -64,7 +67,8 @@ tsconfig.json                 # Paths: @/* → ./src/*
 ### Client vs server components
 - Anything that uses hooks, Ant Design, `window`, or browser APIs must be a **client component**.
 - Add `"use client";` at the top of the file.
-- Currently marked client: `Main.tsx`, `Elements.tsx`, `TemplateTree.tsx`.
+- Currently marked client: `Main.tsx`, `Elements.tsx`, `TemplateTree.tsx`, `Preview.tsx`, `Chat/ChatPanel.tsx`, `Chat/AiSettingsModal.tsx`.
+- Pages are rendered per request (`export const dynamic = "force-dynamic"` in `app/layout.tsx`) because the CSP nonce changes on every request. Do not switch to static export (`output: "export"`).
 - New interactive UI under `src/editor/Main/**` should also be client components.
 
 ### API client (`src/api/main.ts`)
@@ -83,8 +87,9 @@ tsconfig.json                 # Paths: @/* → ./src/*
 - Runner: **Vitest** (`npm test` / `npm run test:watch`).
 - Config: `vitest.config.mts`.
 - Setup: `src/setupTests.ts` (jest-dom matchers + cleanup).
-- Mock API calls with `vi.mock` so tests do not hit the network.
-- Example: `src/App.test.tsx`.
+- Mock API calls with `vi.mock("@/api/main", …)` so tests do not hit the network.
+- Tests live next to the code (`*.test.ts(x)`). Example: `src/editor/Main/Main.test.tsx`.
+- E2E: Playwright specs in `e2e/` (`npm run test:e2e`).
 
 ### TypeScript
 - Strict mode is on.
@@ -151,7 +156,7 @@ docker run -p 3000:3000 email-template-editor
 3. Make the change, keeping client/server boundaries in mind.
 4. Update or add a Vitest test when behavior changes.
 5. Open a PR with a short human summary of what changed and why.
-6. Ensure CI passes on the Node matrix.
+6. Ensure CI passes (build, Vitest, Playwright).
 
 ## Related
 
