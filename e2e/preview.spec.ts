@@ -3,7 +3,7 @@ import { test, expect } from "@playwright/test";
 // 1×1 transparent PNG.
 const PIXEL = Buffer.from(
   "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=",
-  "base64"
+  "base64",
 );
 
 const tree = [

@@ -13,7 +13,7 @@ test("renders the email in a fully sandboxed iframe", () => {
           children: [{ title: "{{name}}", value: "Welcome" }],
         },
       ]}
-    />
+    />,
   );
 
   const frame = screen.getByTitle("Email preview");

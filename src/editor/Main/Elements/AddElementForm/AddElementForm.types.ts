@@ -1,4 +1,6 @@
+import { Element } from "../../../../api/main.types";
+
 export interface AddElementFormProps {
-  onSubmit: (values: any) => void;
+  onSubmit: (values: Omit<Element, "key">) => void;
   onCancel: () => void;
 }

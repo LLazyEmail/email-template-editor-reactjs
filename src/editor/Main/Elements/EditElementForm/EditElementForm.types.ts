@@ -1,7 +1,7 @@
 import { Element } from "../../../../api/main.types";
 
 export interface EditElementFormProps {
-  onSubmit: (values: any) => void;
+  onSubmit: (values: Element) => void;
   onCancel: () => void;
   data: Element;
 }

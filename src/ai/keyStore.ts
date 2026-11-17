@@ -67,7 +67,7 @@ export function loadApiKey(provider: ProviderId): StoredKey | null {
 export function saveApiKey(
   provider: ProviderId,
   apiKey: string,
-  persistence: KeyPersistence
+  persistence: KeyPersistence,
 ): boolean {
   clearApiKey(provider);
   if (persistence === "memory") {

@@ -1,14 +1,10 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Button, Form, Input } from "antd";
 import { EditElementFormProps } from "./EditElementForm.types";
 
 const { TextArea } = Input;
 
-const EditElementForm = ({
-  onCancel,
-  onSubmit,
-  data,
-}: EditElementFormProps) => {
+const EditElementForm = ({ onCancel, onSubmit, data }: EditElementFormProps) => {
   const [form] = Form.useForm();
 
   const onReset = () => {

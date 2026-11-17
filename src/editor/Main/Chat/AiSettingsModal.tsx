@@ -48,6 +48,7 @@ const AiSettingsModal = ({ open, settings, onClose, onChange }: AiSettingsModalP
   useEffect(() => {
     if (!open) return;
     const stored = loadApiKey(settings.provider);
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- resets the form each time the modal opens; the key may have changed elsewhere
     setStoredKey(stored);
     setError(null);
     setShowKey(false);
@@ -93,7 +94,13 @@ const AiSettingsModal = ({ open, settings, onClose, onChange }: AiSettingsModalP
   const info = PROVIDERS[provider];
 
   return (
-    <Modal title="AI assistant settings" open={open} onCancel={onClose} footer={null} destroyOnHidden>
+    <Modal
+      title="AI assistant settings"
+      open={open}
+      onCancel={onClose}
+      footer={null}
+      destroyOnHidden
+    >
       <Alert
         type="info"
         showIcon

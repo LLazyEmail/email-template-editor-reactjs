@@ -1,13 +1,10 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Button, Form, Input } from "antd";
 import { AddElementFormProps } from "./AddElementForm.types";
 
 const { TextArea } = Input;
 
-const AddElementForm = ({
-  onCancel,
-  onSubmit,
-}: AddElementFormProps) => {
+const AddElementForm = ({ onCancel, onSubmit }: AddElementFormProps) => {
   const [form] = Form.useForm();
 
   const onReset = () => {

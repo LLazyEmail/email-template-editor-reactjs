@@ -33,7 +33,9 @@ function someInErrorChain(error: unknown, test: (e: ErrorLike) => boolean, depth
   const e = error as ErrorLike;
   if (test(e)) return true;
   if (someInErrorChain(e.cause, test, depth + 1)) return true;
-  return Array.isArray(e.errors) && e.errors.some((inner) => someInErrorChain(inner, test, depth + 1));
+  return (
+    Array.isArray(e.errors) && e.errors.some((inner) => someInErrorChain(inner, test, depth + 1))
+  );
 }
 
 const isTimeout = (error: unknown) => someInErrorChain(error, (e) => e.name === "TimeoutError");
@@ -75,6 +77,7 @@ const ChatPanel = ({ onChange }: ChatPanelProps) => {
   // Browser storage is read after mount so server and client render the same markup.
   useEffect(() => {
     const loaded = initialSettings();
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- storage exists only in the browser; reading it during render would break hydration
     setSettings(loaded);
     setHasKey(Boolean(loadApiKey(loaded.provider)));
   }, []);
@@ -108,7 +111,7 @@ const ChatPanel = ({ onChange }: ChatPanelProps) => {
         signal?.addEventListener("abort", onAbort);
         setPendingConfirm({ message, resolve: settle });
       }),
-    []
+    [],
   );
 
   const send = async () => {

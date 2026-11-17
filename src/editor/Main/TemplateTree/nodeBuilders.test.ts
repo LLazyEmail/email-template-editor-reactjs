@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { buildElementNode, buildHtmlNode, createNodeKey, extractPlaceholders } from "./nodeBuilders";
+import {
+  buildElementNode,
+  buildHtmlNode,
+  createNodeKey,
+  extractPlaceholders,
+} from "./nodeBuilders";
 
 describe("extractPlaceholders", () => {
   it("returns unique placeholders in order", () => {

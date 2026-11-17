@@ -13,10 +13,7 @@ const { TextArea } = Input;
 //   wrapperCol: { offset: 8, span: 16 },
 // };
 
-const AddRootElementForm = ({
-  onSubmit,
-  onCancel,
-}: AddRootElementFormProps) => {
+const AddRootElementForm = ({ onSubmit, onCancel }: AddRootElementFormProps) => {
   const [form] = Form.useForm();
 
   const onReset = () => {

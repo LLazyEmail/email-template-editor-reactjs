@@ -23,11 +23,7 @@ interface BuildHtmlNodeParams {
 }
 
 /** A leaf node holding raw HTML. */
-export const buildHtmlNode = ({
-  parentKey,
-  title,
-  value,
-}: BuildHtmlNodeParams): AddTreeNode => ({
+export const buildHtmlNode = ({ parentKey, title, value }: BuildHtmlNodeParams): AddTreeNode => ({
   parentKey,
   item: { key: createNodeKey(), title, value, children: [] },
 });
@@ -59,7 +55,7 @@ export const buildElementItem = ({
         title: placeholder,
         value: fills[placeholder] ?? "",
         children: [],
-      }
+      },
   ),
 });
 

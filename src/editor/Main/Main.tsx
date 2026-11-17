@@ -49,7 +49,7 @@ const Home = () => {
     setIsModalOpen(true);
   };
 
-  const onSubmit = (values: any) => {
+  const onSubmit = (values: { value: string }) => {
     console.log("values", values);
     const root: SaveTree["treeData"] = [
       { title: "root", key: "1", value: values.value, children: [] },
@@ -77,19 +77,13 @@ const Home = () => {
   return (
     <div className="editor">
       <header className="editor-toolbar">
-        <Button
-          disabled={Boolean(templateTree.length)}
-          onClick={showModal}
-          type="primary"
-        >
+        <Button disabled={Boolean(templateTree.length)} onClick={showModal} type="primary">
           Add root element
         </Button>
         <Button onClick={onHandleGenerate} type="primary">
           Generate
         </Button>
-        <Typography.Link onClick={onOpenLink}>
-          {generatedTemplateLink}
-        </Typography.Link>
+        <Typography.Link onClick={onOpenLink}>{generatedTemplateLink}</Typography.Link>
       </header>
       <Modal
         title="Add root element"
