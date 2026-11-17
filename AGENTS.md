@@ -144,7 +144,7 @@ tsconfig.json                 # Paths: @/* → ./src/*
 
 ### Change an API call
 
-1. Update the function in `src/api/main.ts`.
+1. Check the operation in the backend's `openapi.json`, then update the function in `src/api/main.ts`.
 2. Update types in `src/api/main.types.ts` if the payload/response changes.
 3. Update any callers in `Main.tsx`, `Elements.tsx`, or `TemplateTree.tsx`.
 4. Keep the mock in tests in sync.

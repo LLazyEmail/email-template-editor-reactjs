@@ -28,6 +28,8 @@ The editor is a single-page experience:
 4. **Manage elements:** `Elements` list → `getAllElements` / `addElement` / `updateElement` / `deleteElement` (REST under `/elements`).
 5. **Generate:** Button calls `generate()` → `POST /generate` → `{ url }`; `generate()` resolves to the link that can be opened.
 
+The backend's request and response shapes are described in its [`openapi.json`](https://github.com/LLazyEmail/email-template-editor-nodejs/blob/main/openapi.json) (served at `GET /openapi.json`). It is generated from the backend's validation schemas, so trust it over this document.
+
 ## File responsibilities
 
 | File                                                        | Role                                                                                          |
