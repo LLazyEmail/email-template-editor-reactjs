@@ -170,9 +170,9 @@ docker run -p 3000:3000 email-template-editor
 
 ## CI
 
-- Workflows: `ci.yml` (build), `test.yml` (Vitest), `e2e.yml` (Playwright) in `.github/workflows/`
+- Workflows in `.github/workflows/`: `ci.yml` (lint, typecheck, format check, build, Docker image), `test.yml` (Vitest with coverage thresholds), `e2e.yml` (Playwright; report uploaded on failure)
 - Triggers: push and pull requests to `master`
-- Node: 22 (same as Dockerfile and devcontainer)
+- Node: 24 from `.nvmrc` (same as Dockerfile and devcontainer)
 - Failures block merge. Keep the workflow green.
 
 ## Things to avoid
