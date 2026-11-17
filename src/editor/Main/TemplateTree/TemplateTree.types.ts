@@ -1,4 +1,5 @@
 import { TemplateTree } from "../../../types";
+import { Element } from "../../../api/main.types";
 
 export interface TemplateTreeProps {
   treeData: Record<string, string | object>[];
@@ -19,10 +20,6 @@ export interface AddElementFormValues {
     elementId?: string;
     children: Record<string, string | undefined>;
   };
-  element: {
-    key: string;
-    title: string;
-    value: string;
-    children: [];
-  };
+  /** The library element picked for `type: "element"`; missing when none was found. */
+  element?: Element | null;
 }

@@ -9,13 +9,6 @@ const { TextArea } = Input;
 
 const { Option } = Select;
 
-const options = [
-  { value: "jack", label: "Jack" },
-  { value: "lucy", label: "Lucy" },
-  { value: "Yiminghe", label: "yiminghe" },
-  { value: "disabled", label: "Disabled", disabled: true },
-];
-
 const AddElementForm = ({ onCancel, onSubmit, data }: AddElementFormProps) => {
   const [form] = Form.useForm();
   const elementKey = Form.useWatch("elementKey", form);
@@ -68,7 +61,7 @@ const AddElementForm = ({ onCancel, onSubmit, data }: AddElementFormProps) => {
     if (foundElement) {
       form.setFieldValue("title", foundElement?.title);
     }
-  }, [elementKey, elements]);
+  }, [elementKey, elements, form]);
 
   return (
     <Form
@@ -79,7 +72,7 @@ const AddElementForm = ({ onCancel, onSubmit, data }: AddElementFormProps) => {
       onFinish={(values) =>
         onSubmit({
           values,
-          currentItemKey: data.key,
+          currentItemKey: data.key as string,
           element:
             values.type === "element"
               ? elements.find((elem) => elem.key === elementKey)

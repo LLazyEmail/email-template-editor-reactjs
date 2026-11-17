@@ -21,7 +21,7 @@ Apply these practices on every code change in this repo. Prefer small, correct, 
 2. Locate the files that own the behavior.
 3. Make the smallest change that meets the goal.
 4. Add or update a test when behavior changes.
-5. Run the relevant check (`npm test`, `npm run build`).
+5. Run the relevant check (`npm run lint`, `npm run typecheck`, `npm test`, `npm run build`).
 6. Write a PR description that says what changed, why, and how to verify.
 
 ## This repository

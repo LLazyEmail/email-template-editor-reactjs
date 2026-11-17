@@ -91,7 +91,13 @@ tsconfig.json                 # Paths: @/* → ./src/*
 - Tests live next to the code (`*.test.ts(x)`). Example: `src/editor/Main/Main.test.tsx`.
 - E2E: Playwright specs in `e2e/` (`npm run test:e2e`).
 
+### Lint and format
+- ESLint 9 flat config (`eslint.config.mjs`): `eslint-config-next` (core-web-vitals + typescript) plus import rules that enforce the layering below. Prettier formats everything (`.prettierrc.json`, width 100).
+- `axios` is allowed only in `src/api/`. `src/ai/` and `src/api/` must not import React, antd or editor UI (`TemplateTree/nodeBuilders` is shared logic and allowed).
+- Do not silence a rule to get green. If a rule is wrong for one line, use `// eslint-disable-next-line <rule> -- <reason>`.
+
 ### TypeScript
+- TypeScript 6. Do not upgrade to 7 yet: `typescript-eslint` does not support it (Renovate is limited to `<7`).
 - Strict mode is on.
 - Path alias `@/*` maps to `src/*`.
 - Prefer explicit types from `src/api/main.types.ts` and `src/types`.
@@ -123,6 +129,9 @@ tsconfig.json                 # Paths: @/* → ./src/*
 ```bash
 npm install
 npm run dev          # http://localhost:3000
+npm run lint         # ESLint: Next.js rules + architecture import rules
+npm run typecheck    # tsc --noEmit
+npm run format       # Prettier
 npm test
 npm run build
 ```

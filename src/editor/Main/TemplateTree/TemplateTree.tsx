@@ -12,6 +12,7 @@ import {
 import EditElementForm from "./EditElementForm/EditElementForm";
 import { TemplateTree as TemplateTreeNode } from "../../../types";
 import { updateTreeNode, addTreeNode, deleteTreeNode } from "../../../api/main";
+import type { UpdateTreeNode } from "../../../api/main.types";
 import AddElementForm from "./AddElementForm/AddElementForm";
 import { buildElementNode, buildHtmlNode } from "./nodeBuilders";
 
@@ -43,7 +44,7 @@ const TemplateTree = (props: TemplateTreeProps) => {
   ];
 
   const handleMenuClick = (e: MenuInfo, item: TemplateTreeNode) => {
-    const map: Record<string, Function | undefined> = {
+    const map: Record<string, (() => void) | undefined> = {
       add: () => setModalAddElement({ isOpen: true, data: item }),
       edit: () => setModalEditElement({ isOpen: true, data: item }),
       delete: () => {
@@ -60,7 +61,7 @@ const TemplateTree = (props: TemplateTreeProps) => {
     console.log("item", item);
   };
 
-  const onSubmitModalEdit = (values: any) => {
+  const onSubmitModalEdit = (values: UpdateTreeNode) => {
     console.log("values", values);
 
     updateTreeNode({
@@ -93,7 +94,7 @@ const TemplateTree = (props: TemplateTreeProps) => {
     }
 
     const data =
-      values.type === "element"
+      values.type === "element" && element
         ? buildElementNode({
             parentKey: currentItemKey,
             title: values.title,

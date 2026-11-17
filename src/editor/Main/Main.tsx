@@ -49,7 +49,7 @@ const Home = () => {
     setIsModalOpen(true);
   };
 
-  const onSubmit = (values: any) => {
+  const onSubmit = (values: { value: string }) => {
     console.log("values", values);
     const root: SaveTree["treeData"] = [
       { title: "root", key: "1", value: values.value, children: [] },

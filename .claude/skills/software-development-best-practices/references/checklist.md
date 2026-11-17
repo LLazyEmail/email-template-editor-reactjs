@@ -19,6 +19,7 @@ Use this before opening or updating a pull request.
 - [ ] `npm test` passes
 
 ## Delivery
+- [ ] `npm run lint`, `npm run typecheck` and `npm run format:check` pass
 - [ ] `npm run build` passes for UI or config changes
 - [ ] PR title is imperative and specific
 - [ ] PR body has what / why / how to verify

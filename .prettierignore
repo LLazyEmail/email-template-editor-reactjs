@@ -1,0 +1,12 @@
+.next
+out
+build
+coverage
+test-results
+playwright-report
+blob-report
+.plans
+package-lock.json
+next-env.d.ts
+public
+docs/screenshots

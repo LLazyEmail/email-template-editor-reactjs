@@ -75,6 +75,7 @@ const ChatPanel = ({ onChange }: ChatPanelProps) => {
   // Browser storage is read after mount so server and client render the same markup.
   useEffect(() => {
     const loaded = initialSettings();
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- storage exists only in the browser; reading it during render would break hydration
     setSettings(loaded);
     setHasKey(Boolean(loadApiKey(loaded.provider)));
   }, []);

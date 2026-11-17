@@ -44,7 +44,7 @@ const Elements = ({ refreshKey = 0 }: ElementsProps) => {
     setIsModalOpenAddElement(true);
   };
 
-  const onSubmitAddElement = (values: any) => {
+  const onSubmitAddElement = (values: Omit<Element, "key">) => {
     addElement({
       key: new Date().toISOString() + "1",
       value: values.value,
@@ -55,7 +55,7 @@ const Elements = ({ refreshKey = 0 }: ElementsProps) => {
     });
   };
 
-  const onSubmitEditElement = (values: any) => {
+  const onSubmitEditElement = (values: Element) => {
     updateElement({
       value: values.value,
       key: values.key,
@@ -99,10 +99,10 @@ const Elements = ({ refreshKey = 0 }: ElementsProps) => {
           return (
             <List.Item
               actions={[
-                <Button onClick={() => onShowModalEditElement(item)}>
+                <Button key="edit" onClick={() => onShowModalEditElement(item)}>
                   edit
                 </Button>,
-                <Button danger onClick={() => onDeleteElement(item)}>
+                <Button key="delete" danger onClick={() => onDeleteElement(item)}>
                   Delete
                 </Button>,
               ]}

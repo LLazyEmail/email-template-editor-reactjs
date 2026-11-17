@@ -1,4 +1,4 @@
 export interface AddRootElementFormProps {
-  onSubmit: (values: any) => void;
+  onSubmit: (values: { value: string }) => void;
   onCancel: () => void;
 }
