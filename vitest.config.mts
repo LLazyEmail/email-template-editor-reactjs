@@ -11,6 +11,14 @@ export default defineConfig({
     css: true,
     // Playwright specs live in e2e/ and run via `npm run test:e2e`, not Vitest.
     exclude: [...configDefaults.exclude, "e2e/**"],
+    coverage: {
+      provider: "v8",
+      include: ["src/**/*.{ts,tsx}"],
+      exclude: ["src/**/*.test.{ts,tsx}", "src/**/*.types.ts", "src/setupTests.ts"],
+      reporter: ["text-summary", "html"],
+      // A ratchet: set just below the current numbers. Raise them when coverage goes up; never lower them.
+      thresholds: { lines: 85, statements: 83, functions: 79, branches: 75 },
+    },
   },
   resolve: {
     alias: {

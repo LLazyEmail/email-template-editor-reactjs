@@ -93,7 +93,7 @@ tsconfig.json                 # Paths: @/* → ./src/*
 
 ### Tests
 
-- Runner: **Vitest** (`npm test` / `npm run test:watch`).
+- Runner: **Vitest** (`npm test` / `npm run test:watch`). `npm run test:coverage` checks coverage thresholds (CI runs it).
 - Config: `vitest.config.mts`.
 - Setup: `src/setupTests.ts` (jest-dom matchers + cleanup).
 - Mock API calls with `vi.mock("@/api/main", …)` so tests do not hit the network.
