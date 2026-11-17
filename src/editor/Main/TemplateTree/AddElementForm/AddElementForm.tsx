@@ -74,9 +74,7 @@ const AddElementForm = ({ onCancel, onSubmit, data }: AddElementFormProps) => {
           values,
           currentItemKey: data.key as string,
           element:
-            values.type === "element"
-              ? elements.find((elem) => elem.key === elementKey)
-              : null,
+            values.type === "element" ? elements.find((elem) => elem.key === elementKey) : null,
         })
       }
       style={{ maxWidth: 1000 }}
@@ -97,9 +95,7 @@ const AddElementForm = ({ onCancel, onSubmit, data }: AddElementFormProps) => {
       </Form.Item>
       <Form.Item
         noStyle
-        shouldUpdate={(prevValues, currentValues) =>
-          prevValues.type !== currentValues.type
-        }
+        shouldUpdate={(prevValues, currentValues) => prevValues.type !== currentValues.type}
       >
         {({ getFieldValue }) => {
           // console.log("getFieldValue", getFieldValue("elementId"));
@@ -117,11 +113,7 @@ const AddElementForm = ({ onCancel, onSubmit, data }: AddElementFormProps) => {
             </Form.Item>
           ) : (
             <>
-              <Form.Item
-                name="elementKey"
-                label="Element"
-                rules={[{ required: true }]}
-              >
+              <Form.Item name="elementKey" label="Element" rules={[{ required: true }]}>
                 <Select
                   // onChange={handleChange}
                   options={elementIdOptions}

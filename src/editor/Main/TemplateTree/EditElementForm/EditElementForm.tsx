@@ -4,11 +4,7 @@ import { EditElementFormProps } from "./EditElementForm.types";
 
 const { TextArea } = Input;
 
-const EditElementForm = ({
-  onCancel,
-  onSubmit,
-  data,
-}: EditElementFormProps) => {
+const EditElementForm = ({ onCancel, onSubmit, data }: EditElementFormProps) => {
   const [form] = Form.useForm();
 
   const onReset = () => {

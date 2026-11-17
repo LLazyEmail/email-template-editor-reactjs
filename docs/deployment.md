@@ -61,12 +61,12 @@ Note: `NEXT_PUBLIC_*` is inlined at build time, so pass it as a build arg if the
 
 ## Recommendation
 
-| Priority | Choice | Why |
-| --- | --- | --- |
-| Fastest | Vercel | Native Next.js, least setup |
-| AWS, managed | Amplify | Runs the Next.js server on AWS |
+| Priority       | Choice                                | Why                                                 |
+| -------------- | ------------------------------------- | --------------------------------------------------- |
+| Fastest        | Vercel                                | Native Next.js, least setup                         |
+| AWS, managed   | Amplify                               | Runs the Next.js server on AWS                      |
 | AWS, own infra | CloudFront + Docker on ECS/App Runner | Edge caching of static assets, HTML from the server |
-| Self-hosted | Existing Dockerfile | Already works |
+| Self-hosted    | Existing Dockerfile                   | Already works                                       |
 
 Do not hardcode the API host. Always use `NEXT_PUBLIC_API_URL`.
 

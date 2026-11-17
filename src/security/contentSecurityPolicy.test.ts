@@ -9,13 +9,17 @@ function directives(policy: string): Record<string, string[]> {
     policy.split("; ").map((directive) => {
       const [name, ...values] = directive.split(" ");
       return [name, values];
-    })
+    }),
   );
 }
 
 describe("buildContentSecurityPolicy", () => {
   const policy = directives(
-    buildContentSecurityPolicy({ nonce: "abc123", isDev: false, apiOrigins: ["https://editor.example:9000"] })
+    buildContentSecurityPolicy({
+      nonce: "abc123",
+      isDev: false,
+      apiOrigins: ["https://editor.example:9000"],
+    }),
   );
 
   it("allows only scripts with this request's nonce", () => {
@@ -71,9 +75,9 @@ describe("apiOriginsFor", () => {
   });
 
   it("uses the fixed dev backend in development", () => {
-    expect(apiOriginsFor({ protocol: "http:", hostname: "127.0.0.1", nodeEnv: "development" })).toEqual([
-      "http://localhost:9000",
-    ]);
+    expect(
+      apiOriginsFor({ protocol: "http:", hostname: "127.0.0.1", nodeEnv: "development" }),
+    ).toEqual(["http://localhost:9000"]);
   });
 
   it("adds NEXT_PUBLIC_API_URL and ignores an invalid one", () => {

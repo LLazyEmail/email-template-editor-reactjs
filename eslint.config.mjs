@@ -33,10 +33,7 @@ export default defineConfig([
   {
     files: ["src/api/**"],
     rules: {
-      "no-restricted-imports": [
-        "error",
-        { paths: noUiInLogic, patterns: [noEditorUiInLogic] },
-      ],
+      "no-restricted-imports": ["error", { paths: noUiInLogic, patterns: [noEditorUiInLogic] }],
     },
   },
   {

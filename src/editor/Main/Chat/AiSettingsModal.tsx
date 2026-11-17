@@ -94,7 +94,13 @@ const AiSettingsModal = ({ open, settings, onClose, onChange }: AiSettingsModalP
   const info = PROVIDERS[provider];
 
   return (
-    <Modal title="AI assistant settings" open={open} onCancel={onClose} footer={null} destroyOnHidden>
+    <Modal
+      title="AI assistant settings"
+      open={open}
+      onCancel={onClose}
+      footer={null}
+      destroyOnHidden
+    >
       <Alert
         type="info"
         showIcon

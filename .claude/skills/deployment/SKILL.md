@@ -15,13 +15,13 @@ Read `docs/deployment.md` before changing hosting.
 
 ## Options
 
-| Target | Fit | Notes |
-| --- | --- | --- |
-| Amplify | AWS, managed | Runs the Next.js server |
+| Target              | Fit            | Notes                                                        |
+| ------------------- | -------------- | ------------------------------------------------------------ |
+| Amplify             | AWS, managed   | Runs the Next.js server                                      |
 | CloudFront + Docker | AWS, own infra | Cache only `/_next/static/*`; HTML must come from the server |
-| Vercel | Best default | Native Next.js, set `NEXT_PUBLIC_API_URL` |
-| Netlify | Good | Next.js plugin, same env var |
-| Docker | Self-hosted | Existing Dockerfile |
+| Vercel              | Best default   | Native Next.js, set `NEXT_PUBLIC_API_URL`                    |
+| Netlify             | Good           | Next.js plugin, same env var                                 |
+| Docker              | Self-hosted    | Existing Dockerfile                                          |
 
 ## Rules
 

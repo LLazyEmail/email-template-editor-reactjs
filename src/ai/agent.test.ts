@@ -6,7 +6,9 @@ import { createEditorTools } from "./tools";
 
 vi.mock("../api/main", () => ({
   getTree: vi.fn(() =>
-    Promise.resolve([{ key: "1", title: "root", value: "<table>{{content}}</table>", children: [] }])
+    Promise.resolve([
+      { key: "1", title: "root", value: "<table>{{content}}</table>", children: [] },
+    ]),
   ),
   getAllElements: vi.fn(() => Promise.resolve([])),
   saveTree: vi.fn(() => Promise.resolve({})),

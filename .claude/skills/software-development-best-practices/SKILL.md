@@ -33,13 +33,13 @@ Apply these practices on every code change in this repo. Prefer small, correct, 
 
 ## Design principles
 
-| Principle | Do | Avoid |
-| --- | --- | --- |
-| Single responsibility | One component / function does one job | God components that fetch, render, and validate everything |
-| Fail visibly | Surface errors the user can see (notification, form error) | Silent `catch` that swallows failures |
-| Stable contracts | Keep API types in `src/api/main.types.ts` | Inline `any` payloads with no type |
-| Progressive change | Land the fix, then improve structure | Mixing a rewrite with a one-line fix |
-| Reviewability | Small commits, clear messages | 1,000-line commits titled "updates" |
+| Principle             | Do                                                         | Avoid                                                      |
+| --------------------- | ---------------------------------------------------------- | ---------------------------------------------------------- |
+| Single responsibility | One component / function does one job                      | God components that fetch, render, and validate everything |
+| Fail visibly          | Surface errors the user can see (notification, form error) | Silent `catch` that swallows failures                      |
+| Stable contracts      | Keep API types in `src/api/main.types.ts`                  | Inline `any` payloads with no type                         |
+| Progressive change    | Land the fix, then improve structure                       | Mixing a rewrite with a one-line fix                       |
+| Reviewability         | Small commits, clear messages                              | 1,000-line commits titled "updates"                        |
 
 ## Testing
 
@@ -61,11 +61,11 @@ Link the issue with `Closes #N` when the PR fully resolves it.
 
 ## Common issues
 
-| Problem | Fix |
-| --- | --- |
-| Component uses hooks but fails in Next.js | Add `"use client"` at the top of the file |
+| Problem                                      | Fix                                                            |
+| -------------------------------------------- | -------------------------------------------------------------- |
+| Component uses hooks but fails in Next.js    | Add `"use client"` at the top of the file                      |
 | Test fails with network or `document` errors | Mock `src/api/main` and keep browser APIs inside the component |
-| Lockfile out of date | Run `npm install` and commit `package-lock.json` |
-| Large unrelated diff | Split into a follow-up PR |
+| Lockfile out of date                         | Run `npm install` and commit `package-lock.json`               |
+| Large unrelated diff                         | Split into a follow-up PR                                      |
 
 See `references/checklist.md` for a pre-submit checklist.

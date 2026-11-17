@@ -4,14 +4,14 @@ Project-specific instructions for Claude Code (and other agents that read `.clau
 
 ## What is there
 
-| Path | Kind | Purpose |
-| --- | --- | --- |
-| `.claude/skills/software-development-best-practices/` | Skill | How to change code well; pre-submit checklist in `references/checklist.md`; trigger evals in `evals/` |
-| `.claude/skills/testing/` | Skill | Vitest and Playwright rules and mocks |
-| `.claude/skills/deployment/` | Skill | Hosting options, Docker, env vars, why static export is not possible |
-| `.claude/skills/editor-conventions/` | Skill | Where editor, AI assistant, preview and CSP code lives and how to change it |
-| `.claude/agents/coder.md` | Subagent | Logic, data flow, tests |
-| `.claude/agents/designer.md` | Subagent | Visual and layout work |
+| Path                                                  | Kind     | Purpose                                                                                               |
+| ----------------------------------------------------- | -------- | ----------------------------------------------------------------------------------------------------- |
+| `.claude/skills/software-development-best-practices/` | Skill    | How to change code well; pre-submit checklist in `references/checklist.md`; trigger evals in `evals/` |
+| `.claude/skills/testing/`                             | Skill    | Vitest and Playwright rules and mocks                                                                 |
+| `.claude/skills/deployment/`                          | Skill    | Hosting options, Docker, env vars, why static export is not possible                                  |
+| `.claude/skills/editor-conventions/`                  | Skill    | Where editor, AI assistant, preview and CSP code lives and how to change it                           |
+| `.claude/agents/coder.md`                             | Subagent | Logic, data flow, tests                                                                               |
+| `.claude/agents/designer.md`                          | Subagent | Visual and layout work                                                                                |
 
 ## How skills are used
 

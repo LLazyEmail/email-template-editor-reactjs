@@ -9,13 +9,19 @@ describe("resolveApiUrl", () => {
 
   it("uses localhost in the browser in development", () => {
     expect(
-      resolveApiUrl({ location: { protocol: "http:", hostname: "127.0.0.1" }, nodeEnv: "development" })
+      resolveApiUrl({
+        location: { protocol: "http:", hostname: "127.0.0.1" },
+        nodeEnv: "development",
+      }),
     ).toBe("http://localhost:9000");
   });
 
   it("uses the page host on port 9000 in the browser in production", () => {
     expect(
-      resolveApiUrl({ location: { protocol: "https:", hostname: "editor.example" }, nodeEnv: "production" })
+      resolveApiUrl({
+        location: { protocol: "https:", hostname: "editor.example" },
+        nodeEnv: "production",
+      }),
     ).toBe("https://editor.example:9000");
   });
 });

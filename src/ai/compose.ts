@@ -66,7 +66,7 @@ function checkElementInput(
   path: string,
   element: Element,
   fills: Record<string, string>,
-  slots: Record<string, unknown>
+  slots: Record<string, unknown>,
 ): string[] {
   const errors: string[] = [];
   const placeholders = extractPlaceholders(element.value);
@@ -75,7 +75,7 @@ function checkElementInput(
   for (const name of Object.keys(fills)) {
     if (!placeholders.includes(name)) {
       errors.push(
-        `${path}.fills: ${name} is not a placeholder of ${describe}. Its placeholders: ${available}`
+        `${path}.fills: ${name} is not a placeholder of ${describe}. Its placeholders: ${available}`,
       );
     }
     const nested = fills[name].match(ANY_PLACEHOLDER);
@@ -86,7 +86,7 @@ function checkElementInput(
   for (const name of Object.keys(slots)) {
     if (!placeholders.includes(name)) {
       errors.push(
-        `${path}.slots: ${name} is not a placeholder of ${describe}. Its placeholders: ${available}`
+        `${path}.slots: ${name} is not a placeholder of ${describe}. Its placeholders: ${available}`,
       );
     }
     if (name in fills) errors.push(`${path}: ${name} is in both fills and slots; use one`);
@@ -104,7 +104,7 @@ const isEmpty = (value: string | undefined) => !value?.trim();
 export function composeBlocks(
   parent: TreeNodeData,
   elements: Element[],
-  input: ComposeInput
+  input: ComposeInput,
 ): ComposeResult {
   const errors: string[] = [];
   const byKey = new Map(elements.map((element) => [element.key, element]));
@@ -112,7 +112,7 @@ export function composeBlocks(
     const element = byKey.get(key);
     if (!element) {
       errors.push(
-        `${path}: element "${key}" not found. Library keys: ${Array.from(byKey.keys()).join(", ") || "none"}`
+        `${path}: element "${key}" not found. Library keys: ${Array.from(byKey.keys()).join(", ") || "none"}`,
       );
     }
     return element;
@@ -144,7 +144,7 @@ export function composeBlocks(
 
   const occupied = input.replace
     ? Array.from(new Set(children.map((child) => child.title))).filter((title) =>
-        html.includes(title)
+        html.includes(title),
       )
     : [];
   if (input.replace) {
@@ -162,12 +162,12 @@ export function composeBlocks(
     if (!anchor) {
       errors.push(
         `Node "${parent.title}" (key ${parent.key}) has no placeholder to add blocks after. ` +
-          `Insert one with edit_node_text first, e.g. {{content}}.`
+          `Insert one with edit_node_text first, e.g. {{content}}.`,
       );
     } else if (!html.includes(anchor)) {
       errors.push(
         `Node "${parent.title}" (key ${parent.key}) has no ${anchor} placeholder. ` +
-          `Its placeholders: ${extractPlaceholders(html).join(", ") || "none"}`
+          `Its placeholders: ${extractPlaceholders(html).join(", ") || "none"}`,
       );
     } else {
       const end = html.lastIndexOf(anchor) + anchor.length;
@@ -191,7 +191,7 @@ export function composeBlocks(
     return name;
   };
   const titles = blocks.map((_, index) =>
-    index === 0 && reusedAnchor ? reusedAnchor : nextName()
+    index === 0 && reusedAnchor ? reusedAnchor : nextName(),
   );
   const newPlaceholders = titles.filter((title) => title !== reusedAnchor);
   html = html.replace(marker, () => newPlaceholders.map((title) => `\n${title}`).join(""));
@@ -209,7 +209,7 @@ export function composeBlocks(
           name,
           buildElementItem({ title: name, elementValue: nested!.value, fills: nestedFills }),
         ];
-      })
+      }),
     );
     for (const placeholder of extractPlaceholders(value)) {
       if (!(placeholder in slotNodes) && isEmpty(fills[placeholder])) {
@@ -239,6 +239,6 @@ export function replaceNode(nodes: TreeNodeData[], node: TreeNodeData): TreeNode
       ? node
       : current.children
         ? { ...current, children: replaceNode(current.children, node) }
-        : current
+        : current,
   );
 }

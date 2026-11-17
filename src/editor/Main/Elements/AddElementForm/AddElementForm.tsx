@@ -4,10 +4,7 @@ import { AddElementFormProps } from "./AddElementForm.types";
 
 const { TextArea } = Input;
 
-const AddElementForm = ({
-  onCancel,
-  onSubmit,
-}: AddElementFormProps) => {
+const AddElementForm = ({ onCancel, onSubmit }: AddElementFormProps) => {
   const [form] = Form.useForm();
 
   const onReset = () => {

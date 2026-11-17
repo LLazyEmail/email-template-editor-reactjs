@@ -2,12 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { Button, List, Modal } from "antd";
-import {
-  addElement,
-  deleteElement,
-  getAllElements,
-  updateElement,
-} from "../../../api/main";
+import { addElement, deleteElement, getAllElements, updateElement } from "../../../api/main";
 import { Element } from "../../../api/main.types";
 import AddElementForm from "./AddElementForm/AddElementForm";
 import { ModalState } from "./EditElementForm/EditElementForm.types";
@@ -121,10 +116,7 @@ const Elements = ({ refreshKey = 0 }: ElementsProps) => {
         width={1000}
         destroyOnHidden
       >
-        <AddElementForm
-          onSubmit={onSubmitAddElement}
-          onCancel={handleCancelAddElement}
-        />
+        <AddElementForm onSubmit={onSubmitAddElement} onCancel={handleCancelAddElement} />
       </Modal>
 
       <Modal

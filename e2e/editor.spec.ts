@@ -32,7 +32,7 @@ test("add root element opens a modal", async ({ page }) => {
 
 test("the assistant is always on screen and manual editing is collapsed", async ({ page }) => {
   await page.route("**/tree", (route) =>
-    route.fulfill({ json: [{ key: "1", title: "root", value: "<p>Hi</p>", children: [] }] })
+    route.fulfill({ json: [{ key: "1", title: "root", value: "<p>Hi</p>", children: [] }] }),
   );
   await page.goto("/");
 

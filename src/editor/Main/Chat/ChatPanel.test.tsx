@@ -39,7 +39,7 @@ describe("ChatPanel", () => {
     expect(await screen.findByText(payload)).toBeInTheDocument();
     expect(container.querySelector("img")).toBeNull();
     expect(runAgent).toHaveBeenCalledWith(
-      expect.objectContaining({ messages: [{ role: "user", content: "hello" }] })
+      expect.objectContaining({ messages: [{ role: "user", content: "hello" }] }),
     );
   });
 
@@ -53,8 +53,8 @@ describe("ChatPanel", () => {
 
     expect(
       await screen.findByText(
-        'Stopped after 12 steps; the task may be unfinished. Send "continue" to go on.'
-      )
+        'Stopped after 12 steps; the task may be unfinished. Send "continue" to go on.',
+      ),
     ).toBeInTheDocument();
   });
 
@@ -73,15 +73,18 @@ describe("ChatPanel", () => {
   it("suggests another model when the provider is overloaded", async () => {
     saveApiKey("google", "key", "memory");
     vi.spyOn(console, "error").mockImplementation(() => {});
-    const overloaded = Object.assign(new Error("This model is currently experiencing high demand."), {
-      statusCode: 503,
-    });
+    const overloaded = Object.assign(
+      new Error("This model is currently experiencing high demand."),
+      {
+        statusCode: 503,
+      },
+    );
     // Same shape as the AI SDK's RetryError.
     vi.mocked(runAgent).mockRejectedValue(
       Object.assign(new Error("Failed after 2 attempts."), {
         errors: [overloaded, overloaded],
         lastError: overloaded,
-      })
+      }),
     );
 
     render(<ChatPanel onChange={vi.fn()} />);
@@ -90,8 +93,8 @@ describe("ChatPanel", () => {
 
     expect(
       await screen.findByText(
-        "This model is currently experiencing high demand. You can also pick another model in Settings (now: gemini-flash-latest)."
-      )
+        "This model is currently experiencing high demand. You can also pick another model in Settings (now: gemini-flash-latest).",
+      ),
     ).toBeInTheDocument();
   });
 });

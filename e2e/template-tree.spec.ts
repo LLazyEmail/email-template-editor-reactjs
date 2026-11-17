@@ -1,6 +1,8 @@
 import { test, expect, type Locator } from "@playwright/test";
 
-const tree = [{ title: "root", key: "1", value: "<html><body>{{content}}</body></html>", children: [] }];
+const tree = [
+  { title: "root", key: "1", value: "<html><body>{{content}}</body></html>", children: [] },
+];
 
 /** Ant Design closes a context menu when its scroll container scrolls, so wait for layout to settle. */
 async function waitUntilStill(locator: Locator) {

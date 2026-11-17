@@ -33,7 +33,9 @@ function someInErrorChain(error: unknown, test: (e: ErrorLike) => boolean, depth
   const e = error as ErrorLike;
   if (test(e)) return true;
   if (someInErrorChain(e.cause, test, depth + 1)) return true;
-  return Array.isArray(e.errors) && e.errors.some((inner) => someInErrorChain(inner, test, depth + 1));
+  return (
+    Array.isArray(e.errors) && e.errors.some((inner) => someInErrorChain(inner, test, depth + 1))
+  );
 }
 
 const isTimeout = (error: unknown) => someInErrorChain(error, (e) => e.name === "TimeoutError");
@@ -109,7 +111,7 @@ const ChatPanel = ({ onChange }: ChatPanelProps) => {
         signal?.addEventListener("abort", onAbort);
         setPendingConfirm({ message, resolve: settle });
       }),
-    []
+    [],
   );
 
   const send = async () => {

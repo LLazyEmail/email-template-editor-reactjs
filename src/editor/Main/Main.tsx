@@ -77,19 +77,13 @@ const Home = () => {
   return (
     <div className="editor">
       <header className="editor-toolbar">
-        <Button
-          disabled={Boolean(templateTree.length)}
-          onClick={showModal}
-          type="primary"
-        >
+        <Button disabled={Boolean(templateTree.length)} onClick={showModal} type="primary">
           Add root element
         </Button>
         <Button onClick={onHandleGenerate} type="primary">
           Generate
         </Button>
-        <Typography.Link onClick={onOpenLink}>
-          {generatedTemplateLink}
-        </Typography.Link>
+        <Typography.Link onClick={onOpenLink}>{generatedTemplateLink}</Typography.Link>
       </header>
       <Modal
         title="Add root element"

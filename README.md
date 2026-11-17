@@ -12,13 +12,13 @@ Give non-specialists (and developers) a reliable way to assemble email templates
 
 ## Problems it solves
 
-| Problem | How this app helps |
-| --- | --- |
-| Email HTML is fragile and hard to edit by hand | Structure is a tree of elements instead of a single HTML blob |
-| Teams reinvent the same header/footer/CTA | Shared **Elements** library can be reused across templates |
-| Design and code drift apart | Visual tree + generate step keeps the output tied to the model |
-| Hard to see the hierarchy of a template | Tree view with add / edit / delete on each node |
-| Generating a final file is manual | **Generate** calls the backend and returns a link to the result |
+| Problem                                        | How this app helps                                              |
+| ---------------------------------------------- | --------------------------------------------------------------- |
+| Email HTML is fragile and hard to edit by hand | Structure is a tree of elements instead of a single HTML blob   |
+| Teams reinvent the same header/footer/CTA      | Shared **Elements** library can be reused across templates      |
+| Design and code drift apart                    | Visual tree + generate step keeps the output tied to the model  |
+| Hard to see the hierarchy of a template        | Tree view with add / edit / delete on each node                 |
+| Generating a final file is manual              | **Generate** calls the backend and returns a link to the result |
 
 ## Screenshots
 
@@ -121,16 +121,16 @@ The frontend expects a backend on port **9000**. Override the base URL with `NEX
 
 ### Scripts
 
-| Command | Purpose |
-| --- | --- |
-| `npm run dev` | Next.js development server |
-| `npm run lint` | ESLint (Next.js rules + architecture import rules) |
-| `npm run typecheck` | TypeScript check (`tsc --noEmit`) |
-| `npm run format` | Format with Prettier (`format:check` runs in CI) |
-| `npm test` | Run Vitest once |
-| `npm run test:watch` | Vitest in watch mode |
-| `npm run build` | Production build |
-| `npm start` | Start the production server |
+| Command              | Purpose                                            |
+| -------------------- | -------------------------------------------------- |
+| `npm run dev`        | Next.js development server                         |
+| `npm run lint`       | ESLint (Next.js rules + architecture import rules) |
+| `npm run typecheck`  | TypeScript check (`tsc --noEmit`)                  |
+| `npm run format`     | Format with Prettier (`format:check` runs in CI)   |
+| `npm test`           | Run Vitest once                                    |
+| `npm run test:watch` | Vitest in watch mode                               |
+| `npm run build`      | Production build                                   |
+| `npm start`          | Start the production server                        |
 
 ### Docker
 

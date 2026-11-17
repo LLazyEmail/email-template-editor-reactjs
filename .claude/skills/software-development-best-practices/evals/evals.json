@@ -4,7 +4,10 @@
     {
       "name": "feature_keeps_scope",
       "input": "add a delete confirmation to the elements list",
-      "assertions": ["changes only the elements list and related test", "does not rewrite unrelated components"]
+      "assertions": [
+        "changes only the elements list and related test",
+        "does not rewrite unrelated components"
+      ]
     },
     {
       "name": "client_boundary",

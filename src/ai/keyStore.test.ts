@@ -1,11 +1,5 @@
 import { afterEach, describe, expect, it } from "vitest";
-import {
-  clearApiKey,
-  loadAiSettings,
-  loadApiKey,
-  saveAiSettings,
-  saveApiKey,
-} from "./keyStore";
+import { clearApiKey, loadAiSettings, loadApiKey, saveAiSettings, saveApiKey } from "./keyStore";
 
 afterEach(() => {
   clearApiKey("google");

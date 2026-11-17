@@ -15,6 +15,7 @@
 This is a **visual email template editor**. Users build a tree of email elements, edit them, and generate HTML templates. The frontend talks to a separate backend API (default port `9000`).
 
 **Stack:**
+
 - Next.js 16 (App Router, Turbopack)
 - React 19
 - Ant Design 6
@@ -65,6 +66,7 @@ tsconfig.json                 # Paths: @/* → ./src/*
 ## Important conventions
 
 ### Client vs server components
+
 - Anything that uses hooks, Ant Design, `window`, or browser APIs must be a **client component**.
 - Add `"use client";` at the top of the file.
 - Currently marked client: `Main.tsx`, `Elements.tsx`, `TemplateTree.tsx`, `Preview.tsx`, `Chat/ChatPanel.tsx`, `Chat/AiSettingsModal.tsx`.
@@ -72,6 +74,7 @@ tsconfig.json                 # Paths: @/* → ./src/*
 - New interactive UI under `src/editor/Main/**` should also be client components.
 
 ### API client (`src/api/main.ts`)
+
 - Default backend: `http://localhost:9000`.
 - Override with `NEXT_PUBLIC_API_URL`.
 - The URL helper avoids touching `document` during SSR.
@@ -79,11 +82,13 @@ tsconfig.json                 # Paths: @/* → ./src/*
 - Do not call `axios` directly from UI components.
 
 ### Styling
+
 - Ant Design 6 (`antd`). Reset CSS is imported in `app/layout.tsx`.
 - Prefer Ant Design components over custom CSS when possible.
 - Global styles live in `src/index.css`.
 
 ### Tests
+
 - Runner: **Vitest** (`npm test` / `npm run test:watch`).
 - Config: `vitest.config.mts`.
 - Setup: `src/setupTests.ts` (jest-dom matchers + cleanup).
@@ -92,11 +97,13 @@ tsconfig.json                 # Paths: @/* → ./src/*
 - E2E: Playwright specs in `e2e/` (`npm run test:e2e`).
 
 ### Lint and format
+
 - ESLint 9 flat config (`eslint.config.mjs`): `eslint-config-next` (core-web-vitals + typescript) plus import rules that enforce the layering below. Prettier formats everything (`.prettierrc.json`, width 100).
 - `axios` is allowed only in `src/api/`. `src/ai/` and `src/api/` must not import React, antd or editor UI (`TemplateTree/nodeBuilders` is shared logic and allowed).
 - Do not silence a rule to get green. If a rule is wrong for one line, use `// eslint-disable-next-line <rule> -- <reason>`.
 
 ### TypeScript
+
 - TypeScript 6. Do not upgrade to 7 yet: `typescript-eslint` does not support it (Renovate is limited to `<7`).
 - Strict mode is on.
 - Path alias `@/*` maps to `src/*`.
@@ -114,18 +121,21 @@ tsconfig.json                 # Paths: @/* → ./src/*
 ## Common tasks
 
 ### Add a new UI section
+
 1. Create a component under `src/editor/Main/` (or a subfolder).
 2. Add `"use client";` if it uses hooks/state/antd.
 3. Import and render it from `Main.tsx`.
 4. Add or update a Vitest smoke/interaction test if the change is user-facing.
 
 ### Change an API call
+
 1. Update the function in `src/api/main.ts`.
 2. Update types in `src/api/main.types.ts` if the payload/response changes.
 3. Update any callers in `Main.tsx`, `Elements.tsx`, or `TemplateTree.tsx`.
 4. Keep the mock in tests in sync.
 
 ### Run locally
+
 ```bash
 npm install
 npm run dev          # http://localhost:3000
@@ -137,12 +147,14 @@ npm run build
 ```
 
 ### Docker
+
 ```bash
 docker build -t email-template-editor .
 docker run -p 3000:3000 email-template-editor
 ```
 
 ## CI
+
 - Workflows: `ci.yml` (build), `test.yml` (Vitest), `e2e.yml` (Playwright) in `.github/workflows/`
 - Triggers: push and pull requests to `master`
 - Node: 22 (same as Dockerfile and devcontainer)

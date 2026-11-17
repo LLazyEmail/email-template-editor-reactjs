@@ -63,8 +63,7 @@ export function errorMessage(error: unknown): string {
   return error instanceof Error ? error.message : String(error);
 }
 
-const countOccurrences = (text: string, part: string) =>
-  part ? text.split(part).length - 1 : 0;
+const countOccurrences = (text: string, part: string) => (part ? text.split(part).length - 1 : 0);
 
 /**
  * Generation replaces the first occurrence of each child's title in the parent's HTML, in order.
@@ -75,7 +74,7 @@ export function freePlaceholders(node: TreeNode): string[] {
   return extractPlaceholders(node.value).filter(
     (placeholder) =>
       countOccurrences(node.value, placeholder) >
-      children.filter((child) => child.title === placeholder).length
+      children.filter((child) => child.title === placeholder).length,
   );
 }
 
@@ -112,7 +111,7 @@ function snippetsAround(value: string, part: string): string[] {
   let index = value.indexOf(part);
   while (index !== -1 && snippets.length < MAX_SNIPPETS) {
     snippets.push(
-      value.slice(Math.max(0, index - SNIPPET_RADIUS), index + part.length + SNIPPET_RADIUS)
+      value.slice(Math.max(0, index - SNIPPET_RADIUS), index + part.length + SNIPPET_RADIUS),
     );
     index = value.indexOf(part, index + part.length);
   }
@@ -161,7 +160,7 @@ export function createEditorTools({ confirm, onChange, onToolEvent }: EditorTool
     toolName: string,
     input: unknown,
     action: () => Promise<ToolResult>,
-    describe: (result: ToolResult) => string
+    describe: (result: ToolResult) => string,
   ): Promise<ToolResult> {
     let result: ToolResult;
     try {
@@ -191,7 +190,7 @@ export function createEditorTools({ confirm, onChange, onToolEvent }: EditorTool
           "get_tree",
           input,
           async () => ({ ok: true, tree: (await loadTree()).map((node) => outline(node)) }),
-          () => "Read the template tree"
+          () => "Read the template tree",
         ),
     }),
 
@@ -235,12 +234,12 @@ export function createEditorTools({ confirm, onChange, onToolEvent }: EditorTool
                 ...base,
                 truncated: true,
                 snippetsAroundPlaceholders: Object.fromEntries(
-                  base.placeholders.map((p) => [p, snippetsAround(node.value, p)])
+                  base.placeholders.map((p) => [p, snippetsAround(node.value, p)]),
                 ),
               },
             };
           },
-          () => `Read node ${input.key}`
+          () => `Read node ${input.key}`,
         ),
     }),
 
@@ -260,7 +259,7 @@ export function createEditorTools({ confirm, onChange, onToolEvent }: EditorTool
               placeholders: extractPlaceholders(element.value),
             })),
           }),
-          () => "Read the element library"
+          () => "Read the element library",
         ),
     }),
 
@@ -283,7 +282,7 @@ export function createEditorTools({ confirm, onChange, onToolEvent }: EditorTool
           () =>
             input.keys.length === 1
               ? `Read element ${input.keys[0]}`
-              : `Read ${input.keys.length} elements`
+              : `Read ${input.keys.length} elements`,
         ),
     }),
 
@@ -305,7 +304,7 @@ export function createEditorTools({ confirm, onChange, onToolEvent }: EditorTool
             onChange("tree");
             return { ok: true };
           },
-          () => "Created the root node"
+          () => "Created the root node",
         ),
     }),
 
@@ -331,7 +330,7 @@ export function createEditorTools({ confirm, onChange, onToolEvent }: EditorTool
             onChange("tree");
             return { ok: true, key: data.item.key };
           },
-          () => `Added "${input.title}"`
+          () => `Added "${input.title}"`,
         ),
     }),
 
@@ -365,7 +364,7 @@ export function createEditorTools({ confirm, onChange, onToolEvent }: EditorTool
             onChange("tree");
             return { ok: true, key: data.item.key };
           },
-          () => `Added element "${input.title}"`
+          () => `Added element "${input.title}"`,
         ),
     }),
 
@@ -380,13 +379,13 @@ export function createEditorTools({ confirm, onChange, onToolEvent }: EditorTool
           .string()
           .optional()
           .describe(
-            "Placeholder in the parent after which the blocks go; defaults to its last placeholder"
+            "Placeholder in the parent after which the blocks go; defaults to its last placeholder",
           ),
         replace: z
           .boolean()
           .optional()
           .describe(
-            "Remove the parent's current child blocks and put the new ones in their place. Only when the user asks to replace the content. The user is asked to confirm."
+            "Remove the parent's current child blocks and put the new ones in their place. Only when the user asks to replace the content. The user is asked to confirm.",
           ),
         blocks: z
           .array(
@@ -397,9 +396,9 @@ export function createEditorTools({ confirm, onChange, onToolEvent }: EditorTool
                 .record(z.string(), z.object({ elementKey: keyField, fills: fillsField }))
                 .optional()
                 .describe(
-                  'Placeholder → another library element placed there, e.g. {"{{item1}}": {"elementKey": "card", "fills": {...}}} for a card in a column'
+                  'Placeholder → another library element placed there, e.g. {"{{item1}}": {"elementKey": "card", "fills": {...}}} for a card in a column',
                 ),
-            })
+            }),
           )
           .min(1)
           .max(MAX_BLOCKS),
@@ -428,7 +427,7 @@ export function createEditorTools({ confirm, onChange, onToolEvent }: EditorTool
             }
             if (plan.removedCount > 0) {
               const approved = await confirm(
-                `Replace ${plan.removedCount} block(s) in "${parent.title}" with ${plan.added.length} new block(s)?`
+                `Replace ${plan.removedCount} block(s) in "${parent.title}" with ${plan.added.length} new block(s)?`,
               );
               if (!approved) return { ok: false, error: "The user declined replacing the blocks" };
             }
@@ -449,7 +448,7 @@ export function createEditorTools({ confirm, onChange, onToolEvent }: EditorTool
             return removed
               ? `Replaced ${removed} block(s) with ${added} new block(s)`
               : `Added ${added} block(s)`;
-          }
+          },
         ),
     }),
 
@@ -479,13 +478,13 @@ export function createEditorTools({ confirm, onChange, onToolEvent }: EditorTool
             onChange("tree");
             return { ok: true };
           },
-          () => `Updated node ${input.key}`
+          () => `Updated node ${input.key}`,
         ),
     }),
 
     edit_node_text: tool({
       description:
-        "Replace one exact piece of text in a node's HTML, without resending the whole HTML. `find` must occur exactly once (include surrounding text to make it unique). Use it to change text or to add a new placeholder, e.g. find \"{{items}}\" → replace \"{{items}}\\n{{items2}}\".",
+        'Replace one exact piece of text in a node\'s HTML, without resending the whole HTML. `find` must occur exactly once (include surrounding text to make it unique). Use it to change text or to add a new placeholder, e.g. find "{{items}}" → replace "{{items}}\\n{{items2}}".',
       inputSchema: z.object({
         key: keyField,
         find: z.string().min(1),
@@ -513,7 +512,7 @@ export function createEditorTools({ confirm, onChange, onToolEvent }: EditorTool
             onChange("tree");
             return { ok: true, freePlaceholders: freePlaceholders({ ...node, value }) };
           },
-          () => `Edited node ${input.key}`
+          () => `Edited node ${input.key}`,
         ),
     }),
 
@@ -528,19 +527,20 @@ export function createEditorTools({ confirm, onChange, onToolEvent }: EditorTool
             const node = findNode(await loadTree(), input.key);
             if (!node) return { ok: false, error: `Node "${input.key}" not found` };
             const approved = await confirm(
-              `Delete node "${node.title}" and ${node.children?.length ?? 0} child node(s)?`
+              `Delete node "${node.title}" and ${node.children?.length ?? 0} child node(s)?`,
             );
             if (!approved) return { ok: false, error: "The user declined this deletion" };
             await deleteTreeNode({ key: input.key });
             onChange("tree");
             return { ok: true };
           },
-          () => `Deleted node ${input.key}`
+          () => `Deleted node ${input.key}`,
         ),
     }),
 
     create_element: tool({
-      description: "Add a reusable element (an HTML snippet, may contain {{placeholders}}) to the library.",
+      description:
+        "Add a reusable element (an HTML snippet, may contain {{placeholders}}) to the library.",
       inputSchema: z.object({ title: z.string().min(1), value: z.string() }),
       execute: (input) =>
         run(
@@ -552,7 +552,7 @@ export function createEditorTools({ confirm, onChange, onToolEvent }: EditorTool
             onChange("elements");
             return { ok: true, key };
           },
-          () => `Created element "${input.title}"`
+          () => `Created element "${input.title}"`,
         ),
     }),
 
@@ -578,7 +578,7 @@ export function createEditorTools({ confirm, onChange, onToolEvent }: EditorTool
             onChange("elements");
             return { ok: true };
           },
-          () => `Updated element ${input.key}`
+          () => `Updated element ${input.key}`,
         ),
     }),
 
@@ -598,7 +598,7 @@ export function createEditorTools({ confirm, onChange, onToolEvent }: EditorTool
             onChange("elements");
             return { ok: true };
           },
-          () => `Deleted element ${input.key}`
+          () => `Deleted element ${input.key}`,
         ),
     }),
 
@@ -610,7 +610,7 @@ export function createEditorTools({ confirm, onChange, onToolEvent }: EditorTool
           "generate",
           input,
           async () => ({ ok: true, url: await generate() }),
-          (result) => `Generated: ${result.ok ? String(result.url) : ""}`
+          (result) => `Generated: ${result.ok ? String(result.url) : ""}`,
         ),
     }),
   };

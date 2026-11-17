@@ -3,11 +3,7 @@
 import { Dropdown, MenuProps, Tree, Modal, notification } from "antd";
 // import type { DataNode, TreeProps } from "antd/es/tree";
 import React, { useState } from "react";
-import {
-  AddElementFormValues,
-  ModalState,
-  TemplateTreeProps,
-} from "./TemplateTree.types";
+import { AddElementFormValues, ModalState, TemplateTreeProps } from "./TemplateTree.types";
 
 import EditElementForm from "./EditElementForm/EditElementForm";
 import { TemplateTree as TemplateTreeNode } from "../../../types";

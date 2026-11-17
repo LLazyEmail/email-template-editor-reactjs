@@ -5,7 +5,7 @@ const API_KEY = "test-gemini-key";
 // 1×1 transparent PNG.
 const PIXEL = Buffer.from(
   "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=",
-  "base64"
+  "base64",
 );
 
 const elements = [
@@ -105,7 +105,7 @@ test("assistant builds an email from pasted text out of library blocks", async (
     return route.fulfill({ json: elements });
   });
   await page.route("https://images.example/**", (route) =>
-    route.fulfill({ contentType: "image/png", body: PIXEL })
+    route.fulfill({ contentType: "image/png", body: PIXEL }),
   );
   await page.route("https://generativelanguage.googleapis.com/**", (route) => {
     geminiBodies.push(route.request().postData() ?? "");
@@ -122,7 +122,7 @@ test("assistant builds an email from pasted text out of library blocks", async (
   await page.getByLabel("Message").press("Enter");
 
   await expect(
-    page.getByText("Added an intro and 3 recipes in 2 rows. Pho has no photo.")
+    page.getByText("Added an intro and 3 recipes in 2 rows. Pho has no photo."),
   ).toBeVisible();
   await expect(page.getByText("✓ Added 3 block(s)")).toBeVisible();
 
@@ -177,7 +177,7 @@ test("assistant builds an email from pasted text out of library blocks", async (
   await expect(preview.getByText("This week: three quick dinners.")).toBeVisible();
   await expect(preview.locator('a[href="https://recipes.example/ramen"] img')).toHaveAttribute(
     "src",
-    "https://images.example/ramen.jpg"
+    "https://images.example/ramen.jpg",
   );
 
   // The pasted text reaches the model as the user's message, behind the system prompt that says it is data.

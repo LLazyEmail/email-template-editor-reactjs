@@ -135,7 +135,7 @@ describe("editor tools", () => {
       error: expect.stringContaining("not found"),
     });
     expect(await call("edit_node_text", { key: "n", find: "<p>a</p>", replace: "" })).toMatchObject(
-      { ok: false, error: expect.stringContaining("occurs 2 times") }
+      { ok: false, error: expect.stringContaining("occurs 2 times") },
     );
     expect(api.updateTreeNode).not.toHaveBeenCalled();
   });
@@ -143,7 +143,12 @@ describe("editor tools", () => {
   it("get_node returns snippets instead of a huge value", async () => {
     const filler = "x".repeat(30_000);
     vi.mocked(api.getTree).mockResolvedValue([
-      { key: "big", title: "root", value: `${filler}<h1>Hello</h1>{{items}}${filler}`, children: [] },
+      {
+        key: "big",
+        title: "root",
+        value: `${filler}<h1>Hello</h1>{{items}}${filler}`,
+        children: [],
+      },
     ]);
     const { call } = setup();
 
@@ -223,11 +228,15 @@ describe("editor tools", () => {
       response: { data: { error: { code: "NOT_FOUND", message: "Parent not found" } } },
     });
     const { call, options } = setup();
-    const result = await call("add_html_node", { parentKey: "root", title: "{{footer}}", value: "" });
+    const result = await call("add_html_node", {
+      parentKey: "root",
+      title: "{{footer}}",
+      value: "",
+    });
     expect(result).toEqual({ ok: false, error: "Parent not found" });
     expect(options.onChange).not.toHaveBeenCalled();
     expect(options.onToolEvent).toHaveBeenCalledWith(
-      expect.objectContaining({ ok: false, summary: "Parent not found" })
+      expect.objectContaining({ ok: false, summary: "Parent not found" }),
     );
   });
 
@@ -331,7 +340,7 @@ describe("compose_blocks", () => {
     expect(api.addTreeNode).not.toHaveBeenCalled();
     const root = savedRoot();
     expect(root.value).toBe(
-      "<header/>{{items}}\n{{items2}}\n{{block1}}\n{{block2}}\n{{block3}}<footer/>"
+      "<header/>{{items}}\n{{items2}}\n{{block1}}\n{{block2}}\n{{block3}}<footer/>",
     );
     expect(root.children!.map((child) => child.title)).toEqual([
       "{{items}}",
@@ -361,7 +370,7 @@ describe("compose_blocks", () => {
     ]);
     expect(options.onChange).toHaveBeenCalledWith("tree");
     expect(options.onToolEvent).toHaveBeenCalledWith(
-      expect.objectContaining({ ok: true, summary: "Added 3 block(s)" })
+      expect.objectContaining({ ok: true, summary: "Added 3 block(s)" }),
     );
   });
 
@@ -433,12 +442,12 @@ describe("compose_blocks", () => {
     expect(result.ok).toBe(false);
     expect(result.error).toContain("Nothing was added");
     expect(result.error).toContain(
-      'blocks[0]: element "missing" not found. Library keys: text, row, card'
+      'blocks[0]: element "missing" not found. Library keys: text, row, card',
     );
     expect(result.error).toContain("blocks[1].fills: {{body}} is not a placeholder");
     expect(result.error).toContain("Its placeholders: {{text}}");
     expect(result.error).toContain(
-      'blocks[2].slots["{{item1}}"].fills["{{title}}"]: text must not contain placeholders like {{items}}'
+      'blocks[2].slots["{{item1}}"].fills["{{title}}"]: text must not contain placeholders like {{items}}',
     );
     expect(result.error).toContain("blocks[3]: {{item1}} is in both fills and slots");
     expect(result.error).toContain("blocks[3].slots: {{item3}} is not a placeholder");
@@ -461,7 +470,7 @@ describe("compose_blocks", () => {
   it("refuses when the tree is empty or the parent is unknown", async () => {
     const { call } = setup();
     expect(
-      await call("compose_blocks", { parentKey: "nope", blocks: [{ elementKey: "text" }] })
+      await call("compose_blocks", { parentKey: "nope", blocks: [{ elementKey: "text" }] }),
     ).toEqual({ ok: false, error: 'Parent node "nope" not found' });
     vi.mocked(api.getTree).mockResolvedValue([]);
     expect(await call("compose_blocks", { blocks: [{ elementKey: "text" }] })).toMatchObject({
@@ -481,14 +490,14 @@ describe("compose_blocks", () => {
     });
 
     expect(options.confirm).toHaveBeenCalledWith(
-      'Replace 2 block(s) in "root" with 2 new block(s)?'
+      'Replace 2 block(s) in "root" with 2 new block(s)?',
     );
     expect(result).toMatchObject({ ok: true, removedCount: 2 });
     const root = savedRoot();
     expect(root.value).toBe("<header/>\n{{block1}}\n{{block2}}\n<footer/>");
     expect(root.children!.map((child) => child.title)).toEqual(["{{block1}}", "{{block2}}"]);
     expect(options.onToolEvent).toHaveBeenCalledWith(
-      expect.objectContaining({ summary: "Replaced 2 block(s) with 2 new block(s)" })
+      expect.objectContaining({ summary: "Replaced 2 block(s) with 2 new block(s)" }),
     );
   });
 

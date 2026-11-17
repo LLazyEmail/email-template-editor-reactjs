@@ -15,6 +15,7 @@ Backend API (port 9000 by default)  ←  separate service
 ```
 
 The editor is a single-page experience:
+
 - Root layout loads Ant Design reset CSS and global styles.
 - Home page renders `<Main />`.
 - `Main` loads the template tree on mount, shows action buttons, and embeds the tree + elements list.
@@ -29,27 +30,27 @@ The editor is a single-page experience:
 
 ## File responsibilities
 
-| File | Role |
-|------|------|
-| `app/layout.tsx` | HTML shell, metadata, global CSS imports; `dynamic = "force-dynamic"` (per-request CSP nonce) |
-| `app/page.tsx` | Renders the editor |
-| `proxy.ts` | Sets a per-request nonce Content-Security-Policy (Next 16 "proxy", formerly middleware) |
-| `src/editor/Main/Main.tsx` | Top-level state and actions; lazy-loads the chat |
-| `src/editor/Main/TemplateTree/TemplateTree.tsx` | Tree UI + add/edit/delete node modals |
-| `src/editor/Main/TemplateTree/nodeBuilders.ts` | Node construction shared by the tree UI and the AI tools |
-| `src/editor/Main/Elements/Elements.tsx` | Element library UI |
-| `src/editor/Main/AddRootElementForm/AddRootElementForm.tsx` | Form that creates the root node |
-| `src/editor/Main/Preview/Preview.tsx` | Live email preview in a sandboxed iframe |
-| `src/editor/Main/Preview/renderTemplate.ts` | Client-side renderer of the tree into email HTML |
-| `src/editor/Main/Chat/` | AI assistant panel and settings (see below) |
-| `src/api/main.ts` | All HTTP calls |
-| `src/api/main.types.ts` | Shared request types |
-| `src/api/apiUrl.ts` | Backend URL resolution, shared with the CSP |
-| `src/security/contentSecurityPolicy.ts` | CSP builder: every external origin the page calls must be listed here |
-| `src/types/index.ts` | `TemplateTree` type |
-| `e2e/` | Playwright specs; backend and AI providers are mocked with `page.route` |
-| `AGENTS.md` | Agent entry point |
-| `.claude/skills/`, `.claude/agents/` | Claude skills and subagents (see below) |
+| File                                                        | Role                                                                                          |
+| ----------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| `app/layout.tsx`                                            | HTML shell, metadata, global CSS imports; `dynamic = "force-dynamic"` (per-request CSP nonce) |
+| `app/page.tsx`                                              | Renders the editor                                                                            |
+| `proxy.ts`                                                  | Sets a per-request nonce Content-Security-Policy (Next 16 "proxy", formerly middleware)       |
+| `src/editor/Main/Main.tsx`                                  | Top-level state and actions; lazy-loads the chat                                              |
+| `src/editor/Main/TemplateTree/TemplateTree.tsx`             | Tree UI + add/edit/delete node modals                                                         |
+| `src/editor/Main/TemplateTree/nodeBuilders.ts`              | Node construction shared by the tree UI and the AI tools                                      |
+| `src/editor/Main/Elements/Elements.tsx`                     | Element library UI                                                                            |
+| `src/editor/Main/AddRootElementForm/AddRootElementForm.tsx` | Form that creates the root node                                                               |
+| `src/editor/Main/Preview/Preview.tsx`                       | Live email preview in a sandboxed iframe                                                      |
+| `src/editor/Main/Preview/renderTemplate.ts`                 | Client-side renderer of the tree into email HTML                                              |
+| `src/editor/Main/Chat/`                                     | AI assistant panel and settings (see below)                                                   |
+| `src/api/main.ts`                                           | All HTTP calls                                                                                |
+| `src/api/main.types.ts`                                     | Shared request types                                                                          |
+| `src/api/apiUrl.ts`                                         | Backend URL resolution, shared with the CSP                                                   |
+| `src/security/contentSecurityPolicy.ts`                     | CSP builder: every external origin the page calls must be listed here                         |
+| `src/types/index.ts`                                        | `TemplateTree` type                                                                           |
+| `e2e/`                                                      | Playwright specs; backend and AI providers are mocked with `page.route`                       |
+| `AGENTS.md`                                                 | Agent entry point                                                                             |
+| `.claude/skills/`, `.claude/agents/`                        | Claude skills and subagents (see below)                                                       |
 
 ## Conventions agents should follow
 
@@ -77,20 +78,20 @@ Watch mode: `npm run test:watch`
 
 ## Claude skills
 
-| Skill | Path | When to use |
-| --- | --- | --- |
+| Skill                               | Path                                                  | When to use                                                  |
+| ----------------------------------- | ----------------------------------------------------- | ------------------------------------------------------------ |
 | Software development best practices | `.claude/skills/software-development-best-practices/` | Implementing, fixing, refactoring, reviewing, or opening PRs |
-| Testing | `.claude/skills/testing/` | Writing or fixing Vitest and Playwright tests |
-| Deployment | `.claude/skills/deployment/` | Hosting, Docker, environment variables |
-| Editor conventions | `.claude/skills/editor-conventions/` | Changing the editor UI, the AI assistant or the API client |
+| Testing                             | `.claude/skills/testing/`                             | Writing or fixing Vitest and Playwright tests                |
+| Deployment                          | `.claude/skills/deployment/`                          | Hosting, Docker, environment variables                       |
+| Editor conventions                  | `.claude/skills/editor-conventions/`                  | Changing the editor UI, the AI assistant or the API client   |
 
 The best-practices skill includes a pre-submit checklist in `references/checklist.md`.
 
 ## Claude subagents
 
-| Agent | Path | Use for |
-| --- | --- | --- |
-| `coder` | `.claude/agents/coder.md` | Logic and behavior: state, API client, AI assistant, CSP, types, tests |
+| Agent      | Path                         | Use for                                                                 |
+| ---------- | ---------------------------- | ----------------------------------------------------------------------- |
+| `coder`    | `.claude/agents/coder.md`    | Logic and behavior: state, API client, AI assistant, CSP, types, tests  |
 | `designer` | `.claude/agents/designer.md` | Visual work: layout, spacing, antd theming, accessibility, preview look |
 
 ## When in doubt
@@ -110,16 +111,16 @@ ChatPanel ──► runAgent (generateText, max 12 steps) ──► provider (Ge
                  └─ tools ──► src/api/main.ts ──► backend
 ```
 
-| File | Role |
-|------|------|
-| `src/ai/providers.ts` | Provider list, default models, `createModel()` |
-| `src/ai/keyStore.ts` | Key storage: `memory` / `session` (default) / `local`; non-secret settings |
-| `src/ai/tools.ts` | Tools the model can call; each wraps a function from `src/api/main.ts` |
-| `src/ai/compose.ts` | Pure planning for `compose_blocks`: validation, placeholder insertion, node building |
-| `src/ai/agent.ts` | System prompt and `runAgent()` |
-| `src/editor/Main/TemplateTree/nodeBuilders.ts` | Node construction shared by the tree UI and the tools |
-| `src/editor/Main/Chat/ChatPanel.tsx` | Chat UI, delete confirmation, stop button |
-| `src/editor/Main/Chat/AiSettingsModal.tsx` | Provider, model, key, and storage choice |
+| File                                           | Role                                                                                 |
+| ---------------------------------------------- | ------------------------------------------------------------------------------------ |
+| `src/ai/providers.ts`                          | Provider list, default models, `createModel()`                                       |
+| `src/ai/keyStore.ts`                           | Key storage: `memory` / `session` (default) / `local`; non-secret settings           |
+| `src/ai/tools.ts`                              | Tools the model can call; each wraps a function from `src/api/main.ts`               |
+| `src/ai/compose.ts`                            | Pure planning for `compose_blocks`: validation, placeholder insertion, node building |
+| `src/ai/agent.ts`                              | System prompt and `runAgent()`                                                       |
+| `src/editor/Main/TemplateTree/nodeBuilders.ts` | Node construction shared by the tree UI and the tools                                |
+| `src/editor/Main/Chat/ChatPanel.tsx`           | Chat UI, delete confirmation, stop button                                            |
+| `src/editor/Main/Chat/AiSettingsModal.tsx`     | Provider, model, key, and storage choice                                             |
 
 Rules when changing it:
 
