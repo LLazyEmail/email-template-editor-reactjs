@@ -201,6 +201,7 @@ docker run -p 3000:3000 email-template-editor
   - Elements: `GET /elements`, `POST /elements`, `PATCH /elements/:key`, `DELETE /elements/:key`
   - `POST /generate` → `{ url }`
   - Keys in paths are URL-encoded. Errors are `{ error: { code, message, details?, requestId } }`.
+  - **Contract:** the backend's [`openapi.json`](https://github.com/LLazyEmail/email-template-editor-nodejs/blob/main/openapi.json) (OpenAPI 3.1, also served at `GET http://localhost:9000/openapi.json`) is the source of truth. Keep `src/api/main.types.ts` in line with it.
 - Product description, charts, and screenshots: `README.md`.
 
 <!-- BEGIN:nextjs-agent-rules -->
