@@ -52,8 +52,11 @@ src/
 e2e/                          # Playwright specs (backend and AI providers are mocked with page.route)
 public/                       # favicon.ico, robots.txt
 
-.claude/skills/               # Claude skills: best practices, testing, deployment, editor conventions
+.claude/skills/               # Claude skills: best practices, testing, deployment, editor conventions, run-app
 .claude/agents/               # Claude subagents: coder (logic, tests), designer (visual work)
+.claude/settings.json         # Shared Claude Code settings: allowed commands, format+lint hook
+.claude/hooks/                # Hook scripts (format-and-lint.sh)
+.mcp.json                     # MCP servers: Next DevTools (dev-server errors/routes), Playwright (browser)
 docs/AI_AGENT.md              # Extended agent reference
 docs/screenshots/             # Screenshots for the README
 .github/workflows/            # CI on Node 22: ci.yml (build), test.yml (Vitest), e2e.yml (Playwright)
@@ -108,6 +111,16 @@ tsconfig.json                 # Paths: @/* → ./src/*
 - Strict mode is on.
 - Path alias `@/*` maps to `src/*`.
 - Prefer explicit types from `src/api/main.types.ts` and `src/types`.
+
+## Agent tooling
+
+- **Claude Code settings** (`.claude/settings.json`): common checks (`npm run lint|typecheck|test|build`, `git status|diff|log`) run without a prompt; `.env` files cannot be read. Personal overrides go to `.claude/settings.local.json` (git-ignored).
+- **Format + lint hook**: after every Edit/Write, `.claude/hooks/format-and-lint.sh` runs Prettier and `eslint --fix` on that file. Remaining ESLint errors come back to the agent; fix them, do not disable the rule.
+- **MCP servers** (`.mcp.json`):
+  - `next-devtools` — talks to the running `next dev` (`/_next/mcp`): `get_errors`, `get_logs`, `get_routes`, `compile_route`. Use it to check compilation while editing instead of `npm run build`.
+  - `playwright` — a headless browser to open the editor, click through a flow and take screenshots.
+- **Running the app**: see the `run-app` skill (frontend :3000 + backend :9000, reuse a running dev server).
+- Other agents (Cursor, Copilot, Codex) read this file; the Claude-specific parts above are optional for them.
 
 ## Best practices (short)
 
