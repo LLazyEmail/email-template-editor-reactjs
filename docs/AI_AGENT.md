@@ -78,12 +78,13 @@ Watch mode: `npm run test:watch`
 
 ## Claude skills
 
-| Skill                               | Path                                                  | When to use                                                  |
-| ----------------------------------- | ----------------------------------------------------- | ------------------------------------------------------------ |
-| Software development best practices | `.claude/skills/software-development-best-practices/` | Implementing, fixing, refactoring, reviewing, or opening PRs |
-| Testing                             | `.claude/skills/testing/`                             | Writing or fixing Vitest and Playwright tests                |
-| Deployment                          | `.claude/skills/deployment/`                          | Hosting, Docker, environment variables                       |
-| Editor conventions                  | `.claude/skills/editor-conventions/`                  | Changing the editor UI, the AI assistant or the API client   |
+| Skill                               | Path                                                  | When to use                                                      |
+| ----------------------------------- | ----------------------------------------------------- | ---------------------------------------------------------------- |
+| Software development best practices | `.claude/skills/software-development-best-practices/` | Implementing, fixing, refactoring, reviewing, or opening PRs     |
+| Testing                             | `.claude/skills/testing/`                             | Writing or fixing Vitest and Playwright tests                    |
+| Deployment                          | `.claude/skills/deployment/`                          | Hosting, Docker, environment variables                           |
+| Editor conventions                  | `.claude/skills/editor-conventions/`                  | Changing the editor UI, the AI assistant or the API client       |
+| Run app                             | `.claude/skills/run-app/`                             | Starting frontend + backend and checking a change in the browser |
 
 The best-practices skill includes a pre-submit checklist in `references/checklist.md`.
 

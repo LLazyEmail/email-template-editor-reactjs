@@ -10,6 +10,10 @@ Project-specific instructions for Claude Code (and other agents that read `.clau
 | `.claude/skills/testing/`                             | Skill    | Vitest and Playwright rules and mocks                                                                 |
 | `.claude/skills/deployment/`                          | Skill    | Hosting options, Docker, env vars, why static export is not possible                                  |
 | `.claude/skills/editor-conventions/`                  | Skill    | Where editor, AI assistant, preview and CSP code lives and how to change it                           |
+| `.claude/skills/run-app/`                             | Skill    | Start frontend + backend, check a change via Next DevTools MCP and Playwright MCP                     |
+| `.claude/settings.json`                               | Settings | Shared permissions and the format-and-lint hook                                                       |
+| `.claude/hooks/format-and-lint.sh`                    | Hook     | Prettier + `eslint --fix` after each edit; ESLint errors go back to the agent                         |
+| `.mcp.json`                                           | MCP      | `next-devtools` (running dev server) and `playwright` (browser)                                       |
 | `.claude/agents/coder.md`                             | Subagent | Logic, data flow, tests                                                                               |
 | `.claude/agents/designer.md`                          | Subagent | Visual and layout work                                                                                |
 
