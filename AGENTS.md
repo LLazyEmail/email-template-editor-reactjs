@@ -60,6 +60,7 @@ public/                       # favicon.ico, robots.txt
 docs/AI_AGENT.md              # Extended agent reference
 docs/screenshots/             # Screenshots for the README
 .github/workflows/            # CI on Node 24 (.nvmrc): ci.yml (lint, typecheck, format, build, Docker), test.yml (Vitest), e2e.yml (Playwright)
+.github/                      # PR template, issue forms (bug, feature), CODEOWNERS
 Dockerfile                    # Node 24, multi-stage, runs the standalone server as user node (port 3000)
 .nvmrc                        # Node major used by CI, Docker and the devcontainer
 vitest.config.mts             # Vitest config (jsdom, setup file, path alias)
@@ -143,7 +144,7 @@ tsconfig.json                 # Paths: @/* → ./src/*
 
 ### Change an API call
 
-1. Update the function in `src/api/main.ts`.
+1. Check the operation in the backend's `openapi.json`, then update the function in `src/api/main.ts`.
 2. Update types in `src/api/main.types.ts` if the payload/response changes.
 3. Update any callers in `Main.tsx`, `Elements.tsx`, or `TemplateTree.tsx`.
 4. Keep the mock in tests in sync.
@@ -169,9 +170,9 @@ docker run -p 3000:3000 email-template-editor
 
 ## CI
 
-- Workflows: `ci.yml` (build), `test.yml` (Vitest), `e2e.yml` (Playwright) in `.github/workflows/`
+- Workflows in `.github/workflows/`: `ci.yml` (lint, typecheck, format check, build, Docker image), `test.yml` (Vitest with coverage thresholds), `e2e.yml` (Playwright; report uploaded on failure)
 - Triggers: push and pull requests to `master`
-- Node: 22 (same as Dockerfile and devcontainer)
+- Node: 24 from `.nvmrc` (same as Dockerfile and devcontainer)
 - Failures block merge. Keep the workflow green.
 
 ## Things to avoid
@@ -190,7 +191,7 @@ docker run -p 3000:3000 email-template-editor
 2. Create a feature branch from `master`.
 3. Make the change, keeping client/server boundaries in mind.
 4. Update or add a Vitest test when behavior changes.
-5. Open a PR with a short human summary of what changed and why.
+5. Open a PR. Fill in `.github/pull_request_template.md` (what, why, how to verify, checklist).
 6. Ensure CI passes (build, Vitest, Playwright).
 
 ## Related
@@ -200,6 +201,7 @@ docker run -p 3000:3000 email-template-editor
   - Elements: `GET /elements`, `POST /elements`, `PATCH /elements/:key`, `DELETE /elements/:key`
   - `POST /generate` → `{ url }`
   - Keys in paths are URL-encoded. Errors are `{ error: { code, message, details?, requestId } }`.
+  - **Contract:** the backend's [`openapi.json`](https://github.com/LLazyEmail/email-template-editor-nodejs/blob/main/openapi.json) (OpenAPI 3.1, also served at `GET http://localhost:9000/openapi.json`) is the source of truth. Keep `src/api/main.types.ts` in line with it.
 - Product description, charts, and screenshots: `README.md`.
 
 <!-- BEGIN:nextjs-agent-rules -->
