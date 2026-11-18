@@ -1,6 +1,9 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:recommended"],
+  "lockFileMaintenance": {
+    "enabled": true
+  },
   "packageRules": [
     {
       "description": "typescript-eslint (used by eslint-config-next) supports TypeScript <6.1 only. Remove once it supports TypeScript 7.1: https://github.com/typescript-eslint/typescript-eslint/issues/10940",
@@ -11,6 +14,45 @@
       "description": "eslint-config-next plugins (react, jsx-a11y, import) declare peer eslint ^9. Remove once they support ESLint 10.",
       "matchPackageNames": ["eslint"],
       "allowedVersions": "<10"
+    },
+    {
+      "description": "Types follow the Node major in .nvmrc.",
+      "matchPackageNames": ["@types/node"],
+      "allowedVersions": "<25"
+    },
+    {
+      "groupName": "Next.js",
+      "matchPackageNames": ["next", "eslint-config-next"]
+    },
+    {
+      "groupName": "React",
+      "matchPackageNames": ["react", "react-dom", "@types/react", "@types/react-dom"]
+    },
+    {
+      "groupName": "AI SDK",
+      "matchPackageNames": ["ai", "@ai-sdk/**"]
+    },
+    {
+      "groupName": "Vitest and Vite",
+      "matchPackageNames": ["vitest", "@vitest/**", "vite", "@vitejs/**"]
+    },
+    {
+      "groupName": "Playwright",
+      "matchPackageNames": ["@playwright/test", "@playwright/mcp"]
+    },
+    {
+      "groupName": "ESLint and Prettier",
+      "matchPackageNames": ["eslint", "eslint-config-prettier", "prettier"]
+    },
+    {
+      "groupName": "GitHub Actions",
+      "matchManagers": ["github-actions"]
+    },
+    {
+      "description": "Patch updates of dev tooling merge on green CI.",
+      "matchDepTypes": ["devDependencies"],
+      "matchUpdateTypes": ["patch"],
+      "automerge": true
     }
   ]
 }

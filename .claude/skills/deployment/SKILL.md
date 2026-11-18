@@ -9,9 +9,9 @@ Read `docs/deployment.md` before changing hosting.
 
 ## Facts
 
-- App is Next.js 16 App Router. Default output is a Node server (`next start`).
+- App is Next.js 16 App Router with `output: "standalone"`: `next build` produces a self-contained Node server in `.next/standalone/server.js`.
 - Frontend calls a separate backend on port 9000 unless `NEXT_PUBLIC_API_URL` is set.
-- Docker image already builds and runs on port 3000.
+- Docker image (Node 24, multi-stage, non-root) runs the standalone server on port 3000. Pass `NEXT_PUBLIC_API_URL` as a build arg: it is inlined at build time.
 
 ## Options
 
