@@ -28,6 +28,8 @@ export default defineConfig([
   {
     rules: {
       "no-restricted-imports": ["error", { paths: [axiosOnlyInApi] }],
+      // Debug logging must not ship. console.warn/error stay allowed for surfacing real failures.
+      "no-console": ["error", { allow: ["warn", "error"] }],
     },
   },
   {

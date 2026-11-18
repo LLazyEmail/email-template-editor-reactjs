@@ -98,8 +98,6 @@ const AddElementForm = ({ onCancel, onSubmit, data }: AddElementFormProps) => {
         shouldUpdate={(prevValues, currentValues) => prevValues.type !== currentValues.type}
       >
         {({ getFieldValue }) => {
-          // console.log("getFieldValue", getFieldValue("elementId"));
-
           return getFieldValue("type") === "html" ? (
             <Form.Item name="value" label="Value">
               <TextArea

@@ -19,8 +19,6 @@ const EditElementForm = ({ onCancel, onSubmit, data }: EditElementFormProps) => 
   //     form.setFieldsValue({ note: "Hello world!", gender: "male" });
   //   };
 
-  console.log("data", data);
-
   return (
     <Form
       //   {...layout}
