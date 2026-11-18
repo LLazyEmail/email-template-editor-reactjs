@@ -26,8 +26,6 @@ const Home = () => {
   const [generatedTemplateLink, setGeneratedTemplateLink] = useState("");
   const [elementsVersion, setElementsVersion] = useState(0);
 
-  console.log("templateTree", templateTree);
-
   const getTreeData = () => {
     getTree().then((data) => {
       setTemplateTree(data);
@@ -50,7 +48,6 @@ const Home = () => {
   };
 
   const onSubmit = (values: { value: string }) => {
-    console.log("values", values);
     const root: SaveTree["treeData"] = [
       { title: "root", key: "1", value: values.value, children: [] },
     ];

@@ -53,13 +53,9 @@ const TemplateTree = (props: TemplateTreeProps) => {
     map[e.key]?.();
 
     // message.info("Click on menu item.");
-    console.log("click", e);
-    console.log("item", item);
   };
 
   const onSubmitModalEdit = (values: UpdateTreeNode) => {
-    console.log("values", values);
-
     updateTreeNode({
       value: values.value,
       key: values.key,
@@ -80,7 +76,6 @@ const TemplateTree = (props: TemplateTreeProps) => {
   };
 
   const onSubmitModalAdd = (formValues: AddElementFormValues) => {
-    console.log("values", formValues);
     const { currentItemKey, values, element } = formValues;
 
     if (values.type === "element" && !element) {
@@ -117,8 +112,6 @@ const TemplateTree = (props: TemplateTreeProps) => {
   const handleCancelModalAdd = () => {
     setModalAddElement({ isOpen: false, data: null });
   };
-
-  console.log("modalEditElement", modalEditElement);
 
   return (
     <>
