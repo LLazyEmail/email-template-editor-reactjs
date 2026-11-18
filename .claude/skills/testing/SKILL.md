@@ -31,7 +31,12 @@ vi.mock("@/api/main", () => ({
 - Tests live next to the code (`Foo.test.tsx` beside `Foo.tsx`). Examples: `src/editor/Main/Main.test.tsx`, `src/editor/Main/Chat/ChatPanel.test.tsx`.
 - AI agent tests: use `MockLanguageModelV4` from `ai/test` instead of a real provider (see `src/ai/agent.test.ts`).
 
-Run: `npm test`
+Run: `npm test`. Coverage: `npm run test:coverage` (HTML report in `coverage/`).
+
+## Coverage
+
+- Thresholds in `vitest.config.mts` are a ratchet: CI fails if coverage drops below them.
+- New code comes with tests, so coverage does not fall. When it goes up noticeably, raise the thresholds in the same PR. Never lower them to get green.
 
 ## E2E (Playwright)
 
@@ -45,4 +50,4 @@ Run: `npm test`
 
 - [ ] New behavior has a test
 - [ ] API is mocked
-- [ ] `npm test` passes
+- [ ] `npm test` and `npm run test:coverage` pass
