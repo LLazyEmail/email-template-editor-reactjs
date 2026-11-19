@@ -1,0 +1,29 @@
+/* Bordered element list (antd's Listy has no header/bordered/actions, so they are built here). */
+.element-list {
+  overflow: hidden;
+  border: 1px solid var(--ant-color-border, #d9d9d9);
+  border-radius: var(--ant-border-radius-lg, 8px);
+}
+
+.element-list-header {
+  padding: var(--ant-padding-sm, 12px) var(--ant-padding, 16px);
+  border-bottom: 1px solid var(--ant-color-split, rgba(5, 5, 5, 0.06));
+}
+
+/* The container already draws the bottom border (specificity beats antd's item rule). */
+.element-list .element-list-item.element-list-item:last-child {
+  border-bottom: 0;
+}
+
+.element-list-row {
+  gap: var(--ant-margin-sm, 12px);
+}
+
+.element-list-title {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.element-list-actions {
+  flex: none;
+}
