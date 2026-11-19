@@ -1,12 +1,13 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Button, List, Modal } from "antd";
+import { Button, Empty, Flex, Listy, Modal } from "antd";
 import { addElement, deleteElement, getAllElements, updateElement } from "../../../api/main";
 import { Element } from "../../../api/main.types";
 import AddElementForm from "./AddElementForm/AddElementForm";
 import { ModalState } from "./EditElementForm/EditElementForm.types";
 import EditElementForm from "./EditElementForm/EditElementForm";
+import "./Elements.css";
 
 interface ElementsProps {
   /** Change this value to reload the list after elements were changed elsewhere (e.g. by the AI assistant). */
@@ -82,31 +83,33 @@ const Elements = ({ refreshKey = 0 }: ElementsProps) => {
 
   return (
     <>
-      <List
-        header={
+      <div className="element-list">
+        <div className="element-list-header">
           <Button type="primary" onClick={showModalAddElement}>
             Add element
           </Button>
-        }
-        bordered
-        dataSource={elements}
-        renderItem={(item) => {
-          return (
-            <List.Item
-              actions={[
-                <Button key="edit" onClick={() => onShowModalEditElement(item)}>
-                  edit
-                </Button>,
-                <Button key="delete" danger onClick={() => onDeleteElement(item)}>
-                  Delete
-                </Button>,
-              ]}
-            >
-              {item.title}
-            </List.Item>
-          );
-        }}
-      />
+        </div>
+        {elements.length === 0 ? (
+          <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+        ) : (
+          <Listy
+            items={elements}
+            rowKey="key"
+            classNames={{ item: "element-list-item" }}
+            itemRender={(item) => (
+              <Flex className="element-list-row" justify="space-between" align="center">
+                <span className="element-list-title">{item.title}</span>
+                <Flex className="element-list-actions" gap="small">
+                  <Button onClick={() => onShowModalEditElement(item)}>edit</Button>
+                  <Button danger onClick={() => onDeleteElement(item)}>
+                    Delete
+                  </Button>
+                </Flex>
+              </Flex>
+            )}
+          />
+        )}
+      </div>
 
       <Modal
         title="Add element"
