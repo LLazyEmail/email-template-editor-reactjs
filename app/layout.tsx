@@ -14,7 +14,9 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      {/* Browser extensions (e.g. Grammarly) add attributes to <body> before React hydrates.
+          This only ignores attribute mismatches on <body> itself, not on its children. */}
+      <body suppressHydrationWarning>{children}</body>
     </html>
   );
 }
