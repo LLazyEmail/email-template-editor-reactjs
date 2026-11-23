@@ -28,7 +28,7 @@ The editor is a single-page experience:
 4. **Manage elements:** `Elements` list → `getAllElements` / `addElement` / `updateElement` / `deleteElement` (REST under `/elements`).
 5. **Generate:** Button calls `generate()` → `POST /generate` → `{ url }`; `generate()` resolves to the link that can be opened.
 
-The backend's request and response shapes are described in its [`openapi.json`](https://github.com/LLazyEmail/email-template-editor-nodejs/blob/main/openapi.json) (served at `GET /openapi.json`). It is generated from the backend's validation schemas, so trust it over this document.
+The backend's request and response shapes are described in its [`openapi.json`](https://github.com/LLazyEmail/email-template-editor-nodejs/blob/main/openapi.json) (served at `GET /openapi.json`). It is generated from the backend's validation schemas, so trust it over this document. The frontend keeps a copy in `src/api/openapi.json` (`npm run api:pull`) and generates `src/api/openapi.types.ts` from it (`npm run api:types`); `src/api/main.types.ts` only names those generated types.
 
 ## File responsibilities
 
@@ -46,7 +46,8 @@ The backend's request and response shapes are described in its [`openapi.json`](
 | `src/editor/Main/Preview/renderTemplate.ts`                 | Client-side renderer of the tree into email HTML                                              |
 | `src/editor/Main/Chat/`                                     | AI assistant panel and settings (see below)                                                   |
 | `src/api/main.ts`                                           | All HTTP calls                                                                                |
-| `src/api/main.types.ts`                                     | Shared request types                                                                          |
+| `src/api/main.types.ts`                                     | Request/response types: aliases over the generated `openapi.types.ts`                         |
+| `src/api/openapi.json`, `src/api/openapi.types.ts`          | Copy of the backend contract and the types generated from it (do not edit the `.ts` by hand)  |
 | `src/api/apiUrl.ts`                                         | Backend URL resolution, shared with the CSP                                                   |
 | `src/api/errors.ts`                                         | `errorMessage()`: the backend's `{ error: { message } }` or the plain error message           |
 | `src/editor/Main/notifyError.ts`                            | `.catch` handler that shows a failed backend call as an antd notification                     |

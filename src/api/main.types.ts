@@ -1,53 +1,30 @@
-export interface GenerateResponse {
-  url: string;
-}
+// API types come from the backend's contract (src/api/openapi.json), not from hand-written copies.
+// After the backend changes: `npm run api:pull && npm run api:types`.
+import type { components } from "./openapi.types";
+
+type Schemas = components["schemas"];
+
+export type GenerateResponse = Schemas["GenerateResponse"];
+
+/** The backend's error body: `{ error: { code, message, details?, requestId? } }`. */
+export type ApiError = Schemas["ErrorResponse"];
 
 /** A template tree node as stored by the backend. */
-export interface TreeNodeData {
-  key: string;
-  title: string;
-  value: string;
-  children?: TreeNodeData[];
-}
+export type TreeNodeData = Schemas["TreeNode"];
 
 /** PUT /tree replaces the whole tree in one atomic write. */
-export interface SaveTree {
-  treeData: TreeNodeData[];
-}
+export type SaveTree = Schemas["SaveTreeBody"];
 
-export interface UpdateTreeNode {
-  value: string;
-  title: string;
-  key: string;
-}
+export type UpdateTreeNode = { key: string } & Schemas["UpdateNodeBody"];
 
-export interface AddTreeNode {
-  parentKey: string;
-  item: { title: string; key: string; value: string; children: object[] };
-}
+export type AddTreeNode = Schemas["AddNodeBody"];
 
-export interface DeleteTreeNode {
-  key: string;
-}
+export type DeleteTreeNode = { key: string };
 
-export interface AddElement {
-  value: string;
-  title: string;
-  key: string;
-}
+export type Element = Schemas["Element"];
 
-export interface UpdateElement {
-  value: string;
-  title: string;
-  key: string;
-}
+export type AddElement = Schemas["CreateElementBody"];
 
-export interface DeleteElement {
-  key: string;
-}
+export type UpdateElement = { key: string } & Schemas["UpdateElementBody"];
 
-export interface Element {
-  value: string;
-  title: string;
-  key: string;
-}
+export type DeleteElement = { key: string };

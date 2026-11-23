@@ -35,7 +35,9 @@ proxy.ts                      # Per-request nonce Content-Security-Policy (Next 
 src/
   api/
     main.ts                   # Axios API client
-    main.types.ts             # Request/response types
+    main.types.ts             # Request/response types (aliases over openapi.types.ts)
+    openapi.json              # Copy of the backend's API contract (npm run api:pull)
+    openapi.types.ts          # Generated from openapi.json (npm run api:types), do not edit
     apiUrl.ts                 # Backend URL resolution (shared with the CSP)
     errors.ts                 # errorMessage(): readable message from a failed API call
   ai/                         # AI assistant (no React): providers, tools, agent loop, keyStore
@@ -112,9 +114,10 @@ tsconfig.json                 # Paths: @/* → ./src/*
 ### TypeScript
 
 - TypeScript 6. Do not upgrade to 7 yet: `typescript-eslint` does not support it (Renovate is limited to `<7`).
+- `openapi-typescript` declares a peer of TypeScript 5; `overrides` in `package.json` points it at the project's TypeScript. Remove the override once it supports 6.
 - Strict mode is on.
 - Path alias `@/*` maps to `src/*`.
-- Prefer explicit types from `src/api/main.types.ts` and `src/types`.
+- Prefer explicit types from `src/api/main.types.ts` and `src/types`. API types are aliases over the generated `src/api/openapi.types.ts`; do not hand-write payload shapes.
 
 ## Agent tooling
 
@@ -146,9 +149,9 @@ tsconfig.json                 # Paths: @/* → ./src/*
 
 ### Change an API call
 
-1. Check the operation in the backend's `openapi.json`, then update the function in `src/api/main.ts`.
-2. Update types in `src/api/main.types.ts` if the payload/response changes.
-3. Update any callers in `Main.tsx`, `Elements.tsx`, or `TemplateTree.tsx`.
+1. Get the backend's current contract and regenerate the types: `npm run api:pull && npm run api:types` (`OPENAPI_URL=http://localhost:9000/openapi.json npm run api:pull` for a local backend or an unmerged backend branch). Commit both `src/api/openapi.json` and `src/api/openapi.types.ts`; a test fails if they disagree.
+2. Update the function in `src/api/main.ts`; add or adjust an alias in `src/api/main.types.ts` if a new schema is needed.
+3. Run `npm run typecheck`: callers that no longer match the contract fail here. Fix them in `Main.tsx`, `Elements.tsx`, `TemplateTree.tsx` or `src/ai/tools.ts`.
 4. Keep the mock in tests in sync.
 
 ### Run locally
@@ -203,7 +206,7 @@ docker run -p 3000:3000 email-template-editor
   - Elements: `GET /elements`, `POST /elements`, `PATCH /elements/:key`, `DELETE /elements/:key`
   - `POST /generate` → `{ url }`
   - Keys in paths are URL-encoded. Errors are `{ error: { code, message, details?, requestId } }`.
-  - **Contract:** the backend's [`openapi.json`](https://github.com/LLazyEmail/email-template-editor-nodejs/blob/main/openapi.json) (OpenAPI 3.1, also served at `GET http://localhost:9000/openapi.json`) is the source of truth. Keep `src/api/main.types.ts` in line with it.
+  - **Contract:** the backend's [`openapi.json`](https://github.com/LLazyEmail/email-template-editor-nodejs/blob/main/openapi.json) (OpenAPI 3.1, also served at `GET http://localhost:9000/openapi.json`) is the source of truth. The frontend keeps a copy in `src/api/openapi.json` and generates its types from it (see "Change an API call").
 - Product description, charts, and screenshots: `README.md`.
 
 <!-- BEGIN:nextjs-agent-rules -->
