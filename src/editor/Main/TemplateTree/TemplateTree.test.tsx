@@ -28,7 +28,9 @@ const openMenuOn = async (title: string, action: "Add" | "Edit" | "Delete") => {
 
 beforeEach(() => {
   vi.clearAllMocks();
-  notification.destroy();
+  // Rendering real notifications leaves antd timers running after jsdom is torn down.
+  vi.spyOn(notification, "error").mockImplementation(() => {});
+  vi.mocked(notification.error).mockClear();
   vi.spyOn(console, "log").mockImplementation(() => {});
 });
 
@@ -102,8 +104,12 @@ describe("TemplateTree", () => {
 
     await openMenuOn("{{intro}}", "Delete");
 
-    expect(await screen.findByText("Could not delete the node")).toBeInTheDocument();
-    expect(screen.getByText("Network Error")).toBeInTheDocument();
+    await waitFor(() =>
+      expect(notification.error).toHaveBeenCalledWith({
+        title: "Could not delete the node",
+        description: "Network Error",
+      }),
+    );
     expect(refresh).not.toHaveBeenCalled();
   });
 });

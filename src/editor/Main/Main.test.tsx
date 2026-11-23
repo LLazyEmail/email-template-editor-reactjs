@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { notification } from "antd";
 import { beforeEach, expect, test, vi } from "vitest";
@@ -19,7 +19,9 @@ vi.mock("@/api/main", () => ({
 }));
 
 beforeEach(() => {
-  notification.destroy();
+  // Rendering real notifications leaves antd timers running after jsdom is torn down.
+  vi.spyOn(notification, "error").mockImplementation(() => {});
+  vi.mocked(notification.error).mockClear();
 });
 
 test("renders the editor without crashing", async () => {
@@ -32,8 +34,12 @@ test("shows an error when the template tree cannot be loaded", async () => {
   vi.mocked(getTree).mockRejectedValueOnce(new Error("Network Error"));
   render(<Main />);
 
-  expect(await screen.findByText("Could not load the template tree")).toBeInTheDocument();
-  expect(screen.getByText("Network Error")).toBeInTheDocument();
+  await waitFor(() =>
+    expect(notification.error).toHaveBeenCalledWith({
+      title: "Could not load the template tree",
+      description: "Network Error",
+    }),
+  );
   expect(screen.getByRole("button", { name: "Add root element" })).toBeEnabled();
 });
 
@@ -46,6 +52,10 @@ test("shows an error when generating fails", async () => {
 
   await user.click(screen.getByRole("button", { name: "Generate" }));
 
-  expect(await screen.findByText("Could not generate the template")).toBeInTheDocument();
-  expect(screen.getByText("The tree is empty")).toBeInTheDocument();
+  await waitFor(() =>
+    expect(notification.error).toHaveBeenCalledWith({
+      title: "Could not generate the template",
+      description: "The tree is empty",
+    }),
+  );
 });

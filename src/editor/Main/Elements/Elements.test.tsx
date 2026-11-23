@@ -16,7 +16,9 @@ const header = { key: "e1", title: "Header", value: "<h1>{{title}}</h1>" };
 
 beforeEach(() => {
   vi.clearAllMocks();
-  notification.destroy();
+  // Rendering real notifications leaves antd timers running after jsdom is torn down.
+  vi.spyOn(notification, "error").mockImplementation(() => {});
+  vi.mocked(notification.error).mockClear();
   vi.mocked(getAllElements).mockResolvedValue([header]);
 });
 
@@ -93,8 +95,12 @@ describe("Elements", () => {
     vi.mocked(getAllElements).mockRejectedValue(new Error("Network Error"));
     render(<Elements />);
 
-    expect(await screen.findByText("Could not load the elements")).toBeInTheDocument();
-    expect(screen.getByText("Network Error")).toBeInTheDocument();
+    await waitFor(() =>
+      expect(notification.error).toHaveBeenCalledWith({
+        title: "Could not load the elements",
+        description: "Network Error",
+      }),
+    );
     expect(screen.getByRole("button", { name: "Add element" })).toBeInTheDocument();
   });
 
@@ -112,8 +118,12 @@ describe("Elements", () => {
     await user.type(within(dialog).getByLabelText("Value"), "<p>bye</p>");
     await user.click(within(dialog).getByRole("button", { name: "Submit" }));
 
-    expect(await screen.findByText("Could not add the element")).toBeInTheDocument();
-    expect(screen.getByText("title is required")).toBeInTheDocument();
+    await waitFor(() =>
+      expect(notification.error).toHaveBeenCalledWith({
+        title: "Could not add the element",
+        description: "title is required",
+      }),
+    );
     expect(screen.getByRole("dialog")).toBeInTheDocument();
     expect(getAllElements).toHaveBeenCalledTimes(1);
   });
