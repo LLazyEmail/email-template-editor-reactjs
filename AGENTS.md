@@ -37,6 +37,7 @@ src/
     main.ts                   # Axios API client
     main.types.ts             # Request/response types
     apiUrl.ts                 # Backend URL resolution (shared with the CSP)
+    errors.ts                 # errorMessage(): readable message from a failed API call
   ai/                         # AI assistant (no React): providers, tools, agent loop, keyStore
   editor/Main/                 # Editor UI (client components)
     Main.tsx                  # Root editor screen

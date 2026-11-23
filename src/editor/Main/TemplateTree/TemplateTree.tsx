@@ -1,6 +1,7 @@
 "use client";
 
 import { Dropdown, MenuProps, Tree, Modal, notification } from "antd";
+import { notifyError } from "../notifyError";
 // import type { DataNode, TreeProps } from "antd/es/tree";
 import React, { useState } from "react";
 import { AddElementFormValues, ModalState, TemplateTreeProps } from "./TemplateTree.types";
@@ -44,9 +45,11 @@ const TemplateTree = (props: TemplateTreeProps) => {
       add: () => setModalAddElement({ isOpen: true, data: item }),
       edit: () => setModalEditElement({ isOpen: true, data: item }),
       delete: () => {
-        deleteTreeNode({ key: item.key as string }).then(() => {
-          props.refresh();
-        });
+        deleteTreeNode({ key: item.key as string })
+          .then(() => {
+            props.refresh();
+          })
+          .catch(notifyError("Could not delete the node"));
       },
     };
 
@@ -60,10 +63,12 @@ const TemplateTree = (props: TemplateTreeProps) => {
       value: values.value,
       key: values.key,
       title: values.title,
-    }).then(() => {
-      props.refresh();
-      setModalEditElement({ isOpen: false, data: null });
-    });
+    })
+      .then(() => {
+        props.refresh();
+        setModalEditElement({ isOpen: false, data: null });
+      })
+      .catch(notifyError("Could not update the node"));
 
     // const root: SaveTree["treeData"] = [
     //   { title: "root", key: "1", value: values.value, children: [] },
@@ -98,9 +103,11 @@ const TemplateTree = (props: TemplateTreeProps) => {
             value: values.value ?? "",
           });
 
-    addTreeNode(data).then(() => {
-      props.refresh();
-    });
+    addTreeNode(data)
+      .then(() => {
+        props.refresh();
+      })
+      .catch(notifyError("Could not add the node"));
 
     setModalAddElement({ isOpen: false, data: null });
   };

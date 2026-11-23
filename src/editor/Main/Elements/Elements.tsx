@@ -7,6 +7,7 @@ import { Element } from "../../../api/main.types";
 import AddElementForm from "./AddElementForm/AddElementForm";
 import { ModalState } from "./EditElementForm/EditElementForm.types";
 import EditElementForm from "./EditElementForm/EditElementForm";
+import { notifyError } from "../notifyError";
 import "./Elements.css";
 
 interface ElementsProps {
@@ -23,9 +24,11 @@ const Elements = ({ refreshKey = 0 }: ElementsProps) => {
   const [elements, setElements] = useState<Element[]>([]);
 
   const getElements = () => {
-    getAllElements().then((data) => {
-      setElements(data);
-    });
+    getAllElements()
+      .then((data) => {
+        setElements(data);
+      })
+      .catch(notifyError("Could not load the elements"));
   };
 
   useEffect(() => {
@@ -45,10 +48,12 @@ const Elements = ({ refreshKey = 0 }: ElementsProps) => {
       key: new Date().toISOString() + "1",
       value: values.value,
       title: values.title,
-    }).then(() => {
-      setIsModalOpenAddElement(false);
-      getElements();
-    });
+    })
+      .then(() => {
+        setIsModalOpenAddElement(false);
+        getElements();
+      })
+      .catch(notifyError("Could not add the element"));
   };
 
   const onSubmitEditElement = (values: Element) => {
@@ -56,10 +61,12 @@ const Elements = ({ refreshKey = 0 }: ElementsProps) => {
       value: values.value,
       key: values.key,
       title: values.title,
-    }).then(() => {
-      getElements();
-      setModalEditElement({ isOpen: false, data: null });
-    });
+    })
+      .then(() => {
+        getElements();
+        setModalEditElement({ isOpen: false, data: null });
+      })
+      .catch(notifyError("Could not update the element"));
   };
 
   const onShowModalEditElement = (item: Element) => {
@@ -76,9 +83,11 @@ const Elements = ({ refreshKey = 0 }: ElementsProps) => {
   const onDeleteElement = (item: Element) => {
     deleteElement({
       key: item.key,
-    }).then(() => {
-      getElements();
-    });
+    })
+      .then(() => {
+        getElements();
+      })
+      .catch(notifyError("Could not delete the element"));
   };
 
   return (

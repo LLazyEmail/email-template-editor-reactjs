@@ -12,6 +12,7 @@ import {
   updateElement,
   updateTreeNode,
 } from "../api/main";
+import { errorMessage } from "../api/errors";
 import type { Element } from "../api/main.types";
 import { composeBlocks, replaceNode } from "./compose";
 import {
@@ -54,14 +55,6 @@ const SNIPPET_RADIUS = 200;
 const MAX_SNIPPETS = 5;
 
 type ToolResult = { ok: true; [key: string]: unknown } | { ok: false; error: string };
-
-/** Pulls the backend's `{ error: { message } }` out of an axios error, else the plain message. */
-export function errorMessage(error: unknown): string {
-  const apiMessage = (error as { response?: { data?: { error?: { message?: unknown } } } })
-    ?.response?.data?.error?.message;
-  if (typeof apiMessage === "string") return apiMessage;
-  return error instanceof Error ? error.message : String(error);
-}
 
 const countOccurrences = (text: string, part: string) => (part ? text.split(part).length - 1 : 0);
 
