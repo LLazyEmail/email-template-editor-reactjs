@@ -4,14 +4,12 @@ import { Button, Collapse, Modal, Skeleton, Typography, notification } from "ant
 import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { saveTree, getTree, generate } from "../../api/main";
-import { SaveTree } from "../../api/main.types";
+import { SaveTree, TreeNodeData } from "../../api/main.types";
 import TemplateTree from "./TemplateTree/TemplateTree";
-import { TemplateTree as TemplateTreeType } from "../../types";
 import AddRootElementForm from "./AddRootElementForm/AddRootElementForm";
 import Elements from "./Elements/Elements";
 import Preview from "./Preview/Preview";
 import { notifyError } from "./notifyError";
-import type { PreviewNode } from "./Preview/renderTemplate";
 import type { ChangedResource } from "../../ai/tools";
 import "./Main.css";
 
@@ -22,7 +20,7 @@ const ChatPanel = dynamic(() => import("./Chat/ChatPanel"), {
 });
 
 const Home = () => {
-  const [templateTree, setTemplateTree] = useState<TemplateTreeType[]>([]);
+  const [templateTree, setTemplateTree] = useState<TreeNodeData[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [generatedTemplateLink, setGeneratedTemplateLink] = useState("");
   const [elementsVersion, setElementsVersion] = useState(0);
@@ -110,8 +108,7 @@ const Home = () => {
 
         <main className="editor-main">
           <section aria-label="Preview">
-            {/* GET /tree returns TreeNode[]; the shared TemplateTree type is a loose record. */}
-            <Preview tree={templateTree as unknown as PreviewNode[]} />
+            <Preview tree={templateTree} />
           </section>
 
           {/* Manual editing: collapsed by default, panels render on first open. */}

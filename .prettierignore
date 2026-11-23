@@ -10,3 +10,5 @@ package-lock.json
 next-env.d.ts
 public
 docs/screenshots
+src/api/openapi.json
+src/api/openapi.types.ts

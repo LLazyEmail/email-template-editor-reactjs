@@ -13,7 +13,7 @@ import {
   updateTreeNode,
 } from "../api/main";
 import { errorMessage } from "../api/errors";
-import type { Element } from "../api/main.types";
+import type { TreeNodeData } from "../api/main.types";
 import { composeBlocks, replaceNode } from "./compose";
 import {
   buildElementNode,
@@ -22,12 +22,7 @@ import {
   extractPlaceholders,
 } from "../editor/Main/TemplateTree/nodeBuilders";
 
-export interface TreeNode {
-  key: string;
-  title: string;
-  value: string;
-  children?: TreeNode[];
-}
+type TreeNode = TreeNodeData;
 
 export type ChangedResource = "tree" | "elements";
 
@@ -170,8 +165,8 @@ export function createEditorTools({ confirm, onChange, onToolEvent }: EditorTool
     return result;
   }
 
-  const loadTree = async () => (await getTree()) as TreeNode[];
-  const loadElements = async () => (await getAllElements()) as Element[];
+  const loadTree = () => getTree();
+  const loadElements = () => getAllElements();
 
   return {
     get_tree: tool({
