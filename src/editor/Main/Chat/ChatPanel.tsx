@@ -6,7 +6,8 @@ import type { ModelMessage } from "ai";
 import { MAX_STEPS, runAgent, type AgentStatus } from "../../../ai/agent";
 import { loadAiSettings, loadApiKey, saveAiSettings, type AiSettings } from "../../../ai/keyStore";
 import { createModel, isProviderId, PROVIDERS, REQUEST_TIMEOUT_MS } from "../../../ai/providers";
-import { createEditorTools, errorMessage, type ChangedResource } from "../../../ai/tools";
+import { createEditorTools, type ChangedResource } from "../../../ai/tools";
+import { errorMessage } from "../../../api/errors";
 import AiSettingsModal from "./AiSettingsModal";
 
 interface ChatPanelProps {

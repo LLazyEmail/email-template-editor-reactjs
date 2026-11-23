@@ -1,5 +1,6 @@
 import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { notification } from "antd";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { addElement, deleteElement, getAllElements, updateElement } from "@/api/main";
 import Elements from "./Elements";
@@ -15,6 +16,7 @@ const header = { key: "e1", title: "Header", value: "<h1>{{title}}</h1>" };
 
 beforeEach(() => {
   vi.clearAllMocks();
+  notification.destroy();
   vi.mocked(getAllElements).mockResolvedValue([header]);
 });
 
@@ -85,5 +87,34 @@ describe("Elements", () => {
 
     expect(deleteElement).toHaveBeenCalledWith({ key: "e1" });
     await waitFor(() => expect(getAllElements).toHaveBeenCalledTimes(2));
+  });
+
+  it("shows why the list could not be loaded and keeps the screen usable", async () => {
+    vi.mocked(getAllElements).mockRejectedValue(new Error("Network Error"));
+    render(<Elements />);
+
+    expect(await screen.findByText("Could not load the elements")).toBeInTheDocument();
+    expect(screen.getByText("Network Error")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Add element" })).toBeInTheDocument();
+  });
+
+  it("keeps the add modal open with the backend's message when adding fails", async () => {
+    vi.mocked(addElement).mockRejectedValueOnce({
+      response: { data: { error: { code: "VALIDATION", message: "title is required" } } },
+    });
+    const user = userEvent.setup();
+    render(<Elements />);
+    await screen.findByText("Header");
+
+    await user.click(screen.getByRole("button", { name: "Add element" }));
+    const dialog = await screen.findByRole("dialog");
+    await user.type(within(dialog).getByLabelText("Title"), "Footer");
+    await user.type(within(dialog).getByLabelText("Value"), "<p>bye</p>");
+    await user.click(within(dialog).getByRole("button", { name: "Submit" }));
+
+    expect(await screen.findByText("Could not add the element")).toBeInTheDocument();
+    expect(screen.getByText("title is required")).toBeInTheDocument();
+    expect(screen.getByRole("dialog")).toBeInTheDocument();
+    expect(getAllElements).toHaveBeenCalledTimes(1);
   });
 });

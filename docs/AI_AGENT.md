@@ -48,6 +48,8 @@ The backend's request and response shapes are described in its [`openapi.json`](
 | `src/api/main.ts`                                           | All HTTP calls                                                                                |
 | `src/api/main.types.ts`                                     | Shared request types                                                                          |
 | `src/api/apiUrl.ts`                                         | Backend URL resolution, shared with the CSP                                                   |
+| `src/api/errors.ts`                                         | `errorMessage()`: the backend's `{ error: { message } }` or the plain error message           |
+| `src/editor/Main/notifyError.ts`                            | `.catch` handler that shows a failed backend call as an antd notification                     |
 | `src/security/contentSecurityPolicy.ts`                     | CSP builder: every external origin the page calls must be listed here                         |
 | `src/types/index.ts`                                        | `TemplateTree` type                                                                           |
 | `e2e/`                                                      | Playwright specs; backend and AI providers are mocked with `page.route`                       |

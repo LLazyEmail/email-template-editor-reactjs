@@ -1,5 +1,6 @@
 import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { notification } from "antd";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { addTreeNode, deleteTreeNode, updateTreeNode } from "@/api/main";
 import TemplateTree from "./TemplateTree";
@@ -27,6 +28,7 @@ const openMenuOn = async (title: string, action: "Add" | "Edit" | "Delete") => {
 
 beforeEach(() => {
   vi.clearAllMocks();
+  notification.destroy();
   vi.spyOn(console, "log").mockImplementation(() => {});
 });
 
@@ -91,5 +93,17 @@ describe("TemplateTree", () => {
       }),
     );
     await waitFor(() => expect(refresh).toHaveBeenCalled());
+  });
+
+  it("shows an error and does not refresh when deleting fails", async () => {
+    vi.mocked(deleteTreeNode).mockRejectedValueOnce(new Error("Network Error"));
+    const refresh = vi.fn();
+    render(<TemplateTree treeData={treeData} refresh={refresh} />);
+
+    await openMenuOn("{{intro}}", "Delete");
+
+    expect(await screen.findByText("Could not delete the node")).toBeInTheDocument();
+    expect(screen.getByText("Network Error")).toBeInTheDocument();
+    expect(refresh).not.toHaveBeenCalled();
   });
 });

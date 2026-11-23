@@ -10,6 +10,7 @@ import { TemplateTree as TemplateTreeType } from "../../types";
 import AddRootElementForm from "./AddRootElementForm/AddRootElementForm";
 import Elements from "./Elements/Elements";
 import Preview from "./Preview/Preview";
+import { notifyError } from "./notifyError";
 import type { PreviewNode } from "./Preview/renderTemplate";
 import type { ChangedResource } from "../../ai/tools";
 import "./Main.css";
@@ -27,9 +28,11 @@ const Home = () => {
   const [elementsVersion, setElementsVersion] = useState(0);
 
   const getTreeData = () => {
-    getTree().then((data) => {
-      setTemplateTree(data);
-    });
+    getTree()
+      .then((data) => {
+        setTemplateTree(data);
+      })
+      .catch(notifyError("Could not load the template tree"));
   };
 
   useEffect(() => {
@@ -37,10 +40,12 @@ const Home = () => {
   }, []);
 
   const onHandleGenerate = () => {
-    generate().then((link) => {
-      notification.success({ title: "Generated successfully" });
-      setGeneratedTemplateLink(link);
-    });
+    generate()
+      .then((link) => {
+        notification.success({ title: "Generated successfully" });
+        setGeneratedTemplateLink(link);
+      })
+      .catch(notifyError("Could not generate the template"));
   };
 
   const showModal = () => {
@@ -52,10 +57,12 @@ const Home = () => {
       { title: "root", key: "1", value: values.value, children: [] },
     ];
 
-    saveTree({ treeData: root }).then(() => {
-      setIsModalOpen(false);
-      getTreeData();
-    });
+    saveTree({ treeData: root })
+      .then(() => {
+        setIsModalOpen(false);
+        getTreeData();
+      })
+      .catch(notifyError("Could not save the root element"));
   };
 
   const handleCancel = () => {
