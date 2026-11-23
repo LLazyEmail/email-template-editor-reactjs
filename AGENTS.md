@@ -36,8 +36,8 @@ src/
   api/
     main.ts                   # Axios API client
     main.types.ts             # Request/response types (aliases over openapi.types.ts)
-    openapi.json              # Copy of the backend's API contract (npm run api:pull)
-    openapi.types.ts          # Generated from openapi.json (npm run api:types), do not edit
+    openapi.json              # Copy of the backend's API contract (npm run api:sync)
+    openapi.types.ts          # Generated from openapi.json (npm run api:sync), do not edit
     apiUrl.ts                 # Backend URL resolution (shared with the CSP)
     errors.ts                 # errorMessage(): readable message from a failed API call
   ai/                         # AI assistant (no React): providers, tools, agent loop, keyStore
@@ -149,7 +149,7 @@ tsconfig.json                 # Paths: @/* → ./src/*
 
 ### Change an API call
 
-1. Get the backend's current contract and regenerate the types: `npm run api:pull && npm run api:types` (`OPENAPI_URL=http://localhost:9000/openapi.json npm run api:pull` for a local backend or an unmerged backend branch). Commit both `src/api/openapi.json` and `src/api/openapi.types.ts`; a test fails if they disagree.
+1. Get the backend's current contract and regenerate the types: `npm run api:sync` (`OPENAPI_URL=http://localhost:9000/openapi.json npm run api:sync` for a local backend or an unmerged backend branch). Commit both `src/api/openapi.json` and `src/api/openapi.types.ts`; a test fails if they disagree.
 2. Update the function in `src/api/main.ts`; add or adjust an alias in `src/api/main.types.ts` if a new schema is needed.
 3. Run `npm run typecheck`: callers that no longer match the contract fail here. Fix them in `Main.tsx`, `Elements.tsx`, `TemplateTree.tsx` or `src/ai/tools.ts`.
 4. Keep the mock in tests in sync.

@@ -1,7 +1,7 @@
-// Downloads the backend's API contract into src/api/openapi.json.
+// Downloads the backend's API contract into src/api/openapi.json. Run through `npm run api:sync`,
+// which then regenerates src/api/openapi.types.ts.
 // Default: the backend's main branch. For a local backend or a branch, set OPENAPI_URL, e.g.
-//   OPENAPI_URL=http://localhost:9000/openapi.json npm run api:pull
-// Then run `npm run api:types` to regenerate src/api/openapi.types.ts.
+//   OPENAPI_URL=http://localhost:9000/openapi.json npm run api:sync
 import { writeFile } from "node:fs/promises";
 
 const url =

@@ -1,5 +1,5 @@
 // API types come from the backend's contract (src/api/openapi.json), not from hand-written copies.
-// After the backend changes: `npm run api:pull && npm run api:types`.
+// After the backend changes: `npm run api:sync`.
 import type { components } from "./openapi.types";
 
 type Schemas = components["schemas"];

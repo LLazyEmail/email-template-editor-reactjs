@@ -8,7 +8,7 @@ description: "Change the email template editor UI, AI assistant or API client. U
 - Editor UI lives in `src/editor/Main`, not `src/pages` (Next.js would treat `pages` as routes).
 - Interactive components need `"use client"`.
 - All HTTP calls go through `src/api/main.ts`. Do not call axios from UI files.
-- Types belong in `src/api/main.types.ts` and `src/types`. API types are generated from the backend contract: `npm run api:pull && npm run api:types`, never edited by hand in `openapi.types.ts`.
+- Types belong in `src/api/main.types.ts` and `src/types`. API types are generated from the backend contract: `npm run api:sync`, never edited by hand in `openapi.types.ts`.
 - Prefer Ant Design components already used in the screen (Button, Modal, Tree, List).
 - Keep the tree and elements list working when the backend is down: do not crash the page on a failed fetch. End every API call in the UI with `.catch(notifyError("Could not …"))` (`src/editor/Main/notifyError.ts`).
 - `src/ai/` (providers, tools, agent loop, key storage) has no React or antd imports. UI for it lives in `src/editor/Main/Chat/`.

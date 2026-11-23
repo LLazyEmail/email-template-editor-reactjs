@@ -18,7 +18,7 @@
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
-    "api:pull": "node scripts/pull-openapi.mjs",
+    "api:sync": "node scripts/pull-openapi.mjs && npm run api:types",
     "api:types": "openapi-typescript src/api/openapi.json -o src/api/openapi.types.ts"
   },
   "dependencies": {
