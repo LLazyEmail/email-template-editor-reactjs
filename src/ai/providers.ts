@@ -35,6 +35,25 @@ export const PROVIDERS: Record<ProviderId, ProviderInfo> = {
   },
 };
 
+/**
+ * Models the provider has shut down (or is about to), mapped to the replacement it recommends.
+ * Source: https://developers.openai.com/api/docs/deprecations (shutdown 2026-12-11).
+ */
+const RETIRED_MODELS: Partial<Record<ProviderId, ReadonlyMap<string, string>>> = {
+  openai: new Map([
+    ["gpt-5", "gpt-6.1-sol"],
+    ["gpt-5-2025-08-07", "gpt-6.1-sol"],
+    ["gpt-5-mini", "gpt-6.1-terra"],
+    ["gpt-5-mini-2025-08-07", "gpt-6.1-terra"],
+    ["gpt-5-nano", "gpt-6-luna"],
+    ["gpt-5-nano-2025-08-07", "gpt-6-luna"],
+  ]),
+};
+
+/** The model to call instead of `model`: its replacement if the provider retired it, else itself. */
+export const replaceRetiredModel = (provider: ProviderId, model: string): string =>
+  RETIRED_MODELS[provider]?.get(model) ?? model;
+
 export const PROVIDER_IDS = Object.keys(PROVIDERS) as ProviderId[];
 
 export const isProviderId = (value: unknown): value is ProviderId =>

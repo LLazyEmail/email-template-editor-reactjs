@@ -3,7 +3,7 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import ChatPanel from "./ChatPanel";
 import { runAgent } from "../../../ai/agent";
-import { clearApiKey, saveApiKey } from "../../../ai/keyStore";
+import { clearApiKey, saveAiSettings, saveApiKey } from "../../../ai/keyStore";
 
 vi.mock("../../../ai/agent", () => ({ runAgent: vi.fn(), MAX_STEPS: 12 }));
 vi.mock("../../../api/main", () => ({}));
@@ -14,6 +14,7 @@ beforeEach(() => {
 
 afterEach(() => {
   clearApiKey("google");
+  clearApiKey("openai");
   window.localStorage.clear();
 });
 
@@ -68,6 +69,25 @@ describe("ChatPanel", () => {
     await userEvent.click(screen.getByRole("button", { name: "Send" }));
 
     await waitFor(() => expect(screen.getByText("API key not valid")).toBeInTheDocument());
+  });
+
+  it("calls the replacement of a saved model the provider has retired", async () => {
+    saveAiSettings({ provider: "openai", model: "gpt-5-mini" });
+    saveApiKey("openai", "key", "memory");
+    vi.mocked(runAgent).mockResolvedValue({
+      text: "ok",
+      hitStepLimit: false,
+      responseMessages: [],
+    });
+
+    render(<ChatPanel onChange={vi.fn()} />);
+    await userEvent.type(screen.getByLabelText("Message"), "hello");
+    await userEvent.click(screen.getByRole("button", { name: "Send" }));
+
+    await screen.findByText("ok");
+    expect(runAgent).toHaveBeenCalledWith(
+      expect.objectContaining({ model: expect.objectContaining({ modelId: "gpt-6.1-terra" }) }),
+    );
   });
 
   it("suggests another model when the provider is overloaded", async () => {
