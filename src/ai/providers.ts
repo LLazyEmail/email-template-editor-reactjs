@@ -18,19 +18,13 @@ export const PROVIDERS: Record<ProviderId, ProviderInfo> = {
   google: {
     label: "Google Gemini",
     defaultModel: "gemini-flash-latest",
-    models: [
-      "gemini-flash-latest",
-      "gemini-flash-lite-latest",
-      "gemini-2.5-flash",
-      "gemini-2.5-flash-lite",
-      "gemini-pro-latest",
-    ],
+    models: ["gemini-flash-latest", "gemini-flash-lite-latest", "gemini-pro-latest"],
     keyUrl: "https://aistudio.google.com/apikey",
   },
   openai: {
     label: "OpenAI",
-    defaultModel: "gpt-5-mini",
-    models: ["gpt-5-mini", "gpt-5", "gpt-5-nano"],
+    defaultModel: "gpt-6.1-terra",
+    models: ["gpt-6.1-terra", "gpt-6.2-sol", "gpt-6-luna", "gpt-6.2-astra"],
     keyUrl: "https://platform.openai.com/api-keys",
   },
   anthropic: {
