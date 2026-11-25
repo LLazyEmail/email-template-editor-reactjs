@@ -18,19 +18,13 @@ export const PROVIDERS: Record<ProviderId, ProviderInfo> = {
   google: {
     label: "Google Gemini",
     defaultModel: "gemini-flash-latest",
-    models: [
-      "gemini-flash-latest",
-      "gemini-flash-lite-latest",
-      "gemini-2.5-flash",
-      "gemini-2.5-flash-lite",
-      "gemini-pro-latest",
-    ],
+    models: ["gemini-flash-latest", "gemini-flash-lite-latest", "gemini-pro-latest"],
     keyUrl: "https://aistudio.google.com/apikey",
   },
   openai: {
     label: "OpenAI",
-    defaultModel: "gpt-5-mini",
-    models: ["gpt-5-mini", "gpt-5", "gpt-5-nano"],
+    defaultModel: "gpt-6.1-terra",
+    models: ["gpt-6.1-terra", "gpt-6.2-sol", "gpt-6-luna", "gpt-6.2-astra"],
     keyUrl: "https://platform.openai.com/api-keys",
   },
   anthropic: {
@@ -40,6 +34,25 @@ export const PROVIDERS: Record<ProviderId, ProviderInfo> = {
     keyUrl: "https://console.anthropic.com/settings/keys",
   },
 };
+
+/**
+ * Models the provider has shut down (or is about to), mapped to the replacement it recommends.
+ * Source: https://developers.openai.com/api/docs/deprecations (shutdown 2026-12-11).
+ */
+const RETIRED_MODELS: Partial<Record<ProviderId, ReadonlyMap<string, string>>> = {
+  openai: new Map([
+    ["gpt-5", "gpt-6.1-sol"],
+    ["gpt-5-2025-08-07", "gpt-6.1-sol"],
+    ["gpt-5-mini", "gpt-6.1-terra"],
+    ["gpt-5-mini-2025-08-07", "gpt-6.1-terra"],
+    ["gpt-5-nano", "gpt-6-luna"],
+    ["gpt-5-nano-2025-08-07", "gpt-6-luna"],
+  ]),
+};
+
+/** The model to call instead of `model`: its replacement if the provider retired it, else itself. */
+export const replaceRetiredModel = (provider: ProviderId, model: string): string =>
+  RETIRED_MODELS[provider]?.get(model) ?? model;
 
 export const PROVIDER_IDS = Object.keys(PROVIDERS) as ProviderId[];
 

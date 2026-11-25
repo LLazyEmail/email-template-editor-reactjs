@@ -5,7 +5,13 @@ import { Alert, Button, Input, Space, Spin, Typography } from "antd";
 import type { ModelMessage } from "ai";
 import { MAX_STEPS, runAgent, type AgentStatus } from "../../../ai/agent";
 import { loadAiSettings, loadApiKey, saveAiSettings, type AiSettings } from "../../../ai/keyStore";
-import { createModel, isProviderId, PROVIDERS, REQUEST_TIMEOUT_MS } from "../../../ai/providers";
+import {
+  createModel,
+  isProviderId,
+  PROVIDERS,
+  replaceRetiredModel,
+  REQUEST_TIMEOUT_MS,
+} from "../../../ai/providers";
 import { createEditorTools, type ChangedResource } from "../../../ai/tools";
 import { errorMessage } from "../../../api/errors";
 import AiSettingsModal from "./AiSettingsModal";
@@ -54,7 +60,8 @@ function initialSettings(): AiSettings {
   const provider = isProviderId(saved.provider) ? saved.provider : "google";
   const model =
     typeof saved.model === "string" && saved.model ? saved.model : PROVIDERS[provider].defaultModel;
-  return { provider, model };
+  // A model saved before the provider shut it down would only fail on every message.
+  return { provider, model: replaceRetiredModel(provider, model) };
 }
 
 /**
