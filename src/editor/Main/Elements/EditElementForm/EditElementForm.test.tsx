@@ -50,7 +50,7 @@ describe("Elements EditElementForm", () => {
     await user.type(title, "Changed");
     await user.click(screen.getByRole("button", { name: "Reset" }));
 
-    expect(title).toHaveValue("Header");
+    await waitFor(() => expect(screen.getByLabelText("Title")).toHaveValue("Header"));
   });
 
   it("calls onCancel", async () => {

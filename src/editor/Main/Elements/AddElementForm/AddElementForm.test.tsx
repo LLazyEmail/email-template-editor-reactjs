@@ -49,6 +49,6 @@ describe("Elements AddElementForm", () => {
 
     await user.click(screen.getByRole("button", { name: "Reset" }));
 
-    expect(title).toHaveValue("");
+    await waitFor(() => expect(screen.getByLabelText("Title")).toHaveValue(""));
   });
 });

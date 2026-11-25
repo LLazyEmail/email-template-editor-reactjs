@@ -1,4 +1,4 @@
-import { render, screen, waitFor, within } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { getAllElements } from "@/api/main";
@@ -27,7 +27,12 @@ describe("TemplateTree AddElementForm", () => {
 
     await user.type(screen.getByLabelText("Title"), "Intro");
     await user.click(screen.getAllByRole("combobox")[0]);
-    await user.click(await screen.findByTitle("Element"));
+    // The Element field label also has title="Element", so target the open Type option.
+    const typeOption = (await screen.findAllByTitle("Element")).find((el) =>
+      el.classList.contains("ant-select-item-option"),
+    );
+    expect(typeOption).toBeDefined();
+    await user.click(typeOption!);
 
     await user.click(screen.getAllByRole("combobox")[1]);
     await user.click(await screen.findByTitle("Header"));
@@ -89,7 +94,8 @@ describe("TemplateTree AddElementForm", () => {
     await user.type(screen.getByLabelText("Title"), "Something");
     await user.click(screen.getByRole("button", { name: "Submit" }));
 
-    expect(await screen.findByText(/required/i)).toBeInTheDocument();
+    // Type and Element are both required while type is unset, so two messages appear.
+    expect(await screen.findAllByText(/required/i)).toHaveLength(2);
     expect(onSubmit).not.toHaveBeenCalled();
   });
 
