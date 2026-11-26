@@ -3,7 +3,8 @@
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  /* The window minus the app header (AppShell). */
+  height: calc(100vh - var(--app-header-height, 0px));
   padding: 16px 24px;
 }
 
@@ -30,9 +31,9 @@
   flex-direction: column;
   min-height: 0;
   padding: 16px;
-  border: 1px solid #f0f0f0;
+  border: 1px solid var(--ant-color-border-secondary, #f0f0f0);
   border-radius: 8px;
-  background: #fff;
+  background: var(--ant-color-bg-container, #fff);
 }
 
 .editor-chat-body {
@@ -53,10 +54,11 @@
   display: block;
   width: 100%;
   /* Leaves the manual-editing headers peeking out below. */
-  height: calc(100vh - 160px);
+  height: calc(100vh - 160px - var(--app-header-height, 0px));
   min-height: 480px;
-  border: 1px solid #f0f0f0;
+  border: 1px solid var(--ant-color-border-secondary, #f0f0f0);
   border-radius: 8px;
+  /* The email itself stays white in the dark theme, as mail clients show it. */
   background: #fff;
 }
 

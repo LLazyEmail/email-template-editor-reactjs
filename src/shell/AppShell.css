@@ -1,0 +1,58 @@
+/* Sidebar on the left; header and page on the right. The page decides its own scrolling and
+   sizes itself with --app-header-height. */
+.app-shell {
+  --app-header-height: 56px;
+  min-height: 100vh;
+}
+
+/* Doubled classes beat antd's header defaults (navy background, 64px). */
+.app-header.ant-layout-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  height: var(--app-header-height);
+  padding-inline: 24px;
+  line-height: normal;
+  background: var(--ant-color-bg-container, #fff);
+  border-bottom: 1px solid var(--ant-color-split, rgba(5, 5, 5, 0.06));
+}
+
+/* Doubled classes beat antd's own rules: the divider runs the full height of the sider,
+   not just along the menu. */
+.app-sider.ant-layout-sider {
+  border-inline-end: 1px solid var(--ant-color-split, rgba(5, 5, 5, 0.06));
+}
+
+/* The sider is as tall as the page; keep the menu in view while the page scrolls. */
+.app-nav {
+  position: sticky;
+  top: 0;
+  max-height: calc(100vh - var(--ant-layout-trigger-height, 48px));
+  overflow-y: auto;
+}
+
+.app-sider .ant-menu.ant-menu-root.ant-menu-root {
+  border-inline-end: 0;
+}
+
+.app-nav-soon {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.app-nav-tag {
+  margin-inline-end: 0;
+}
+
+.app-body {
+  min-width: 0;
+}
+
+.app-content {
+  flex: auto;
+  min-width: 0;
+}

@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { apiOriginsFor, buildContentSecurityPolicy } from "./src/security/contentSecurityPolicy";
+import { COLOR_SCHEME_HINT } from "./src/shell/themeMode";
 
 /**
  * Sets a nonce-based Content-Security-Policy on every page response.
@@ -34,6 +35,10 @@ export function proxy(request: NextRequest) {
 
   const response = NextResponse.next({ request: { headers: requestHeaders } });
   response.headers.set("Content-Security-Policy", policy);
+  // Ask Chromium browsers for the OS color scheme so the "system" theme renders right on the
+  // server. Critical-CH makes the first visit retry once with the hint instead of rendering light.
+  response.headers.set("Accept-CH", COLOR_SCHEME_HINT);
+  response.headers.set("Critical-CH", COLOR_SCHEME_HINT);
   return response;
 }
 

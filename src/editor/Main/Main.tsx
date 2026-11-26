@@ -78,7 +78,8 @@ const Home = () => {
 
   return (
     <div className="editor">
-      <header className="editor-toolbar">
+      {/* A div: the app header (AppShell) is the page's banner. */}
+      <div className="editor-toolbar">
         <Button disabled={Boolean(templateTree.length)} onClick={showModal} type="primary">
           Add root element
         </Button>
@@ -86,7 +87,7 @@ const Home = () => {
           Generate
         </Button>
         <Typography.Link onClick={onOpenLink}>{generatedTemplateLink}</Typography.Link>
-      </header>
+      </div>
       <Modal
         title="Add root element"
         open={isModalOpen}

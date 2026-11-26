@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Alert, Button, Input, Space, Spin, Typography } from "antd";
+import { Alert, Button, Input, Space, Spin, Typography, theme } from "antd";
 import type { ModelMessage } from "ai";
 import { MAX_STEPS, runAgent, type AgentStatus } from "../../../ai/agent";
 import { loadAiSettings, loadApiKey, saveAiSettings, type AiSettings } from "../../../ai/keyStore";
@@ -298,7 +298,11 @@ const ChatMessage = ({ entry }: { entry: ChatEntry }) => {
       </Typography.Paragraph>
     );
   }
-  const isUser = entry.kind === "user";
+  return <ChatBubble isUser={entry.kind === "user"} text={entry.text} />;
+};
+
+const ChatBubble = ({ isUser, text }: { isUser: boolean; text: string }) => {
+  const { token } = theme.useToken();
   return (
     <div style={{ display: "flex", justifyContent: isUser ? "flex-end" : "flex-start" }}>
       <Typography.Paragraph
@@ -308,11 +312,11 @@ const ChatMessage = ({ entry }: { entry: ChatEntry }) => {
           maxWidth: "85%",
           padding: "6px 10px",
           borderRadius: 8,
-          background: isUser ? "#e6f4ff" : "#f5f5f5",
+          background: isUser ? token.colorPrimaryBg : token.colorFillTertiary,
           marginBottom: 8,
         }}
       >
-        {entry.text}
+        {text}
       </Typography.Paragraph>
     </div>
   );
