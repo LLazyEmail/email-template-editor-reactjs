@@ -49,9 +49,7 @@ test("the assistant is always on screen and manual editing is collapsed", async 
   await expect(page.getByText("root", { exact: true })).toBeVisible();
 });
 
-test("the sidebar links the editor, marks templates as coming soon and keeps the dark theme", async ({
-  page,
-}) => {
+test("the sidebar links the editor and marks templates as coming soon", async ({ page }) => {
   await page.goto("/");
 
   const nav = page.getByRole("navigation", { name: "Main navigation" });
@@ -59,14 +57,34 @@ test("the sidebar links the editor, marks templates as coming soon and keeps the
   const templates = nav.getByRole("menuitem", { name: /Templates/ });
   await expect(templates).toHaveAttribute("aria-disabled", "true");
   await expect(templates).toContainText("Coming soon");
+});
 
-  const toggle = page.getByRole("banner").getByRole("button", { name: "Dark theme" });
-  await expect(toggle).toHaveAttribute("aria-pressed", "false");
+test("a theme picked in the header is kept after a reload", async ({ page }) => {
+  await page.emulateMedia({ colorScheme: "light" });
+  await page.goto("/");
   await waitForHydration(page);
-  await toggle.click();
-  await expect(toggle).toHaveAttribute("aria-pressed", "true");
+
+  await page.getByRole("banner").getByRole("button", { name: "Theme: System" }).click();
+  await page.getByRole("menuitem", { name: /Dark/ }).click();
+  await expect(page.locator("html")).toHaveCSS("color-scheme", "dark");
 
   await page.reload();
-  await expect(toggle).toHaveAttribute("aria-pressed", "true");
+  await expect(page.getByRole("banner").getByRole("button", { name: "Theme: Dark" })).toBeVisible();
   await expect(page.locator("html")).toHaveCSS("color-scheme", "dark");
+});
+
+test.describe("with a dark OS", () => {
+  test.use({ colorScheme: "dark" });
+
+  test("the system theme is dark, already in the server-rendered page", async ({ page }) => {
+    await page.goto("/");
+    // Playwright's emulated scheme reaches the Sec-CH-Prefers-Color-Scheme hint from the second
+    // request on (a real browser sends the OS value right away), so check the reload.
+    const response = await page.reload();
+    expect(await response?.text()).toMatch(/<html[^>]*color-scheme:\s*dark/);
+    await expect(page.locator("html")).toHaveCSS("color-scheme", "dark");
+    await expect(
+      page.getByRole("banner").getByRole("button", { name: "Theme: System" }),
+    ).toBeVisible();
+  });
 });

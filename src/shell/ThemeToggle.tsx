@@ -1,35 +1,51 @@
 "use client";
 
-import { MoonOutlined, SunOutlined } from "@ant-design/icons";
-import { Button, Tooltip } from "antd";
+import { DesktopOutlined, MoonOutlined, SunOutlined } from "@ant-design/icons";
+import { Button, Dropdown, Tooltip } from "antd";
+import type { MenuProps } from "antd";
 import React, { createContext, useContext } from "react";
-import type { ThemeMode } from "./themeMode";
+import type { ThemePreference } from "./themeMode";
 
-interface ThemeModeContextValue {
-  mode: ThemeMode;
-  setMode: (mode: ThemeMode) => void;
+interface ThemeContextValue {
+  preference: ThemePreference;
+  setPreference: (preference: ThemePreference) => void;
 }
 
 /** Provided by AppShell; null outside it (e.g. a component rendered alone in a test). */
-export const ThemeModeContext = createContext<ThemeModeContextValue | null>(null);
+export const ThemeContext = createContext<ThemeContextValue | null>(null);
 
-/** Sun/moon icon button that flips the app between light and dark. */
+const OPTIONS: Record<ThemePreference, { label: string; icon: React.ReactNode }> = {
+  system: { label: "System", icon: <DesktopOutlined /> },
+  light: { label: "Light", icon: <SunOutlined /> },
+  dark: { label: "Dark", icon: <MoonOutlined /> },
+};
+
+const items: MenuProps["items"] = (Object.keys(OPTIONS) as ThemePreference[]).map((key) => ({
+  key,
+  ...OPTIONS[key],
+}));
+
+/** Header button with a System / Light / Dark menu. */
 const ThemeToggle = () => {
-  const context = useContext(ThemeModeContext);
+  const context = useContext(ThemeContext);
   if (!context) return null;
 
-  const dark = context.mode === "dark";
-  const label = dark ? "Switch to light theme" : "Switch to dark theme";
+  const current = OPTIONS[context.preference];
   return (
-    <Tooltip title={label}>
-      <Button
-        type="text"
-        aria-label="Dark theme"
-        aria-pressed={dark}
-        icon={dark ? <SunOutlined /> : <MoonOutlined />}
-        onClick={() => context.setMode(dark ? "light" : "dark")}
-      />
-    </Tooltip>
+    <Dropdown
+      trigger={["click"]}
+      placement="bottomRight"
+      menu={{
+        items,
+        selectable: true,
+        selectedKeys: [context.preference],
+        onClick: ({ key }) => context.setPreference(key as ThemePreference),
+      }}
+    >
+      <Tooltip title={`Theme: ${current.label}`} placement="left">
+        <Button type="text" aria-label={`Theme: ${current.label}`} icon={current.icon} />
+      </Tooltip>
+    </Dropdown>
   );
 };
 

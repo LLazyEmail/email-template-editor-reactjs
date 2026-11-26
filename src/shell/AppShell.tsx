@@ -5,14 +5,19 @@ import { ConfigProvider, Layout, Menu, Tag, Tooltip, theme } from "antd";
 import type { MenuProps, ThemeConfig } from "antd";
 import Link from "next/link";
 import React, { useEffect, useMemo, useState } from "react";
-import { ThemeModeContext } from "./ThemeToggle";
-import { type ThemeMode, themeCookie } from "./themeMode";
+import { ThemeContext } from "./ThemeToggle";
+import { type ThemeMode, type ThemePreference, resolveThemeMode, themeCookie } from "./themeMode";
 import "./AppShell.css";
 
 interface AppShellProps {
-  initialTheme: ThemeMode;
+  /** The saved choice (cookie); "system" follows the OS. */
+  initialPreference: ThemePreference;
+  /** The OS scheme as the server saw it (client hint), light when unknown. */
+  initialSystemMode: ThemeMode;
   children: React.ReactNode;
 }
+
+const DARK_QUERY = "(prefers-color-scheme: dark)";
 
 const themeConfig = (mode: ThemeMode): ThemeConfig => ({
   algorithm: mode === "dark" ? theme.darkAlgorithm : theme.defaultAlgorithm,
@@ -39,8 +44,20 @@ const menuItems: MenuProps["items"] = [
 ];
 
 /** App frame: sidebar navigation and the light/dark theme for everything inside. */
-const AppShell = ({ initialTheme, children }: AppShellProps) => {
-  const [mode, setMode] = useState<ThemeMode>(initialTheme);
+const AppShell = ({ initialPreference, initialSystemMode, children }: AppShellProps) => {
+  const [preference, setPreference] = useState<ThemePreference>(initialPreference);
+  const [systemMode, setSystemMode] = useState<ThemeMode>(initialSystemMode);
+  const mode = resolveThemeMode(preference, systemMode);
+
+  // Browsers without the client hint render "system" as light first; this corrects it after
+  // hydration and follows later OS changes.
+  useEffect(() => {
+    const query = window.matchMedia(DARK_QUERY);
+    const sync = () => setSystemMode(query.matches ? "dark" : "light");
+    sync();
+    query.addEventListener("change", sync);
+    return () => query.removeEventListener("change", sync);
+  }, []);
 
   useEffect(() => {
     document.documentElement.style.colorScheme = mode;
@@ -50,21 +67,21 @@ const AppShell = ({ initialTheme, children }: AppShellProps) => {
     });
   }, [mode]);
 
-  // The toggle itself lives in the page header (ThemeToggle); it reaches the mode via context.
-  const themeMode = useMemo(
+  // The toggle itself lives in the page header (ThemeToggle); it reaches the choice via context.
+  const themeContext = useMemo(
     () => ({
-      mode,
-      setMode: (next: ThemeMode) => {
-        setMode(next);
+      preference,
+      setPreference: (next: ThemePreference) => {
+        setPreference(next);
         document.cookie = themeCookie(next);
       },
     }),
-    [mode],
+    [preference],
   );
 
   return (
     <ConfigProvider theme={themeConfig(mode)}>
-      <ThemeModeContext.Provider value={themeMode}>
+      <ThemeContext.Provider value={themeContext}>
         <Layout className="app-shell">
           {/* "light" sider and menu use the container colors, which the dark algorithm darkens. */}
           <Layout.Sider className="app-sider" theme="light" width={240} breakpoint="lg" collapsible>
@@ -76,7 +93,7 @@ const AppShell = ({ initialTheme, children }: AppShellProps) => {
           {/* A div, not Layout.Content: that renders <main>, and the page has its own landmarks. */}
           <div className="app-content">{children}</div>
         </Layout>
-      </ThemeModeContext.Provider>
+      </ThemeContext.Provider>
     </ConfigProvider>
   );
 };
