@@ -3,16 +3,13 @@
 import { DesktopOutlined, MoonOutlined, SunOutlined } from "@ant-design/icons";
 import { Button, Dropdown, Tooltip } from "antd";
 import type { MenuProps } from "antd";
-import React, { createContext, useContext } from "react";
+import React from "react";
 import type { ThemePreference } from "./themeMode";
 
-interface ThemeContextValue {
+interface ThemeToggleProps {
   preference: ThemePreference;
-  setPreference: (preference: ThemePreference) => void;
+  onChange: (preference: ThemePreference) => void;
 }
-
-/** Provided by AppShell; null outside it (e.g. a component rendered alone in a test). */
-export const ThemeContext = createContext<ThemeContextValue | null>(null);
 
 const OPTIONS: Record<ThemePreference, { label: string; icon: React.ReactNode }> = {
   system: { label: "System", icon: <DesktopOutlined /> },
@@ -25,12 +22,9 @@ const items: MenuProps["items"] = (Object.keys(OPTIONS) as ThemePreference[]).ma
   ...OPTIONS[key],
 }));
 
-/** Header button with a System / Light / Dark menu. */
-const ThemeToggle = () => {
-  const context = useContext(ThemeContext);
-  if (!context) return null;
-
-  const current = OPTIONS[context.preference];
+/** App header button with a System / Light / Dark menu. */
+const ThemeToggle = ({ preference, onChange }: ThemeToggleProps) => {
+  const current = OPTIONS[preference];
   return (
     <Dropdown
       trigger={["click"]}
@@ -38,8 +32,8 @@ const ThemeToggle = () => {
       menu={{
         items,
         selectable: true,
-        selectedKeys: [context.preference],
-        onClick: ({ key }) => context.setPreference(key as ThemePreference),
+        selectedKeys: [preference],
+        onClick: ({ key }) => onChange(key as ThemePreference),
       }}
     >
       <Tooltip title={`Theme: ${current.label}`} placement="left">

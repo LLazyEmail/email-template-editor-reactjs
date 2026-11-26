@@ -3,7 +3,8 @@
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  /* The window minus the app header (AppShell). */
+  height: calc(100vh - var(--app-header-height, 0px));
   padding: 16px 24px;
 }
 
@@ -14,10 +15,6 @@
   gap: 8px;
   flex: none;
   margin-bottom: 16px;
-}
-
-.editor-toolbar-end {
-  margin-inline-start: auto;
 }
 
 /* Chat on the left, the email (and manual editing under it) on the right. */
@@ -57,7 +54,7 @@
   display: block;
   width: 100%;
   /* Leaves the manual-editing headers peeking out below. */
-  height: calc(100vh - 160px);
+  height: calc(100vh - 160px - var(--app-header-height, 0px));
   min-height: 480px;
   border: 1px solid var(--ant-color-border-secondary, #f0f0f0);
   border-radius: 8px;

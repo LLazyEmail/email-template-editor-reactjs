@@ -10,7 +10,6 @@ import AddRootElementForm from "./AddRootElementForm/AddRootElementForm";
 import Elements from "./Elements/Elements";
 import Preview from "./Preview/Preview";
 import { notifyError } from "./notifyError";
-import ThemeToggle from "../../shell/ThemeToggle";
 import type { ChangedResource } from "../../ai/tools";
 import "./Main.css";
 
@@ -79,7 +78,8 @@ const Home = () => {
 
   return (
     <div className="editor">
-      <header className="editor-toolbar">
+      {/* A div: the app header (AppShell) is the page's banner. */}
+      <div className="editor-toolbar">
         <Button disabled={Boolean(templateTree.length)} onClick={showModal} type="primary">
           Add root element
         </Button>
@@ -87,10 +87,7 @@ const Home = () => {
           Generate
         </Button>
         <Typography.Link onClick={onOpenLink}>{generatedTemplateLink}</Typography.Link>
-        <div className="editor-toolbar-end">
-          <ThemeToggle />
-        </div>
-      </header>
+      </div>
       <Modal
         title="Add root element"
         open={isModalOpen}

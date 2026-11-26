@@ -1,8 +1,7 @@
-import { act, render, screen } from "@testing-library/react";
+import { act, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, expect, test } from "vitest";
 import AppShell from "./AppShell";
-import ThemeToggle from "./ThemeToggle";
 import {
   parseColorSchemeHint,
   parseThemePreference,
@@ -52,7 +51,7 @@ afterEach(() => {
 const renderShell = (preference: "system" | "light" | "dark", systemMode: "light" | "dark") =>
   render(
     <AppShell initialPreference={preference} initialSystemMode={systemMode}>
-      <ThemeToggle />
+      page
     </AppShell>,
   );
 
@@ -109,9 +108,11 @@ test("picking a theme in the header menu applies it and remembers it in a cookie
   expect(colorScheme()).toBe("light");
 });
 
-test("the toggle renders nothing outside the app shell", () => {
-  const { container } = render(<ThemeToggle />);
-  expect(container).toBeEmptyDOMElement();
+test("the app header holds only the theme button", () => {
+  renderShell("system", "light");
+  const header = screen.getByRole("banner");
+  expect(header).toContainElement(screen.getByRole("button", { name: "Theme: System" }));
+  expect(within(header).getAllByRole("button")).toHaveLength(1);
 });
 
 test("theme helpers parse the cookie and the client hint", () => {

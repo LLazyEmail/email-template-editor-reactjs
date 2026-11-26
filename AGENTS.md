@@ -49,7 +49,7 @@ src/
     Chat/                     # AI assistant panel (left column) + settings (lazy-loaded)
     Preview/                  # Live email preview (sandboxed iframe) + client-side renderer
   security/                   # Content-Security-Policy builder
-  shell/                      # App frame: sidebar navigation + System/Light/Dark theme (cookie + OS hint, read in app/layout.tsx)
+  shell/                      # App frame: sidebar navigation, header with the System/Light/Dark theme menu (cookie + OS hint, read in app/layout.tsx)
   types/                      # Shared types (e.g. TemplateTree)
   index.css                   # Global styles
   setupTests.ts               # Vitest setup (jest-dom, matchMedia/ResizeObserver polyfills)

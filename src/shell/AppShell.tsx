@@ -4,8 +4,8 @@ import { EditOutlined, TableOutlined } from "@ant-design/icons";
 import { ConfigProvider, Layout, Menu, Tag, Tooltip, theme } from "antd";
 import type { MenuProps, ThemeConfig } from "antd";
 import Link from "next/link";
-import React, { useEffect, useMemo, useState } from "react";
-import { ThemeContext } from "./ThemeToggle";
+import React, { useEffect, useState } from "react";
+import ThemeToggle from "./ThemeToggle";
 import { type ThemeMode, type ThemePreference, resolveThemeMode, themeCookie } from "./themeMode";
 import "./AppShell.css";
 
@@ -43,7 +43,7 @@ const menuItems: MenuProps["items"] = [
   },
 ];
 
-/** App frame: sidebar navigation and the light/dark theme for everything inside. */
+/** App frame: sidebar navigation, a header with the theme menu, and the theme for everything inside. */
 const AppShell = ({ initialPreference, initialSystemMode, children }: AppShellProps) => {
   const [preference, setPreference] = useState<ThemePreference>(initialPreference);
   const [systemMode, setSystemMode] = useState<ThemeMode>(initialSystemMode);
@@ -67,33 +67,29 @@ const AppShell = ({ initialPreference, initialSystemMode, children }: AppShellPr
     });
   }, [mode]);
 
-  // The toggle itself lives in the page header (ThemeToggle); it reaches the choice via context.
-  const themeContext = useMemo(
-    () => ({
-      preference,
-      setPreference: (next: ThemePreference) => {
-        setPreference(next);
-        document.cookie = themeCookie(next);
-      },
-    }),
-    [preference],
-  );
+  const onPreferenceChange = (next: ThemePreference) => {
+    setPreference(next);
+    document.cookie = themeCookie(next);
+  };
 
   return (
     <ConfigProvider theme={themeConfig(mode)}>
-      <ThemeContext.Provider value={themeContext}>
-        <Layout className="app-shell">
-          {/* "light" sider and menu use the container colors, which the dark algorithm darkens. */}
-          <Layout.Sider className="app-sider" theme="light" width={240} breakpoint="lg" collapsible>
-            {/* Collapses to icons below the lg breakpoint; the trigger at the bottom toggles it. */}
-            <nav className="app-nav" aria-label="Main navigation">
-              <Menu mode="inline" selectedKeys={["editor"]} items={menuItems} />
-            </nav>
-          </Layout.Sider>
+      <Layout className="app-shell">
+        {/* "light" sider and menu use the container colors, which the dark algorithm darkens. */}
+        <Layout.Sider className="app-sider" theme="light" width={240} breakpoint="lg" collapsible>
+          {/* Collapses to icons below the lg breakpoint; the trigger at the bottom toggles it. */}
+          <nav className="app-nav" aria-label="Main navigation">
+            <Menu mode="inline" selectedKeys={["editor"]} items={menuItems} />
+          </nav>
+        </Layout.Sider>
+        <Layout className="app-body">
+          <Layout.Header className="app-header">
+            <ThemeToggle preference={preference} onChange={onPreferenceChange} />
+          </Layout.Header>
           {/* A div, not Layout.Content: that renders <main>, and the page has its own landmarks. */}
           <div className="app-content">{children}</div>
         </Layout>
-      </ThemeContext.Provider>
+      </Layout>
     </ConfigProvider>
   );
 };
