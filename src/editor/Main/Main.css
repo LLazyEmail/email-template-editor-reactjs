@@ -16,6 +16,10 @@
   margin-bottom: 16px;
 }
 
+.editor-toolbar-end {
+  margin-inline-start: auto;
+}
+
 /* Chat on the left, the email (and manual editing under it) on the right. */
 .editor-workspace {
   flex: 1;
@@ -30,9 +34,9 @@
   flex-direction: column;
   min-height: 0;
   padding: 16px;
-  border: 1px solid #f0f0f0;
+  border: 1px solid var(--ant-color-border-secondary, #f0f0f0);
   border-radius: 8px;
-  background: #fff;
+  background: var(--ant-color-bg-container, #fff);
 }
 
 .editor-chat-body {
@@ -55,8 +59,9 @@
   /* Leaves the manual-editing headers peeking out below. */
   height: calc(100vh - 160px);
   min-height: 480px;
-  border: 1px solid #f0f0f0;
+  border: 1px solid var(--ant-color-border-secondary, #f0f0f0);
   border-radius: 8px;
+  /* The email itself stays white in the dark theme, as mail clients show it. */
   background: #fff;
 }
 

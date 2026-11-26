@@ -10,6 +10,7 @@ import AddRootElementForm from "./AddRootElementForm/AddRootElementForm";
 import Elements from "./Elements/Elements";
 import Preview from "./Preview/Preview";
 import { notifyError } from "./notifyError";
+import ThemeToggle from "../../shell/ThemeToggle";
 import type { ChangedResource } from "../../ai/tools";
 import "./Main.css";
 
@@ -86,6 +87,9 @@ const Home = () => {
           Generate
         </Button>
         <Typography.Link onClick={onOpenLink}>{generatedTemplateLink}</Typography.Link>
+        <div className="editor-toolbar-end">
+          <ThemeToggle />
+        </div>
       </header>
       <Modal
         title="Add root element"

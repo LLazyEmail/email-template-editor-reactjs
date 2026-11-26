@@ -1,0 +1,37 @@
+/* Sidebar on the left, the page on the right; the page decides its own scrolling. */
+.app-shell {
+  min-height: 100vh;
+}
+
+/* Doubled classes beat antd's own rules: the divider runs the full height of the sider,
+   not just along the menu. */
+.app-sider.ant-layout-sider {
+  border-inline-end: 1px solid var(--ant-color-split, rgba(5, 5, 5, 0.06));
+}
+
+/* The sider is as tall as the page; keep the menu in view while the page scrolls. */
+.app-nav {
+  position: sticky;
+  top: 0;
+  max-height: calc(100vh - var(--ant-layout-trigger-height, 48px));
+  overflow-y: auto;
+}
+
+.app-sider .ant-menu.ant-menu-root.ant-menu-inline {
+  border-inline-end: 0;
+}
+
+.app-nav-soon {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.app-nav-tag {
+  margin-inline-end: 0;
+}
+
+.app-content {
+  flex: auto;
+  min-width: 0;
+}

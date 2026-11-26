@@ -35,9 +35,9 @@ test("right-clicking a tree node opens its Add / Edit / Delete menu", async ({ p
   await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2, { button: "right" });
 
   for (const name of ["Add", "Edit", "Delete"]) {
-    await expect(page.getByRole("menuitem", { name })).toBeVisible();
+    await expect(page.getByRole("menuitem", { name, exact: true })).toBeVisible();
   }
 
-  await page.getByRole("menuitem", { name: "Edit" }).click();
+  await page.getByRole("menuitem", { name: "Edit", exact: true }).click();
   await expect(page.getByRole("dialog", { name: "Edit element" })).toBeVisible();
 });

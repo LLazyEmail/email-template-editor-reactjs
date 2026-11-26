@@ -49,6 +49,7 @@ src/
     Chat/                     # AI assistant panel (left column) + settings (lazy-loaded)
     Preview/                  # Live email preview (sandboxed iframe) + client-side renderer
   security/                   # Content-Security-Policy builder
+  shell/                      # App frame: sidebar navigation + light/dark theme (cookie, read in app/layout.tsx)
   types/                      # Shared types (e.g. TemplateTree)
   index.css                   # Global styles
   setupTests.ts               # Vitest setup (jest-dom, matchMedia/ResizeObserver polyfills)
@@ -77,7 +78,8 @@ tsconfig.json                 # Paths: @/* → ./src/*
 
 - Anything that uses hooks, Ant Design, `window`, or browser APIs must be a **client component**.
 - Add `"use client";` at the top of the file.
-- Currently marked client: `Main.tsx`, `Elements.tsx`, `TemplateTree.tsx`, `Preview.tsx`, `Chat/ChatPanel.tsx`, `Chat/AiSettingsModal.tsx`.
+- Currently marked client: `Main.tsx`, `Elements.tsx`, `TemplateTree.tsx`, `Preview.tsx`, `Chat/ChatPanel.tsx`, `Chat/AiSettingsModal.tsx`, `src/shell/AppShell.tsx`.
+- Theme: colors come from antd tokens (`var(--ant-…)` in CSS, `theme.useToken()` in TSX) so they follow the dark theme; do not hard-code light colors.
 - Pages are rendered per request (`export const dynamic = "force-dynamic"` in `app/layout.tsx`) because the CSP nonce changes on every request. Do not switch to static export (`output: "export"`).
 - New interactive UI under `src/editor/Main/**` should also be client components.
 
