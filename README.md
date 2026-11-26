@@ -4,7 +4,7 @@ A visual editor for building HTML email templates as a tree of blocks. Authors c
 
 Built with **Next.js** (App Router), **React**, **Ant Design**, and **Vitest**.
 
-![Editor: AI assistant on the left, live email preview on the right](docs/screenshots/app-overview.png)
+![Editor: navigation sidebar, AI assistant and live email preview](docs/screenshots/app-overview.png)
 
 ## Goal
 
@@ -42,9 +42,21 @@ The title is the placeholder used in the tree (`{{recipeCard}}`). The value is t
 
 ![Edit element modal](docs/screenshots/app-edit-element.png)
 
+### Dark theme
+
+The button in the top-right corner switches the theme: **System** (default, follows the OS), **Light** or **Dark**. The choice is saved in a cookie, so the page renders in the right theme on the first paint. The email preview keeps the email's own colors: it shows what the recipient will see.
+
+![Dark theme with the theme menu open](docs/screenshots/app-theme-menu-dark.png)
+
+The tree, the Elements library and the modals follow the theme too.
+
+![Template tree and Elements library in the dark theme](docs/screenshots/app-tree-and-elements-dark.png)
+
+![Edit element modal in the dark theme](docs/screenshots/app-edit-element-dark.png)
+
 ### Regenerating the screenshots
 
-Start the backend on `:9000` with the sample `db.json` and run `npm run dev`. Then capture the editor at 1440×900 (device scale 2): the overview, the preview scrolled to the first recipe row, both panels expanded, and the **edit** modal of `{{recipeCard}}`. Hide the Next.js dev badge before you capture.
+Start the backend on `:9000` with the sample `db.json` and run `npm run dev`. Then capture the editor at 1440×900 (device scale 2) with the `theme` cookie set to `light`: the overview, the preview scrolled to the first recipe row, both panels expanded (capture the panels only), and the **edit** modal of `{{recipeCard}}`. Repeat with `theme=dark` for the theme menu open, the panels and the edit modal (`-dark` suffix). Hide the Next.js dev badge before you capture.
 
 ## How it works
 
